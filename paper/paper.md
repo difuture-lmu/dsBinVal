@@ -1,5 +1,5 @@
 ---
-title: 'dsROCGLM: Conducting distributed ROC analysis using DataSHIELD'
+title: 'dsBinVal: Conducting distributed ROC analysis using DataSHIELD'
 tags:
   - R
   - DataSHIELD
@@ -29,7 +29,7 @@ bibliography: paper.bib
 
 # Summary
 
-Our `R` [@rcore] package `dsROCGLM` implements the methodology explained by @schalk2022rocglm. It extends the ROC-GLM [@pepe2000interpretation] to distributed data by using techniques of differential privacy [@dwork2006calibrating] and the idea of sharing highly aggregated values only. The package also exports functionality to calculate distributed calibration curves and assess the calibration. Using the package allows us to evaluate a prognostic model based on a binary outcome using the DataSHIELD [@gaye2014datashield] framework. Therefore, the main functionality makes it able to 1) compute the ROC curve using the ROC-GLM from which 2) the AUC and confidence intervals after @delong1988comparing to conduct hypothesis testing are derived. Furthermore, 3) the calibration can be assessed distributively via calibration curves and the Brier score. Visualizing the approximated ROC curve, the AUC with confidence intervals, and the calibration curves is also supported based on [`ggplot2`](https://ggplot2.tidyverse.org/reference/ggplot.html). Examples can be found in the [README](https://github.com/difuture-lmu/dsROCGLM) file of the repository.
+Our `R` [@rcore] package `dsBinVal` implements the methodology explained by @schalk2022rocglm. It extends the ROC-GLM [@pepe2000interpretation] to distributed data by using techniques of differential privacy [@dwork2006calibrating] and the idea of sharing highly aggregated values only. The package also exports functionality to calculate distributed calibration curves and assess the calibration. Using the package allows us to evaluate a prognostic model based on a binary outcome using the DataSHIELD [@gaye2014datashield] framework. Therefore, the main functionality makes it able to 1) compute the ROC curve using the ROC-GLM from which 2) the AUC and confidence intervals after @delong1988comparing to conduct hypothesis testing are derived. Furthermore, 3) the calibration can be assessed distributively via calibration curves and the Brier score. Visualizing the approximated ROC curve, the AUC with confidence intervals, and the calibration curves is also supported based on [`ggplot2`](https://ggplot2.tidyverse.org/reference/ggplot.html). Examples can be found in the [README](https://github.com/difuture-lmu/dsBinVal) file of the repository.
 
 # Statement of need
 

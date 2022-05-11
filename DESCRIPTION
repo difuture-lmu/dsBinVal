@@ -1,4 +1,4 @@
-Package: dsROCGLM
+Package: dsBinVal
 Type: Package
 Title: ROC and calibration analysis for DataSHIELD
 Authors@R:
@@ -16,7 +16,7 @@ Description: Methods to conduct distributed ROC and calibration analyses. The ba
     methods to push models and predict models at the DataSHIELD server which is necessary for the analysis.
     DataSHIELD uses an option `datashield.privacyLevel` to indicate the minimal amount of numbers required to
     be allowed to share an aggregated value of these numbers. Instead of setting the option, we directly retrieve
-    the privacy level from the DESCRIPTION (https://github.com/difuture-lmu/dsROCGLM/blob/master/DESCRIPTION)
+    the privacy level from the DESCRIPTION (https://github.com/difuture-lmu/dsBinVal/blob/master/DESCRIPTION)
     file each time a function calls for it. This options is set to 5 by default.
 Depends:
     R (>= 3.1.0)
