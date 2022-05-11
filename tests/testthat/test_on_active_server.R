@@ -53,6 +53,7 @@ test_that("all methods can be used and produce reasonable output", {
     expect_equal(dss$`quantiles & mean`["75%"], quantile(p, 0.75))
   })
 
+  dsConfusion(connections, "valid", "pred", 0.5)
 
   expect_equal(l2sens("iris", "p", nbreaks = 30L)$l2sens, dsL2Sens(connections, "dat", "pred", nbreaks = 30L))
   expect_message({

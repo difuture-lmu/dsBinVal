@@ -1,4 +1,3 @@
-#'
 #' @title Predict model on server site
 #' @description This function enables to make predictions on the server for any
 #'   model. Requirement is that it can be serialized and deserialized without loosing
@@ -63,7 +62,6 @@ predictModel = function(connections, mod, pred_name, dat_name = "D", predict_fun
   }
 }
 
-#'
 #' @title Wrapper to predict model on server site
 #' @description This function enables to make predictions on the server for any
 #'   model.

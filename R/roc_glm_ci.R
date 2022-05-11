@@ -44,7 +44,6 @@ aucCI = function(connections, truth_name, pred_name, roc_glm, alpha = 0.05, epsi
     "\", \"", pred_name, "\", m = ", m_pos, ")"))
   sdd_pos = 1 / (n_pos - 1) * sum(unlist(ssd_pos))
 
-
   n_scores = DSI::datashield.aggregate(connections, paste0("getNegativeScores(\"", truth_name, "\", \"",
     pred_name, "\", ", epsilon, ", ", delta, ", \"", seed_object, "\", TRUE)"))
   p_scores = DSI::datashield.aggregate(connections, paste0("getPositiveScores(\"", truth_name, "\", \"",
@@ -62,7 +61,12 @@ aucCI = function(connections, truth_name, pred_name, roc_glm, alpha = 0.05, epsi
   var_auc = stats::var(s_d(pooled_n_scores)) / length(pooled_n_scores) +
     stats::var(s_nond(pooled_p_scores)) / length(pooled_p_scores)
 
-  logit_pm = log(auc / (1 - auc)) + c(-1, 1) * stats::qnorm(1 - alpha / 2) * sqrt(var_auc) / (auc * (1 - auc))
+  quant = stats::qnorm(1 - alpha / 2)
+  lauc  = log(auc / (1 - auc))
+  sdauc = sqrt(var_auc) / (auc * (1 - auc))
 
-  return(1 / (1 + exp(-logit_pm)))
+  logit_pm = lauc + c(-1, 1) * quant * sdauc
+  ciauc = 1 / (1 + exp(-logit_pm))
+
+  return(ciauc)
 }

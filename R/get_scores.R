@@ -1,4 +1,3 @@
-#'
 #' @title Get a seed depending on an object
 #' @description This function creates a seed based on the hash of an object.
 #' @param object (`character(1L)`) Character containing the name of the object
@@ -26,7 +25,6 @@ seedBoundedToObject = function(object, rm_attributes = TRUE) {
   return(seed_add)
 }
 
-#'
 #' @title Truth and Prediction Checker
 #' @description This function checks if the vector of true values and predictions
 #'   has the correct format to be used for the ROC-GLM. If something does not suit,
@@ -73,7 +71,6 @@ checkTruthProb = function(truth_name, prob_name, pos = NULL) {
   return(invisible(data.frame(truth = truth, prob = prob)))
 }
 
-#'
 #' @title Return variance of positive scores
 #' @description This function just returns the variance of positive scores.
 #' @param truth_name (`character(1L)`) Character containing the name of the vector of 0-1-values
@@ -108,7 +105,6 @@ getPositiveScoresVar = function(truth_name, prob_name, m = NULL, return_sum = FA
     return(sum((pv - m)^2))
 }
 
-#'
 #' @title Return positive scores
 #' @description This function just returns positive scores and is used
 #'   as aggregator to send these positive scores.
@@ -166,7 +162,6 @@ getPositiveScores = function(truth_name, prob_name, epsilon = 0.2, delta = 0.2,
   return(out)
 }
 
-#'
 #' @title Return variance of negative scores
 #' @description This function just returns the variance of negative scores.
 #' @param truth_name (`character(1L)`) Character containing the name of the vector of 0-1-values
@@ -199,7 +194,6 @@ getNegativeScoresVar = function(truth_name, prob_name, m = NULL, return_sum = FA
     return(sum((nv - m)^2))
 }
 
-#'
 #' @title Return negative scores
 #' @description This function just returns negative scores and is used
 #'   as aggregator to send these positive scores.
@@ -257,7 +251,6 @@ getNegativeScores = function(truth_name, prob_name, epsilon = 0.2, delta = 0.2,
   return(out)
 }
 
-#'
 #' @title Calculate standard deviation for Gaussian Mechanism
 #' @param l2s (`numeric(1L)`) l2-sensitivity.
 #' @param epsilon (`numeric(1L)`) First privacy parameter for (e,d)-differential privacy.

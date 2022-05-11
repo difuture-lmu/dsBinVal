@@ -1,4 +1,3 @@
-#'
 #' @title Compute Placement Values on Server
 #' @description This function calculates the placement values required to calculate the ROC-GLM.
 #' @param pooled_scores_name (`character(1L)`) Name of the object holding the pooled negative scores.
@@ -29,7 +28,6 @@ computePlacementValues = function(pooled_scores_name, truth_name, prob_name, tse
   return(surv_emp(tset))
 }
 
-#'
 #' @title Calculate U Matrix for ROC-GLM
 #' @description This function calculates U matrix which is used as target variable for the ROC-GLM.
 #' @param tset (`numeric()`) Set of thresholds
@@ -45,7 +43,6 @@ calcU = function(tset, pv) {
   return(out)
 }
 
-#'
 #' @title Get Data for ROC-GLM
 #' @description This function calculates the data used for the ROC-GLM
 #' @param U (`matrix()`) Response matrix for ROC-GLM
@@ -53,6 +50,7 @@ calcU = function(tset, pv) {
 #' @return Data used for the ROC-GLM
 #' @author Stefan B., Daniel S.
 rocGLMData = function(U, tset) {
+  checkmate::assertIntegerish(U, lower = 0, upper = 1)
   checkmate::assertNumeric(tset, any.missing = FALSE)
 
   roc_glm_data = data.frame(
@@ -63,7 +61,6 @@ rocGLMData = function(U, tset) {
   return(roc_glm_data)
 }
 
-#'
 #' @title Calculate data for ROC-GLM
 #' @description This function stores the data on the server used for the ROC-GLM
 #' @param truth_name (`character(1L)`) Character containing the name of the vector of 0-1-values
@@ -81,7 +78,8 @@ rocGLMFrame = function(truth_name, prob_name, pooled_scores_name) {
   truth = df_pred$truth
   prob  = df_pred$prob
 
-  if (length(truth) < 5) stop("More than 5 observations are required to ensure privacy!")
+  if (length(truth) < 5)
+    stop("More than 5 observations are required to ensure privacy!")
 
   tset = prob[truth == 1]
   pv   = computePlacementValues(pooled_scores_name, prob, truth, tset)
@@ -92,7 +90,6 @@ rocGLMFrame = function(truth_name, prob_name, pooled_scores_name) {
 }
 
 
-#'
 #' @title Calculate Parts for Fisher Scoring
 #' @description This function calculates the parts required to conduct an update for the
 #'   Fisher scoring for probit regression
@@ -104,17 +101,19 @@ rocGLMFrame = function(truth_name, prob_name, pooled_scores_name) {
 #' @author Daniel S.
 #' @export
 calculateDistrGLMParts = function(formula, data,  w = NULL, params_char) {
-  ## CHECKS CHECKS
+  checkmate::assertFormula(formula)
+  checkmate::assertCharacter(data, len = 1L, any.missing = FALSE)
+  checkmate::assertNumeric(w, null.ok = TRUE)
+  checkmate::assertCharacter(params_char, len = 1L)
 
   fm = format(formula)
   target = strsplit(fm, " ~ ")[[1]][1]
 
   eval(parse(text = paste0("X = model.matrix(", fm, ", data = ", data, ")")))
   eval(parse(text = paste0("y = as.integer(", data, "[['", target, "']])")))
-  if (max(y) == 2) y = y - 1
+  if (max(y) == 2)
+    y = y - 1
 
-  # Flip labels:
-  #y = abs(y - 1)
 
   if (!is.null(w)) {
     eval(parse(text = paste0("w = ", data, "[['", w, "']]")))
@@ -151,7 +150,6 @@ calculateDistrGLMParts = function(formula, data,  w = NULL, params_char) {
   return(out)
 }
 
-#'
 #' @title Transform Response for Probit Fisher-Scoring
 #' @description This function transform the original 0-1-response y  to a new reponse
 #'   "lambda" that is used as respone for the fisher scoring.
@@ -161,7 +159,13 @@ calculateDistrGLMParts = function(formula, data,  w = NULL, params_char) {
 #' @return Numeric vector of new response
 #' @author Stefan B., Daniel S.
 calculateLambda = function(y, X, beta) {
-  ## CHECKS CHECKS
+  checkmate::assertIntegerish(y, lower = 0, upper = 1)
+  checkmate::assertNumeric(X)
+
+  if (nrow(X) != length(y))
+    stop("nrows of X must be the same length of y")
+  if (ncol(X) != length(beta))
+    stop("ncols of X must be the same length of beta")
 
   eta = X %*% beta
   q = 2 * y - 1
@@ -170,7 +174,6 @@ calculateLambda = function(y, X, beta) {
   return((stats::dnorm(qeta) * q) / (stats::pnorm(qeta)))
 }
 
-#'
 #' @title Calculate Likelihood of Probit Model
 #' @description This function calculates the likelihood used in a probit regression
 #'   (Bernoulli distribution + probit link).
@@ -181,7 +184,14 @@ calculateLambda = function(y, X, beta) {
 #' @return Numeric value containing the likelihood
 #' @author Stefan B., Daniel S.
 probitLikelihood = function(y, X, beta, w = NULL) {
-  ## CHECKS CHECKS
+  checkmate::assertIntegerish(y, lower = 0, upper = 1)
+  checkmate::assertNumeric(X)
+  checkmate::assertNumeric(w, null.ok = TRUE, len = length(y))
+
+  if (nrow(X) != length(y))
+    stop("nrows of X must be the same length of y")
+  if (ncol(X) != length(beta))
+    stop("ncols of X must be the same length of beta")
 
   eta = X %*% beta
 
@@ -201,6 +211,9 @@ probitLikelihood = function(y, X, beta, w = NULL) {
 #' @author Daniel S.
 #' @export
 calculateAUC = function(roc_glm) {
+  if (! inherits(roc_glm, "ROC.GLM"))
+    stop("roc_glm must be of class ROC.GLM")
+
   params = roc_glm$parameter
   temp = function(x) stats::pnorm(params[1] + params[2] * stats::qnorm(x))
   int = stats::integrate(f = temp, lower = 0, upper = 1)

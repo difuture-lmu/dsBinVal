@@ -21,7 +21,8 @@ dsCalibrationCurve(
 
 \item{nbins}{(`integer(1L)`) Number of bins between 0 and 1 (default is 10).}
 
-\item{remove_critical_bins}{(`logical(1L)`) Just remove critical bins and return just bins with `length(bin) > n_critical`.}
+\item{remove_critical_bins}{(`logical(1L)`) Just remove critical bins and return just bins
+with `length(bin) > n_critical`.}
 }
 \value{
 Calibration curve for multiple server

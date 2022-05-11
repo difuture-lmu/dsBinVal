@@ -153,6 +153,7 @@ dsBrierScore(connections, "y", "pred")
 ### Calculate and plot calibration curve:
 cc = dsCalibrationCurve(connections, "y", "pred", 10, 3)
 cc
+
 plot(cc)
 ```
 

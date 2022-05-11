@@ -1,4 +1,3 @@
-#'
 #' @title Printer for ROC-GLM
 #' @description This function provides a printer for the ROC-GLM object returned from `dsROCGLM`.
 #' @param x (`list()`) List containing the ROC-GLM parameter returned from `dsROCGLM`.
@@ -6,6 +5,10 @@
 #' @author Daniel S.
 #' @export
 print.ROC.GLM = function(x, ...) {
+
+  if (! inherits(x, ROC.GLM))
+    stop("x must be of class ROC.GLM")
+
   roc_glm = x
   cat("\n",
     "ROC-GLM after Pepe:",

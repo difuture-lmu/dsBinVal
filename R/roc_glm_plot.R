@@ -1,4 +1,3 @@
-#'
 #' @title Visualize ROC-GLM
 #' @description This function plots the approximted ROC curve after calculating the ROC-GLM using `dsROCGLM`.
 #'   The function calculates a regular grid from 0 to 1 and calculate the ROC from the binormal form
@@ -12,6 +11,9 @@
 #' @author Daniel S.
 #' @export
 plot.ROC.GLM = function(x, ...) {
+
+  if (! inherits(x, ROC.GLM))
+    stop("x must be of class ROC.GLM")
 
   ll_args = list(...)
   by = ll_args[["by"]]

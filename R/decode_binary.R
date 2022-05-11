@@ -1,4 +1,3 @@
-#'
 #' @title Deserialize object
 #' @description Decode a given string of a serialized object.
 #' @param bin (`character(1L)`) Binary string value containing the serialized model.

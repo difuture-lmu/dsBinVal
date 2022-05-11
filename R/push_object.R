@@ -1,4 +1,3 @@
-#'
 #' @title Push object to DataSHIELD server
 #' @description This function pushes a serialized object and assigns a server
 #'   variable to it.

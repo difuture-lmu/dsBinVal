@@ -1,4 +1,3 @@
-#'
 #' @title Calculate the l2 sensitivity
 #'
 #' @description Calculation of the l2 sensitivity using a histogram representetation.
@@ -83,7 +82,6 @@ l2sens = function(dat_name, scores_name, nbreaks = NULL, col_names = NULL, norm 
   }
 }
 
-#'
 #' @title Calculate the l2 sensitivity on DataSHIELD servers
 #'
 #' @description Calculation of the l2 sensitivity using a histogram representetation.

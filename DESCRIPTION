@@ -43,7 +43,7 @@ AggregateMethods:
     getDataSHIELDInfo,
     brierScore,
     calibrationCurve,
-    getFiles
+    confusion
 AssignMethods:
     rocGLMFrame,
     decodeBinary,

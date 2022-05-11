@@ -1,4 +1,3 @@
-#'
 #' @title Calculate Probit Regression on Server
 #'
 #' @description Distributed computing of the probit regression using DataSHIELD. The method gets the
@@ -75,7 +74,6 @@ dsProbitRegr = function(connections, formula, data, w = NULL, stop_tol = 1e-8, i
   return(out)
 }
 
-#'
 #' @title Calculate Probit Regression on Server
 #' @description ROC-GLM function for DataSHIELD. The function prepares the data on the server and fits the model.
 #'   The model returned by the function contains ROC-GLM as parametrized model.
@@ -108,15 +106,17 @@ dsROCGLM = function(connections, truth_name, pred_name, trace = TRUE, clean_serv
   priv_pars_choice = list(c(0.2, 0.1), c(0.3, 0.4), c(0.5, 0.3), c(0.5, 0.5), c(0.5, 0.5))
   pp_select = which(l2s <= l2breaks)[1]
 
-  if (pp_select == 5)
+  if (pp_select == 5) {
     warning("l2-sensitivity may be too high for good results! ",
       "Epsilon = 0.5 and delta = 0.5 is used which may lead to bad results.")
+  }
 
   epsilon = priv_pars_choice[[pp_select]][1]
   delta = priv_pars_choice[[pp_select]][2]
 
-  if (trace)
+  if (trace) {
     message("\n[", Sys.time(), "] Setting: epsilon = ", epsilon, " and delta = ", delta, "\n")
+  }
 
 
   checkmate::assertLogical(trace, len = 1L, any.missing = FALSE, null.ok = FALSE)
@@ -125,9 +125,10 @@ dsROCGLM = function(connections, truth_name, pred_name, trace = TRUE, clean_serv
 
   if (is.null(seed_object)) seed_object = "NULL"
 
-  if (trace)
+  if (trace) {
     message("\n[", Sys.time(), "] Initializing ROC-GLM\n\n[", Sys.time(),
       "] Host: Received scores of negative response\n")
+  }
 
   if (trace) message("[", Sys.time(), "] Receiving negative scores")
 
@@ -136,21 +137,26 @@ dsROCGLM = function(connections, truth_name, pred_name, trace = TRUE, clean_serv
     "\", \"", pred_name, "\", ", epsilon, ", ", delta, ", \"", seed_object, "\", TRUE)"))
   pooled_scores = Reduce("c", n_scores)
 
-  if (trace) message("[", Sys.time(), "] Host: Pushing pooled scores")
+  if (trace)
+    message("[", Sys.time(), "] Host: Pushing pooled scores")
 
   pushObject(connections, pooled_scores)
 
-  if (trace) message("[", Sys.time(), "] Server: Calculating placement values and parts for ROC-GLM")
+  if (trace)
+    message("[", Sys.time(), "] Server: Calculating placement values and parts for ROC-GLM")
 
   cq = NULL # Dummy for checks
   eval(parse(text = paste0("cq = quote(", paste0("rocGLMFrame(\"", truth_name, "\",\"",
     pred_name, "\", \"pooled_scores\")"), ")")))
   DSI::datashield.assign(connections, "roc_data", cq)
 
-  if (trace) message("[", Sys.time(), "] Server: Calculating probit regression to obtain ROC-GLM")
+  if (trace)
+    message("[", Sys.time(), "] Server: Calculating probit regression to obtain ROC-GLM")
+
   roc_glm = dsProbitRegr(connections, "y ~ x", "roc_data", w = "w", trace = TRUE)
 
-  if (trace) message("[", Sys.time(), "] Host: Finished calculating ROC-GLM")
+  if (trace)
+    message("[", Sys.time(), "] Host: Finished calculating ROC-GLM")
 
   ## Clean server objects:
   if (clean_server) {
@@ -159,7 +165,8 @@ dsROCGLM = function(connections, truth_name, pred_name, trace = TRUE, clean_serv
     DSI::datashield.rm(connections, "roc_data")
   }
 
-  if (trace) message("[", Sys.time(), "] Host: Calculating AUC and CI")
+  if (trace)
+    message("[", Sys.time(), "] Host: Calculating AUC and CI")
 
   roc_glm$auc = calculateAUC(roc_glm)
   roc_glm$ci = aucCI(connections, truth_name, pred_name, roc_glm, alpha = alpha,
@@ -169,7 +176,8 @@ dsROCGLM = function(connections, truth_name, pred_name, trace = TRUE, clean_serv
 
   class(roc_glm) = "ROC.GLM"
 
-  if (trace) message("[", Sys.time(), "] Finished!")
+  if (trace)
+    message("[", Sys.time(), "] Finished!")
 
   return(roc_glm)
 }
