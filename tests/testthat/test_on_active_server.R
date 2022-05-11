@@ -14,11 +14,10 @@ test_that("all methods can be used and produce reasonable output", {
   password = "password"
 
   opal = opalr::opal.login(username = username, password = password, url = surl)
-  ref = "pkg-merge"
 
   # Check if package can be installed:
-  expect_true(opalr::dsadmin.install_github_package(opal = opal, pkg = pkg, username = "difuture-lmu", ref = ref))
-  expect_true(opalr::dsadmin.publish_package(opal = opal, pkg = pkg))
+  expect_true(opalr::dsadmin.install_github_package(opal = opal, pkg = "dsBinVal", username = "difuture-lmu", ref = "main"))
+  expect_true(opalr::dsadmin.publish_package(opal = opal, pkg = "dsBinVal"))
 
   library(DSI)
   library(DSOpal)
