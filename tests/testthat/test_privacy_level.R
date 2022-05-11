@@ -1,5 +1,5 @@
 context("Privacy level getter")
 
 test_that("test if privacy level can be obtained", {
-  expect_equal(dsROCGLM:::.getPrivacyLevel(), 5)
+  expect_equal(dsBinVal:::.getPrivacyLevel(), 5)
 })

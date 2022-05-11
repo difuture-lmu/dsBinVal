@@ -9,13 +9,13 @@ test_that("test truth prob checker", {
   truth3[1] = "C"
   truth3 <<- truth3
 
-  expect_silent({df_ts = dsROCGLM:::checkTruthProb("truth", "score")})
+  expect_silent({df_ts = dsBinVal:::checkTruthProb("truth", "score")})
   expect_equal(truth, df_ts$truth)
   expect_equal(score, df_ts$prob)
 
-  expect_warning(dsROCGLM:::checkTruthProb("truth2", "score"))
-  expect_error(dsROCGLM:::checkTruthProb("truth3", "score"))
-  expect_warning(dsROCGLM:::checkTruthProb("truth", "score", pos = "bla"))
+  expect_warning(dsBinVal:::checkTruthProb("truth2", "score"))
+  expect_error(dsBinVal:::checkTruthProb("truth3", "score"))
+  expect_warning(dsBinVal:::checkTruthProb("truth", "score", pos = "bla"))
 })
 
 test_that("score variances can be calculated", {

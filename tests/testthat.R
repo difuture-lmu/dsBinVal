@@ -1,4 +1,4 @@
 library(testthat)
-library(dsROCGLM)
+library(dsBinVal)
 
-test_check("dsROCGLM")
+test_check("dsBinVal")
