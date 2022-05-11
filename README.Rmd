@@ -31,7 +31,7 @@ check1 = opalr::dsadmin.install_github_package(opal = opal, pkg = "dsBinVal", us
 if (! check1)
   stop("[", Sys.time(), "] Was not able to install dsBinVal!")
 
-check2 = opalr::dsadmin.publish_package(opal = opal, pkg = dsBinVal)
+check2 = opalr::dsadmin.publish_package(opal = opal, pkg = "dsBinVal")
 if (! check2)
   stop("[", Sys.time(), "] Was not able to publish methods of dsBinVal!")
 ```
@@ -65,7 +65,6 @@ library(DSI)
 library(DSOpal)
 library(dsBaseClient)
 
-library(dsPredictBase)
 library(dsBinVal)
 ```
 
@@ -98,7 +97,8 @@ connections = datashield.login(logins = builder$build(), assign = TRUE)
 
 ```{r}
 datashield.assign(connections, "iris", quote(iris))
-datashield.assign(connections, "y", quote(c(rep(1, 50), rep(0, 100))))
+vcall = paste0("quote(c(", paste(rep(c(1, 0), times = c(50, 100)), collapse = ", "), "))")
+datashield.assign(connections, "y", eval(parse(text = vcall)))
 ```
 
 #### Load test model, push to DataSHIELD, and calculate predictions
@@ -145,6 +145,17 @@ roc_glm
 plot(roc_glm)
 ```
 
+#### Assess calibration
+
+```{r}
+dsBrierScore(connections, "y", "pred")
+
+### Calculate and plot calibration curve:
+cc = dsCalibrationCurve(connections, "y", "pred", 10, 3)
+cc
+plot(cc)
+```
+
 ## Deploy information:
 
 __Build by `r Sys.info()[["login"]]` (`r Sys.info()[["sysname"]]`) on `r as.character(Sys.time())`.__
@@ -156,7 +167,7 @@ This readme is built automatically after each push to the repository. Hence, it 
 ri_l  = sessionInfo()
 ri_ds = datashield.aggregate(connections, quote(getDataSHIELDInfo()))
 client_pkgs = c("DSI", "DSOpal", "dsBaseClient", "dsPredictBase", "dsBinVal")
-remote_pkgs = c("dsBase", "resourcer", "dsPredictBase", "dsBinVal")
+remote_pkgs = c("dsBase", "resourcer", "dsBinVal")
 ```
 
 - Local machine:

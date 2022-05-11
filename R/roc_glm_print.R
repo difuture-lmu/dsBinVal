@@ -7,8 +7,26 @@
 #' @export
 print.ROC.GLM = function(x, ...) {
   roc_glm = x
-  cat("\nROC-GLM after Pepe:\n\n\tBinormal form: pnorm(", round(roc_glm$parameter[1], 2), " + ",
-    round(roc_glm$parameter[2], 2), "*qnorm(t))\n\n\tAUC and ", 1 - roc_glm$alpha,
-    " CI: [", round(roc_glm$ci[1], 2), "----", round(roc_glm$auc, 2), "----",
-    round(roc_glm$ci[2], 2), "]\n\n", sep = "")
+  cat("\n",
+    "ROC-GLM after Pepe:",
+    "\n",
+    "\n",
+    "\tBinormal form: pnorm(",
+    round(roc_glm$parameter[1], 2),
+    " + ",
+    round(roc_glm$parameter[2], 2),
+    "*qnorm(t))",
+    "\n",
+    "\n",
+    "\tAUC and ", 1 - roc_glm$alpha,
+    " CI: [",
+    round(roc_glm$ci[1], 2),
+    "----",
+    round(roc_glm$auc, 2),
+    "----",
+    round(roc_glm$ci[2], 2), "]",
+    "\n",
+    sep = "")
+
+  return(invisible(x))
 }

@@ -60,6 +60,7 @@ test_that("all methods can be used and produce reasonable output", {
       seed_object = "pred")
   })
   expect_equal(class(roc_glm), "ROC.GLM")
+  expect_output(print(roc_glm))
 
   expect_message({
     roc_glm2 = dsROCGLM(connections, "valid", "pred", dat_name = "iris",
@@ -77,13 +78,21 @@ test_that("all methods can be used and produce reasonable output", {
      expect_true("dat_no_na" %in% s)
   })
 
- ri = datashield.aggregate(connections, quote(getDataSHIELDInfo()))
+  ri = datashield.aggregate(connections, quote(getDataSHIELDInfo()))
   expect_equal(class(ri), "list")
   nuisance = lapply(ri, function(r) {
     expect_equal(names(r), c("session_info", "pcks"))
   })
 
+  cc = expect_message(dsCalibrationCurve(connections, "valid", "pred", 10, 3))
+  expect_output(print(cc))
 
+  expect_error(brierScore(connections, 1, 2))
+  bs = expect_message(dsBrierScore(connections, "valid", "pred"))
+  expect_true(is.numeric(bs))
+
+  gg_cc = expect_silent(plot(cc))
+  expect_true(inherits(gg_cc, "ggplot"))
 
   datashield.logout(connections)
 })
