@@ -27,35 +27,32 @@ password = "password"
 
 opal = opalr::opal.login(username = username, password = password, url = surl)
 
-pkgs = c("dsPredictBase", "dsROCGLM")
-for (pkg in pkgs) {
-  check1 = opalr::dsadmin.install_github_package(opal = opal, pkg = pkg, username = "difuture-lmu")
-  if (! check1)
-    stop("[", Sys.time(), "] Was not able to install ", pkg, "!")
+check1 = opalr::dsadmin.install_github_package(opal = opal, pkg = "dsBinVal", username = "difuture-lmu")
+if (! check1)
+  stop("[", Sys.time(), "] Was not able to install dsBinVal!")
 
-  check2 = opalr::dsadmin.publish_package(opal = opal, pkg = pkg)
-  if (! check2)
-    stop("[", Sys.time(), "] Was not able to publish methods of ", pkg, "!")
-}
+check2 = opalr::dsadmin.publish_package(opal = opal, pkg = dsBinVal)
+if (! check2)
+  stop("[", Sys.time(), "] Was not able to publish methods of dsBinVal!")
 ```
 
-[![Actions Status](https://github.com/difuture-lmu/dsROCGLM/workflows/R-CMD-check/badge.svg)](https://github.com/difuture-lmu/dsROCGLM/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![codecov](https://codecov.io/gh/difuture-lmu/dsROCGLM/branch/main/graph/badge.svg?token=E8AZRM6XJX)](https://codecov.io/gh/difuture-lmu/dsROCGLM)
+[![Actions Status](https://github.com/difuture-lmu/dsBinVal/workflows/R-CMD-check/badge.svg)](https://github.com/difuture-lmu/dsBinVal/actions) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![codecov](https://codecov.io/gh/difuture-lmu/dsBinVal/branch/main/graph/badge.svg?token=E8AZRM6XJX)](https://codecov.io/gh/difuture-lmu/dsBinVal)
 
-# ROC-GLM for DataSHIELD
+# ROC-GLM and Calibration for DataSHIELD
 
-The package provides functionality to conduct and visualize ROC analysis on decentralized data. The basis is the DataSHIELD](https://www.datashield.org/) infrastructure for distributed computing. This package provides the calculation of the [__ROC-GLM__](https://www.jstor.org/stable/2676973?seq=1) as well as [__AUC confidence intervals__](https://www.jstor.org/stable/2531595?seq=1). In order to calculate the ROC-GLM it is necessry to push models and predict them at the servers. This is done automatically by the base package [`dsPredictBase`](https://github.com/difuture-lmu/dsPredictBase). Note that DataSHIELD uses an option `datashield.privacyLevel` to indicate the minimal amount of numbers required to be allowed to share an aggregated value of these numbers. Instead of setting the option, we directly retrieve the privacy level from the [`DESCRIPTION`](https://github.com/difuture-lmu/dsROCGLM/blob/master/DESCRIPTION) file each time a function calls for it. This options is set to 5 by default.
+The package provides functionality to conduct and visualize ROC analysis on decentralized data. The basis is the DataSHIELD](https://www.datashield.org/) infrastructure for distributed computing. This package provides the calculation of the [__ROC-GLM__](https://www.jstor.org/stable/2676973?seq=1) as well as [__AUC confidence intervals__](https://www.jstor.org/stable/2531595?seq=1). In order to calculate the ROC-GLM it is necessry to push models and predict them at the servers. This is done automatically by the base package [`dsPredictBase`](https://github.com/difuture-lmu/dsPredictBase). Note that DataSHIELD uses an option `datashield.privacyLevel` to indicate the minimal amount of numbers required to be allowed to share an aggregated value of these numbers. Instead of setting the option, we directly retrieve the privacy level from the [`DESCRIPTION`](https://github.com/difuture-lmu/dsBinVal/blob/master/DESCRIPTION) file each time a function calls for it. This options is set to 5 by default.
 
 ## Installation
 
 At the moment, there is no CRAN version available. Install the development version from GitHub:
 
 ```{r,eval=FALSE}
-remotes::install_github("difuture-lmu/dsROCGLM")
+remotes::install_github("difuture-lmu/dsBinVal")
 ```
 
 #### Register methods
 
-It is necessary to register the assign and aggregate methods in the OPAL administration. These methods are registered automatically when publishing the package on OPAL (see [`DESCRIPTION`](https://github.com/difuture-lmu/dsROCGLM/blob/main/DESCRIPTION)).
+It is necessary to register the assign and aggregate methods in the OPAL administration. These methods are registered automatically when publishing the package on OPAL (see [`DESCRIPTION`](https://github.com/difuture-lmu/dsBinVal/blob/main/DESCRIPTION)).
 
 Note that the package needs to be installed at both locations, the server and the analysts machine.
 
@@ -69,7 +66,7 @@ library(DSOpal)
 library(dsBaseClient)
 
 library(dsPredictBase)
-library(dsROCGLM)
+library(dsBinVal)
 ```
 
 #### Log into DataSHIELD server
@@ -158,8 +155,8 @@ This readme is built automatically after each push to the repository. Hence, it 
 ```{r, include=FALSE}
 ri_l  = sessionInfo()
 ri_ds = datashield.aggregate(connections, quote(getDataSHIELDInfo()))
-client_pkgs = c("DSI", "DSOpal", "dsBaseClient", "dsPredictBase", "dsROCGLM")
-remote_pkgs = c("dsBase", "resourcer", "dsPredictBase", "dsROCGLM")
+client_pkgs = c("DSI", "DSOpal", "dsBaseClient", "dsPredictBase", "dsBinVal")
+remote_pkgs = c("dsBase", "resourcer", "dsPredictBase", "dsBinVal")
 ```
 
 - Local machine:

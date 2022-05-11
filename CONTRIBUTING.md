@@ -1,10 +1,10 @@
-# Contributing to `dsROCGLM` development
+# Contributing to `dsBinVal` development
 
-We, the authors of the `dsROCGLM` R package, use the same guide as is used for
+We, the authors of the `dsBinVal` R package, use the same guide as is used for
 contributing to the development of the popular `ggplot2` R package. This
 document is simply a formal re-statement of that fact.
 
-The goal of this guide is to help you get up and contributing to `dsROCGLM` as
+The goal of this guide is to help you get up and contributing to `dsBinVal` as
 quickly as possible. The guide is divided into two main pieces:
 
 * Filing a bug report or feature request in an issue.
@@ -50,13 +50,13 @@ of `sessionInfo()`.)
 
 ## Pull requests
 
-To contribute a change to `dsROCGLM`, you follow these steps:
+To contribute a change to `dsBinVal`, you follow these steps:
 
 1. Create a branch in git and make your changes.
 1. Push branch to github and issue pull request (PR).
 1. Discuss the pull request.
 1. Iterate until either we accept the PR or decide that it's not a good fit for
-   `dsROCGLM`.
+   `dsBinVal`.
 
 Each of these steps are described in more detail below. This might feel
 overwhelming the first time you get set up, but it gets easier with practice.
@@ -71,7 +71,7 @@ Pull requests will be evaluated against the a checklist:
    how your pull request solves it as concisely as possible.
 
     Also include this motivation in `NEWS` so that when a new release of
-    `dsROCGLM` comes out it's easy for users to see what's changed. Add your
+    `dsBinVal` comes out it's easy for users to see what's changed. Add your
     item at the top of the file and use markdown for formatting. The
     news item should end with `(@yourGithubUsername, #the_issue_number)`.
 
