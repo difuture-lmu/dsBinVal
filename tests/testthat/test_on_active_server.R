@@ -84,11 +84,13 @@ test_that("all methods can be used and produce reasonable output", {
     expect_equal(names(r), c("session_info", "pcks"))
   })
 
-  cc = expect_message(dsCalibrationCurve(connections, "valid", "pred", 10, 3))
+  # Weird, sometimes it complains that message is printed and sometimes that it does
+  # not produce messages ...
+  cc = expect_silent(dsCalibrationCurve(connections, "valid", "pred", 10, 3))
   expect_output(print(cc))
 
   expect_error(brierScore(connections, 1, 2))
-  bs = expect_message(dsBrierScore(connections, "valid", "pred"))
+  bs = expect_silent(dsBrierScore(connections, "valid", "pred"))
   expect_true(is.numeric(bs))
 
   gg_cc = expect_silent(plot(cc))

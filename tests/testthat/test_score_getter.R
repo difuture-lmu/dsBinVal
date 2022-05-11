@@ -37,11 +37,10 @@ test_that("score variances can be calculated", {
 })
 
 test_that("score getter works", {
-  truth <<- rep(c(0, 1), 5)
-  score <<- rnorm(10)
-
   expect_error(getPositiveScores("truth", "score"))
 
+  truth <<- rep(c(0, 1), 5)
+  score <<- rnorm(10)
   l2s <<- 0.01
 
   expect_silent({s1 = getPositiveScores("truth", "score", seed_object = "l2s", sort = TRUE)})
