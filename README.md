@@ -1,31 +1,30 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![Actions
-Status](https://github.com/difuture-lmu/dsROCGLM/workflows/R-CMD-check/badge.svg)](https://github.com/difuture-lmu/dsROCGLM/actions)
+[![R-CMD-check](https://github.com/difuture-lmu/dsBinVal/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/difuture-lmu/dsBinVal/actions/workflows/R-CMD-check.yaml)
 [![License: LGPL
 v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
-[![codecov](https://codecov.io/gh/difuture-lmu/dsROCGLM/branch/main/graph/badge.svg?token=E8AZRM6XJX)](https://codecov.io/gh/difuture-lmu/dsROCGLM)
+[![codecov](https://codecov.io/gh/difuture-lmu/dsBinVal/branch/main/graph/badge.svg?token=E8AZRM6XJX)](https://codecov.io/gh/difuture-lmu/dsBinVal)
 
-# ROC-GLM for DataSHIELD
+# ROC-GLM and Calibration for DataSHIELD
 
 The package provides functionality to conduct and visualize ROC analysis
-on decentralized data. The basis is the
+and calibration on decentralized data. The basis is the
 DataSHIELD\](<https://www.datashield.org/>) infrastructure for
 distributed computing. This package provides the calculation of the
-[**ROC-GLM**](https://www.jstor.org/stable/2676973?seq=1) as well as
-[**AUC confidence
-intervals**](https://www.jstor.org/stable/2531595?seq=1). In order to
-calculate the ROC-GLM it is necessry to push models and predict them at
-the servers. This is done automatically by the base package
-[`dsPredictBase`](https://github.com/difuture-lmu/dsPredictBase). Note
+[**ROC-GLM**](https://www.jstor.org/stable/2676973?seq=1) with [**AUC
+confidence intervals**](https://www.jstor.org/stable/2531595?seq=1) as
+well as calibration curves and the brier score. In order to calculate
+the ROC-GLM or assess calibration it is necessary to push models and
+predict them at the servers which is also provided by this package. Note
 that DataSHIELD uses an option `datashield.privacyLevel` to indicate the
 minimal amount of numbers required to be allowed to share an aggregated
 value of these numbers. Instead of setting the option, we directly
 retrieve the privacy level from the
-[`DESCRIPTION`](https://github.com/difuture-lmu/dsROCGLM/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/difuture-lmu/dsBinVal/blob/master/DESCRIPTION)
 file each time a function calls for it. This options is set to 5 by
-default.
+default. The methodology is explained in detail
+[here](https://arxiv.org/abs/2203.10828).
 
 ## Installation
 
@@ -33,7 +32,7 @@ At the moment, there is no CRAN version available. Install the
 development version from GitHub:
 
 ``` r
-remotes::install_github("difuture-lmu/dsROCGLM")
+remotes::install_github("difuture-lmu/dsBinVal")
 ```
 
 #### Register methods
@@ -41,7 +40,7 @@ remotes::install_github("difuture-lmu/dsROCGLM")
 It is necessary to register the assign and aggregate methods in the OPAL
 administration. These methods are registered automatically when
 publishing the package on OPAL (see
-[`DESCRIPTION`](https://github.com/difuture/dsROCGLM/blob/main/DESCRIPTION)).
+[`DESCRIPTION`](https://github.com/difuture-lmu/dsBinVal/blob/main/DESCRIPTION)).
 
 Note that the package needs to be installed at both locations, the
 server and the analysts machine.
@@ -60,8 +59,7 @@ library(DSOpal)
 #> Loading required package: httr
 library(dsBaseClient)
 
-library(dsPredictBase)
-library(dsROCGLM)
+library(dsBinVal)
 ```
 
 #### Log into DataSHIELD server
@@ -95,7 +93,8 @@ connections = datashield.login(logins = builder$build(), assign = TRUE)
 
 ``` r
 datashield.assign(connections, "iris", quote(iris))
-datashield.assign(connections, "y", quote(c(rep(1, 50), rep(0, 100))))
+vcall = paste0("quote(c(", paste(rep(c(1, 0), times = c(50, 100)), collapse = ", "), "))")
+datashield.assign(connections, "y", eval(parse(text = vcall)))
 ```
 
 #### Load test model, push to DataSHIELD, and calculate predictions
@@ -144,36 +143,36 @@ l2s
 roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
   dat_name = "iris", seed_object = "y")
 #> 
-#> [2022-04-04 12:47:46] L2 sensitivity is: 0.1281
+#> [2022-05-11 09:59:57] L2 sensitivity is: 0.1281
 #> Warning in dsROCGLM(connections, truth_name = "y", pred_name = "pred", dat_name
 #> = "iris", : l2-sensitivity may be too high for good results! Epsilon = 0.5 and
 #> delta = 0.5 is used which may lead to bad results.
 #> 
-#> [2022-04-04 12:47:47] Setting: epsilon = 0.5 and delta = 0.5
+#> [2022-05-11 09:59:58] Setting: epsilon = 0.5 and delta = 0.5
 #> 
-#> [2022-04-04 12:47:47] Initializing ROC-GLM
+#> [2022-05-11 09:59:58] Initializing ROC-GLM
 #> 
-#> [2022-04-04 12:47:47] Host: Received scores of negative response
-#> [2022-04-04 12:47:47] Receiving negative scores
-#> [2022-04-04 12:47:49] Host: Pushing pooled scores
-#> [2022-04-04 12:47:50] Server: Calculating placement values and parts for ROC-GLM
-#> [2022-04-04 12:47:52] Server: Calculating probit regression to obtain ROC-GLM
-#> [2022-04-04 12:47:53] Deviance of iter1=137.2431
-#> [2022-04-04 12:47:54] Deviance of iter2=121.5994
-#> [2022-04-04 12:47:56] Deviance of iter3=147.7237
-#> [2022-04-04 12:47:57] Deviance of iter4=140.4008
-#> [2022-04-04 12:47:58] Deviance of iter5=129.2244
-#> [2022-04-04 12:48:00] Deviance of iter6=123.9979
-#> [2022-04-04 12:48:01] Deviance of iter7=123.1971
-#> [2022-04-04 12:48:02] Deviance of iter8=124.1615
-#> [2022-04-04 12:48:04] Deviance of iter9=124.5356
-#> [2022-04-04 12:48:05] Deviance of iter10=124.5503
-#> [2022-04-04 12:48:06] Deviance of iter11=124.5504
-#> [2022-04-04 12:48:08] Deviance of iter12=124.5504
-#> [2022-04-04 12:48:08] Host: Finished calculating ROC-GLM
-#> [2022-04-04 12:48:08] Host: Cleaning data on server
-#> [2022-04-04 12:48:09] Host: Calculating AUC and CI
-#> [2022-04-04 12:48:18] Finished!
+#> [2022-05-11 09:59:58] Host: Received scores of negative response
+#> [2022-05-11 09:59:58] Receiving negative scores
+#> [2022-05-11 09:59:59] Host: Pushing pooled scores
+#> [2022-05-11 10:00:00] Server: Calculating placement values and parts for ROC-GLM
+#> [2022-05-11 10:00:00] Server: Calculating probit regression to obtain ROC-GLM
+#> [2022-05-11 10:00:01] Deviance of iter1=137.2431
+#> [2022-05-11 10:00:02] Deviance of iter2=121.5994
+#> [2022-05-11 10:00:03] Deviance of iter3=147.7237
+#> [2022-05-11 10:00:04] Deviance of iter4=140.4008
+#> [2022-05-11 10:00:04] Deviance of iter5=129.2244
+#> [2022-05-11 10:00:05] Deviance of iter6=123.9979
+#> [2022-05-11 10:00:06] Deviance of iter7=123.1971
+#> [2022-05-11 10:00:07] Deviance of iter8=124.1615
+#> [2022-05-11 10:00:07] Deviance of iter9=124.5356
+#> [2022-05-11 10:00:08] Deviance of iter10=124.5503
+#> [2022-05-11 10:00:09] Deviance of iter11=124.5504
+#> [2022-05-11 10:00:10] Deviance of iter12=124.5504
+#> [2022-05-11 10:00:10] Host: Finished calculating ROC-GLM
+#> [2022-05-11 10:00:10] Host: Cleaning data on server
+#> [2022-05-11 10:00:10] Host: Calculating AUC and CI
+#> [2022-05-11 10:00:16] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -187,9 +186,48 @@ plot(roc_glm)
 
 ![](Readme_files/unnamed-chunk-8-1.png)<!-- -->
 
+#### Assess calibration
+
+``` r
+dsBrierScore(connections, "y", "pred")
+#> [1] 0.07431599
+
+### Calculate and plot calibration curve:
+cc = dsCalibrationCurve(connections, "y", "pred", 10, 3)
+cc
+#> 
+#> Calibration curve:
+#> 
+#>  Number of shared values:
+#>            (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6] (0.6,0.7]
+#> n              140        30        12        14        12         2         0
+#> not_shared       0         0         0         0         0         2       NaN
+#>            (0.7,0.8] (0.8,0.9] (0.9,1]
+#> n                  8        38      44
+#> not_shared         8         0       0
+#> 
+#> Values of the calibration curve:
+#>              (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6]
+#> truth     0.00000000 0.2000000 0.0000000 0.2857143 0.8333333         0
+#> predicted 0.01074561 0.1312315 0.2395063 0.3457399 0.4699741         0
+#>           (0.6,0.7] (0.7,0.8] (0.8,0.9]   (0.9,1]
+#> truth           NaN         0 0.8421053 0.9090909
+#> predicted       NaN         0 0.8431611 0.9603714
+#> 
+#> 
+#> Missing values are indicated by the privacy level of 5.
+plot(cc)
+#> Warning: Removed 6 rows containing missing values (geom_point).
+#> Warning: Removed 6 row(s) containing missing values (geom_path).
+#> Warning: Removed 1 rows containing missing values (geom_point).
+#> Warning: Removed 1 row(s) containing missing values (geom_path).
+```
+
+![](Readme_files/unnamed-chunk-9-1.png)<!-- -->
+
 ## Deploy information:
 
-**Build by root (Darwin) on 2022-04-04 12:48:23.**
+**Build by root (Darwin) on 2022-05-11 10:00:20.**
 
 This readme is built automatically after each push to the repository.
 Hence, it also is a test if the functionality of the package works also
@@ -198,25 +236,23 @@ on the DataSHIELD servers. We also test these functionality in
 local and remote servers are as followed:
 
   - Local machine:
-      - `R` version: R version 4.1.3 (2022-03-10)
+      - `R` version: R version 4.2.0 (2022-04-22)
       - Version of DataSHELD client packages:
 
-| Package       | Version |
-| :------------ | :------ |
-| DSI           | 1.3.0   |
-| DSOpal        | 1.3.1   |
-| dsBaseClient  | 6.1.1   |
-| dsPredictBase | 0.0.1   |
-| dsROCGLM      | 1.0.0   |
+| Package      | Version |
+| :----------- | :------ |
+| DSI          | 1.4.0   |
+| DSOpal       | 1.3.1   |
+| dsBaseClient | 6.2.0   |
+| dsBinVal     | 1.0.0   |
 
   - Remote DataSHIELD machines:
-      - `R` version of ds1: R version 4.1.1 (2021-08-10)
-      - `R` version of ds2: R version 4.1.1 (2021-08-10)
+      - `R` version of ds1: R version 4.2.0 (2022-04-22)
+      - `R` version of ds2: R version 4.2.0 (2022-04-22)
       - Version of server packages:
 
-| Package       | ds1: Version | ds2: Version |
-| :------------ | :----------- | :----------- |
-| dsBase        | 6.1.1        | 6.1.1        |
-| resourcer     | 1.1.1        | 1.1.1        |
-| dsPredictBase | 0.0.1        | 0.0.1        |
-| dsROCGLM      | 1.0.0        | 1.0.0        |
+| Package   | ds1: Version | ds2: Version |
+| :-------- | :----------- | :----------- |
+| dsBase    | 6.2.0        | 6.2.0        |
+| resourcer | 1.2.0        | 1.2.0        |
+| dsBinVal  | 1.0.0        | 1.0.0        |
