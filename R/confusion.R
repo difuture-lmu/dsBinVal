@@ -45,8 +45,14 @@ confusion = function(truth_name, prob_name, threshold = 0.5) {
   cls_pred = ifelse(prob > threshold, 1, 0)
   conf = table(truth = truth, predicted = cls_pred)
 
-  if (any(conf < nfilter_privacy))
-    stop("Each entry in the confusion matrix must be smaller than the privacy level ", nfilter_privacy, ".")
+  tab_truth = table(truth)
+  tab_pred  = table(cls_pred)
+
+  if (any(tab_truth < nfilter_privacy))
+    stop("Each entry in the table of the truth values must be smaller than the privacy level ", nfilter_privacy, ".")
+
+  if (any(tab_pred < nfilter_privacy))
+    stop("Each entry in the table of the predicted classes must be smaller than the privacy level ", nfilter_privacy, ".")
 
   return(conf)
 }
