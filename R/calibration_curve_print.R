@@ -44,7 +44,7 @@ print.calibration.curve = function(x, ...) {
   cat("\n",
     "\n",
     "Missing values are indicated by the privacy level of ",
-    dsBinVal:::.getPrivacyLevel(),
+    .getPrivacyLevel(),
     ".\n",
     sep = "")
 
