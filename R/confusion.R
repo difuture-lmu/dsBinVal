@@ -48,12 +48,15 @@ confusion = function(truth_name, prob_name, threshold = 0.5) {
   tab_truth = table(truth)
   tab_pred  = table(cls_pred)
 
-  if (any(tab_truth < nfilter_privacy))
-    stop("Each entry in the table of the truth values must be smaller than the privacy level ", nfilter_privacy, ".")
+  if (any(tab_truth < nfilter_privacy)) {
+    stop("Each entry in the table of the truth values must be ",
+       "smaller than the privacy level ", nfilter_privacy, ".")
+  }
 
-  if (any(tab_pred < nfilter_privacy))
-    stop("Each entry in the table of the predicted classes must be smaller than the privacy level ", nfilter_privacy, ".")
-
+  if (any(tab_pred < nfilter_privacy)) {
+    stop("Each entry in the table of the predicted classes ",
+      "must be smaller than the privacy level ", nfilter_privacy, ".")
+  }
   return(conf)
 }
 
@@ -84,5 +87,37 @@ dsConfusion = function(connections, truth_name, pred_name, threshold = 0.5) {
 
   conf = Reduce("+", individuals)
 
-  return(conf)
+  tp = conf[1, 1]
+  fp = conf[2, 1]
+  fn = conf[2, 1]
+  tn = conf[2, 2]
+
+  np = tp + fn
+  nn = fp + tn
+
+  pn = fn + tn
+  pp = tp + fp
+
+  f1  = 2 * tp / (2 * tp + fp + fn)
+  acc = (tp + tn) / sum(conf)
+  npv = tn / pn
+  tpr = tp / np
+  tnr = tn / nn
+  fnr = fn / np
+  fpr = fp / nn
+
+  out = list(
+    confusion = conf,
+    measures = c(
+     npos = np,
+     nneg = nn,
+     f1   = f1,
+     acc  = acc,
+     npv  = npv,
+     tpr  = tpr,
+     tnr  = tnr,
+     fnr  = fnr,
+     fpr  = fpr))
+
+  return(out)
 }

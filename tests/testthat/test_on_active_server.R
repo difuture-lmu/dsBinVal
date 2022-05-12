@@ -41,6 +41,7 @@ test_that("all methods can be used and produce reasonable output", {
 
   datashield.assign(connections, "dat", quote(iris))
   vcall = paste0("quote(c(", paste(rep(c(1, 0), times = c(35, 115)), collapse = ", "), "))")
+  valid = rep(c(1, 0), times = c(35, 115))
   datashield.assign(connections, "valid", eval(parse(text = vcall)))
   pushObject(connections, mod)
   predictModel(connections, mod, "pred", "dat", predict_fun = "predict(mod, newdata = D, type = 'response')")
@@ -53,7 +54,12 @@ test_that("all methods can be used and produce reasonable output", {
     expect_equal(dss$`quantiles & mean`["75%"], quantile(p, 0.75))
   })
 
-  dsConfusion(connections, "valid", "pred", 0.5)
+  p_cls <<- ifelse(p > 0.5, 1, 0)
+  conf_local = table(truth = valid, predicted = p_cls)
+  expect_equal(confusion("valid", "p_cls"), conf_local)
+  conf = expect_silent(dsConfusion(connections, "valid", "pred"))
+  expect_equal(nrow(conf$confusion), 2)
+  expect_equal(nrow(conf$confusion), 2)
 
   expect_equal(l2sens("iris", "p", nbreaks = 30L)$l2sens, dsL2Sens(connections, "dat", "pred", nbreaks = 30L))
   expect_message({

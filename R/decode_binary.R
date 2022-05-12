@@ -19,7 +19,6 @@ decodeBinary = function(bin, package = NULL) {
     stop("Package '", package, "' is not installed. Please install",
       " it or contact the administrator to do this for you.")
   }
-
   binary_str_deparse = substring(bin, seq(1, nchar(bin), 2), seq(2, nchar(bin), 2))
 
   raw = as.raw(as.hexmode(binary_str_deparse))

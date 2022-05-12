@@ -21,7 +21,9 @@ pushObject = function(connections, obj, check_serialization = TRUE, package = NU
 
   # Checks are done in encodeObject:
   bin = encodeObject(obj, obj_name, check_serialization)
-  if (is.null(package)) package = "NULL" else packge = paste0("\"", package, "\"")
+
+  if (is.null(package))
+    package = "NULL" else packge = paste0("\"", package, "\"")
 
   call = paste0("decodeBinary(\"", bin, "\", ", package, ")")
   cq = NULL # Dummy for checks

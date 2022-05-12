@@ -47,7 +47,7 @@ checkTruthProb = function(truth_name, prob_name, pos = NULL) {
 
   if (is.null(pos)) {
     if (is.character(truth) | is.factor(truth)) {
-      warning("\"", truth_name, "\" is not enocded as 0-1 integer, conversion is done automatically.",
+      warning("\"", truth_name, "\" is not encoded as 0-1 integer, conversion is done automatically.",
         "This may lead to a label flip! Set argument \"pos\" to ensure correct encoding.")
     }
 
@@ -133,14 +133,18 @@ getPositiveScores = function(truth_name, prob_name, epsilon = 0.2, delta = 0.2,
   checkmate::assertLogical(sort, len = 1L)
 
   if (epsilon == 0) stop("Epsilon must be > 0")
-  if (delta == 0) stop("Delta must be > 0")
+  if (delta == 0)   stop("Delta must be > 0")
 
-  if (! "l2s" %in% c(ls(envir = .GlobalEnv), ls()))
-    stop("Cannot find l2 sensitivity. Please push an l2 sensitivity with name 'l2s' to the servers.")
+  if (! "l2s" %in% c(ls(envir = .GlobalEnv), ls())) {
+    stop("Cannot find l2 sensitivity. Please push an l2 ",
+      "sensitivity with name 'l2s' to the servers.")
+  }
 
   l2s = eval(parse(text = "l2s"))
   checkmate::assertNumeric(l2s, len = 1L, lower = 0)
-  if (l2s == 0) stop("L2 sensitivity must be > 0")
+
+  if (l2s == 0)
+    stop("L2 sensitivity must be > 0")
 
   truth = df_pred$truth
   prob  = df_pred$prob
@@ -151,7 +155,9 @@ getPositiveScores = function(truth_name, prob_name, epsilon = 0.2, delta = 0.2,
     pv  = prob[truth == 1]
   }
   sde = GMVar(l2s, epsilon, delta)
-  if (sde <= 0) stop("Standard deviation must be positive to ensure privacy!")
+
+  if (sde <= 0)
+    stop("Standard deviation must be positive to ensure privacy!")
 
   if (! is.null(seed_object)) {
     seed = seedBoundedToObject(seed_object)
