@@ -51,8 +51,8 @@ plotCalibrationCurve = function(cc, individuals = TRUE, ...) {
 #' @author Daniel S.
 #' @export
 plot.calibration.curve = function(x, ...) {
-  if (! inherits(cc, "calibration.curve"))
-    stop("cc must be of class calibration.curve")
+  if (! inherits(x, "calibration.curve"))
+    stop("x must be of class calibration.curve")
 
   plotCalibrationCurve(cc = x, ...)
 }

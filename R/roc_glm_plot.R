@@ -12,7 +12,7 @@
 #' @export
 plot.ROC.GLM = function(x, ...) {
 
-  if (! inherits(x, ROC.GLM))
+  if (! inherits(x, "ROC.GLM"))
     stop("x must be of class ROC.GLM")
 
   ll_args = list(...)

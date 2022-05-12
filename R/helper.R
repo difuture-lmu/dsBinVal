@@ -9,6 +9,14 @@
   return(pl)
 }
 
+.suppressDataSHIELDProgress = function(expr, suppress = TRUE) {
+  if (suppress) {
+    suppressMessages(expr)
+  } else {
+    eval(expr)
+  }
+}
+
 #' @title Get the session information of the DataSHIELD server
 #' @description This method returns `sessionInfo()` from the used DataSHIELD servers.
 #'   The main purpose is for testing and checking the environment used on the remote servers.

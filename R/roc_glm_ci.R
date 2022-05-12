@@ -17,7 +17,7 @@
 aucCI = function(connections, truth_name, pred_name, roc_glm, alpha = 0.05, epsilon = 0.2, delta = 0.2,
   seed_object = NULL) {
 
-  mns = ds.mean(truth_name, datasources = connections)
+  mns = dsBaseClient::ds.mean(truth_name, datasources = connections)
 
   n_neg = sum(mns$Mean.by.Study[,"Ntotal"] * (1 - mns$Mean.by.Study[, "EstimatedMean"]))
   n_pos = sum(mns$Mean.by.Study[,"Ntotal"] * mns$Mean.by.Study[, "EstimatedMean"])

@@ -54,7 +54,7 @@ l2sens = function(dat_name, scores_name, nbreaks = NULL, col_names = NULL, norm 
         return(stats::model.matrix(~ 0 + cl))
       }
     }))
-    l1n = as.matrix(dist(int_representation, method = "manhattan"))
+    l1n = as.matrix(stats::dist(int_representation, method = "manhattan"))
     mdist = min(l1n[l1n > 0])
     if (mdist > 1)
       warning("Was not able to found direct neighbour. Found l1 norm of ", mdist, " as closest inputs.")
@@ -105,7 +105,7 @@ dsL2Sens = function(connections, dat_name, pred_name, nbreaks = NULL, cols = NUL
   checkmate::assertLogical(drop_on_error, len = 1L)
 
   if (is.null(nbreaks)) {
-    ntotal = ds.dim(dat_name, type = "combined", datasources = connections)
+    ntotal = dsBaseClient::ds.dim(dat_name, type = "combined", datasources = connections)
     nbreaks = floor(ntotal[[1]][1] / 3)
   }
 
@@ -117,6 +117,6 @@ dsL2Sens = function(connections, dat_name, pred_name, nbreaks = NULL, cols = NUL
   l2s = as.data.frame(do.call(rbind, lapply(ll_l2s, function(x) {
     c(l2s = x$l2sens, l1n = x$l1n)
   })))
-  ds.rm("xXcols", connections)
+  dsBaseClient::ds.rm("xXcols", connections)
   return(max(l2s$l2s[min(l2s$l1n, na.rm = TRUE) == l2s$l1n], na.rm = TRUE))
 }

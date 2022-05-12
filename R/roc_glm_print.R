@@ -6,7 +6,7 @@
 #' @export
 print.ROC.GLM = function(x, ...) {
 
-  if (! inherits(x, ROC.GLM))
+  if (! inherits(x, "ROC.GLM"))
     stop("x must be of class ROC.GLM")
 
   roc_glm = x

@@ -1,5 +1,4 @@
 #' @title Printer for calibration curve objects
-#' @param
 #' @param x (`list()`) List containing the calibration curve object returned from `dsCalibrationCurve()`.
 #' @param ... Additional parameters (basically none, but CRAN forces us to do this in print).
 #' @author Daniel S.
