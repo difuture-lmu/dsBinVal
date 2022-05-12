@@ -1,4 +1,4 @@
-#'' @title Calculate Brier score
+#' @title Calculate Brier score
 #' @description This function calculates the Brier score for a given 0-1-vector and
 #'   vector of probabilities.
 #' @param truth_name (`character(1L)`) Character containing the name of the vector of 0-1-values

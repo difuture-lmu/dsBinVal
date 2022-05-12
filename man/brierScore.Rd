@@ -2,7 +2,7 @@
 % Please edit documentation in R/brier_score.R
 \name{brierScore}
 \alias{brierScore}
-\title{' @title Calculate Brier score}
+\title{Calculate Brier score}
 \usage{
 brierScore(truth_name, prob_name)
 }
