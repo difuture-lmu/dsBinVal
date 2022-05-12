@@ -1,11 +1,17 @@
 ---
 title: 'dsBinVal: Conducting distributed ROC analysis using DataSHIELD'
 tags:
-  - R
   - DataSHIELD
-  - distributed Computing
-  - medical tests
+  - distributed computing
+  - distributed analysis
+  - privacy-preserving
+  - diagnostic tests
+  - prognostic model
+  - model validation
   - ROC-GLM
+  - discrimination
+  - calibration
+  - Brier score
 authors:
   - name: Daniel Schalk
     orcid: 0000-0003-0950-1947
