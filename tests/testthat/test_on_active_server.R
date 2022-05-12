@@ -41,7 +41,7 @@ test_that("all methods can be used and produce reasonable output", {
 
   datashield.assign(connections, "dat", quote(iris))
   vcall = paste0("quote(c(", paste(rep(c(1, 0), times = c(35, 115)), collapse = ", "), "))")
-  valid = rep(c(1, 0), times = c(35, 115))
+  valid <<- rep(c(1, 0), times = c(35, 115))
   datashield.assign(connections, "valid", eval(parse(text = vcall)))
   pushObject(connections, mod)
   predictModel(connections, mod, "pred", "dat", predict_fun = "predict(mod, newdata = D, type = 'response')")

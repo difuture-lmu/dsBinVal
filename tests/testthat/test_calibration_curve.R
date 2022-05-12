@@ -58,6 +58,7 @@ test_that("plotCalibrationCurve works", {
     upper = individuals[[1]]$upper, truth = truth, prob = prob)
 
   llcc = list(individuals = individuals, aggregated = aggregated)
+  class(llcc) = "calibration.curve"
 
   expect_error(plotCalibrationCurve("x"))
   expect_error(plotCalibrationCurve(llcc, individuals = "no"))
