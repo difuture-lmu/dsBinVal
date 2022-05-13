@@ -28,13 +28,10 @@ Imports:
     stringr,
     digest
 Suggests:
-    dsBaseClient,
     DSOpal,
     ggplot2,
     testthat,
     opalr
-Remotes:
-    datashield/dsBaseClient
 AggregateMethods:
     calculateDistrGLMParts,
     getNegativeScoresVar,
