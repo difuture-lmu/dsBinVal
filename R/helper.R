@@ -17,6 +17,15 @@
   }
 }
 
+.tryOPALConnection = function(expr) {
+  conns = try(expr, silent = TRUE)
+  if (inherits(conns, "opal")) {
+    return(conns)
+  } else {
+    return("Was not able to establish connection")
+  }
+}
+
 #' @title Get the session information of the DataSHIELD server
 #' @description This method returns `sessionInfo()` from the used DataSHIELD servers.
 #'   The main purpose is for testing and checking the environment used on the remote servers.

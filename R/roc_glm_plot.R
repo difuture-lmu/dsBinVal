@@ -31,7 +31,7 @@ plot.ROC.GLM = function(x, ...) {
   df_plt = data.frame(TPR = y, FPR = x)
 
   gg = ggplot2::ggplot() +
-    ggplot2::geom_line(data = df_plt, ggplot2::aes_string(x = "FPR", y = "TPR"), size = 1.5) +
+    ggplot2::geom_line(data = df_plt, aes = ggplot2::aes_string(x = "FPR", y = "TPR"), size = 1.5) +
     ggplot2::geom_abline(slope = 1, col = "gray", alpha = 0.9, linetype = "dashed") +
     ggplot2::ggtitle("ROC Curve", "Approximation via ROC-GLM")
 

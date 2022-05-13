@@ -39,7 +39,9 @@ predictModel = function(connections, mod, pred_name, dat_name = "D", predict_fun
 
     snames = names(sym)
     for (s in snames) {
-      if (! dat_name %in% sym[[s]]) stop("There is no data object '", dat_name, "' on server '", s, "'.")
+      if (! dat_name %in% sym[[s]]) {
+        stop("There is no data object '", dat_name, "' on server '", s, "'.")
+      }
     }
   }
 
@@ -69,4 +71,6 @@ predictModel = function(connections, mod, pred_name, dat_name = "D", predict_fun
 #' @return Vector of predictions
 #' @author Daniel S.
 #' @export
-assignPredictModel = function(bin_call) eval(parse(text = decodeBinary(bin_call)))
+assignPredictModel = function(bin_call) {
+  eval(parse(text = decodeBinary(bin_call)))
+}

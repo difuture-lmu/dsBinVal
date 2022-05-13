@@ -31,10 +31,12 @@ encodeObject = function(obj, obj_name = NULL, check_serialization = TRUE) {
       stop("Model cannot serialized and deserialized into equal object!")
   }
 
-  osize = utils::object.size(obj_binary_str_collapsed) / 1024^2
-  if (osize > 1) {
-    message("[", Sys.time(), "] Your object is bigger than 1 MB (", round(osize, 1),
-      " MB). Uploading larger objects may take some time.")
+  osize_bytes = utils::object.size(obj_binary_str_collapsed)
+  osize_mb    = osize_bytes / 1024^2
+  osize_mbr   = round(osize_mb, 1)
+  if (osize_mb > 1) {
+    message("[", Sys.time(), "] Your object is bigger than 1 MB (",
+      osize_mb, " MB). Uploading larger objects may take some time.")
   }
   names(obj_binary_str_collapsed) = obj_name
 

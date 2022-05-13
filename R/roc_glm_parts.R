@@ -39,7 +39,11 @@ calcU = function(tset, pv) {
   checkmate::assertNumeric(pv, any.missing = FALSE)
 
   tset_sorted = sort(tset)
-  out = vapply(X = tset, FUN.VALUE = integer(length(pv)), FUN = function(th) ifelse(pv <= th, 1L, 0L))
+  out = vapply(
+    X         = tset,
+    FUN.VALUE = integer(length(pv)),
+    FUN       = function(th) ifelse(pv <= th, 1L, 0L))
+
   return(out)
 }
 
@@ -56,7 +60,7 @@ rocGLMData = function(U, tset) {
   roc_glm_data = data.frame(
     y = rep(c(0, 1), times = length(tset)),
     x = rep(stats::qnorm(tset), each = 2L),
-    w = as.vector(apply(U, 2, function(x) c(sum(x == 0), sum(x == 1))))
+    w = as.vector(apply(X = U, MARGIN = 2, FUN = function(x) c(sum(x == 0), sum(x == 1))))
   )
   return(roc_glm_data)
 }
@@ -111,19 +115,19 @@ calculateDistrGLMParts = function(formula, data,  w = NULL, params_char) {
 
   eval(parse(text = paste0("X = model.matrix(", fm, ", data = ", data, ")")))
   eval(parse(text = paste0("y = as.integer(", data, "[['", target, "']])")))
-  if (max(y) == 2)
-    y = y - 1
-
+  if (max(y) == 2) y = y - 1
 
   if (!is.null(w)) {
-    eval(parse(text = paste0("w = ", data, "[['", w, "']]")))
+    wget = paste0("w = ", data, "[['", w, "']]")
+    eval(parse(text = wget))
   } else {
     w = rep(1, length(y))
   }
+
   if (params_char == "xxx") {
     beta = rep(0, ncol(X))
   } else {
-    beta = unlist(lapply(strsplit(params_char, "xnx")[[1]], FUN = function(p) {
+    beta = unlist(lapply(X = strsplit(params_char, "xnx")[[1]], FUN = function(p) {
       sp = strsplit(p, "xex")
       params = vapply(sp, FUN.VALUE = numeric(1L), function(s) as.numeric(s[2]))
       names(params) = vapply(sp, FUN.VALUE = character(1L), function(s) s[1])
@@ -146,7 +150,11 @@ calculateDistrGLMParts = function(formula, data,  w = NULL, params_char) {
   xtx = t(X) %*% W %*% X
   xy = t(X) %*% lambda
 
-  out = list(XtX = xtx, Xy = xy, likelihood = probitLikelihood(y, X, beta))
+  out = list(
+    XtX = xtx,
+    Xy = xy,
+    likelihood = probitLikelihood(y, X, beta))
+
   return(out)
 }
 
@@ -164,6 +172,7 @@ calculateLambda = function(y, X, beta) {
 
   if (nrow(X) != length(y))
     stop("nrows of X must be the same length of y")
+
   if (ncol(X) != length(beta))
     stop("ncols of X must be the same length of beta")
 
@@ -171,7 +180,8 @@ calculateLambda = function(y, X, beta) {
   q = 2 * y - 1
   qeta = q * eta
 
-  return((stats::dnorm(qeta) * q) / (stats::pnorm(qeta)))
+  lambda = (stats::dnorm(qeta) * q) / (stats::pnorm(qeta))
+  return(lambda)
 }
 
 #' @title Calculate Likelihood of Probit Model
@@ -190,6 +200,7 @@ probitLikelihood = function(y, X, beta, w = NULL) {
 
   if (nrow(X) != length(y))
     stop("nrows of X must be the same length of y")
+
   if (ncol(X) != length(beta))
     stop("ncols of X must be the same length of beta")
 
@@ -199,7 +210,7 @@ probitLikelihood = function(y, X, beta, w = NULL) {
     w = rep(1, times = nrow(X))
   }
   lh = stats::pnorm(eta)^y * (1 - stats::pnorm(eta))^(1 - y)
-  prod(lh^w)
+  return(prod(lh^w))
 }
 
 #'
@@ -215,7 +226,10 @@ calculateAUC = function(roc_glm) {
     stop("roc_glm must be of class ROC.GLM")
 
   params = roc_glm$parameter
-  temp = function(x) stats::pnorm(params[1] + params[2] * stats::qnorm(x))
+  temp = function(x) {
+    stats::pnorm(params[1] + params[2] * stats::qnorm(x))
+  }
   int = stats::integrate(f = temp, lower = 0, upper = 1)
+
   return(int$value)
 }

@@ -19,8 +19,11 @@ aucCI = function(connections, truth_name, pred_name, roc_glm, alpha = 0.05, epsi
 
   mns = dsBaseClient::ds.mean(truth_name, datasources = connections)
 
-  n_neg = sum(mns$Mean.by.Study[,"Ntotal"] * (1 - mns$Mean.by.Study[, "EstimatedMean"]))
-  n_pos = sum(mns$Mean.by.Study[,"Ntotal"] * mns$Mean.by.Study[, "EstimatedMean"])
+  ntotal = mns$Mean.by.Study[,"Ntotal"]
+  nmean  = mns$Mean.by.Study[, "EstimatedMean"]
+
+  n_neg = sum(ntotal * (1 - nmean))
+  n_pos = sum(ntotal * nmean)
 
   checkmate::assertCharacter(seed_object, null.ok = TRUE, len = 1L)
 
@@ -58,8 +61,10 @@ aucCI = function(connections, truth_name, pred_name, roc_glm, alpha = 0.05, epsi
   s_nond = function(x) 1 - stats::ecdf(pooled_n_scores)(x)
 
   # Variance of empirical auc after DeLong:
-  var_auc = stats::var(s_d(pooled_n_scores)) / length(pooled_n_scores) +
-    stats::var(s_nond(pooled_p_scores)) / length(pooled_p_scores)
+  varn = stats::var(s_d(pooled_n_scores))
+  varp = stats::var(s_nond(pooled_p_scores))
+
+  var_auc = varn / length(pooled_n_scores) + varp / length(pooled_p_scores)
 
   quant = stats::qnorm(1 - alpha / 2)
   lauc  = log(auc / (1 - auc))

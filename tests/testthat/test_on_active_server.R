@@ -1,4 +1,3 @@
-if (FALSE) {
 context("Check if functionality works on the DataSHIELD test sever")
 
 test_that("all methods can be used and produce reasonable output", {
@@ -14,11 +13,13 @@ test_that("all methods can be used and produce reasonable output", {
   username = "administrator"
   password = "password"
 
-  opal = opalr::opal.login(username = username, password = password, url = surl)
+  opal = expect_silent(dsBinVal::.tryOPALConnection(opalr::opal.login(username = username, password = password, url = surl)))
 
   # Check if package can be installed:
   expect_true(opalr::dsadmin.install_github_package(opal = opal, pkg = "dsBinVal", username = "difuture-lmu", ref = "main"))
   expect_true(opalr::dsadmin.publish_package(opal = opal, pkg = "dsBinVal"))
+
+  opalr::opal.logout(opal, save = FALSE)
 
   library(DSI)
   library(DSOpal)
@@ -106,4 +107,3 @@ test_that("all methods can be used and produce reasonable output", {
 
   datashield.logout(connections)
 })
-}
