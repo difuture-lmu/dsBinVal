@@ -53,7 +53,7 @@ test_that("all methods can be used and produce reasonable output", {
     expect_equal(dsBinVal:::.dsNcol(connections, "iris"), ncol(iris))
     expect_equal(dsBinVal:::.dsNrow(connections, "iris"), nrow(iris) * 2)
     expect_equal(dsBinVal:::.dsMean(connections, "valid"), mean(valid))
-    expect_equal(dsBinVal:::.dsLength(connections, "valid"), length(valid))
+    expect_equal(dsBinVal:::.dsLength(connections, "valid"), length(valid) * 2)
 
     ds_summary = ds.summary("pred")
     nuisance = lapply(ds_summary, function(dss) {
