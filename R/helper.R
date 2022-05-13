@@ -80,8 +80,7 @@ getDataSHIELDInfo = function() {
   llm = DSI::datashield.aggregate(conns = connections, cl)
   m = Reduce("+", llm)
 
-  cl = paste0("internLength(\"", symbol, "\")")
-  n = .dsLength(conns = connections, cl)
+  n = .dsLength(conns = connections, symbol)
 
   checkmate::assertNumeric(m, len = 1L)
 
