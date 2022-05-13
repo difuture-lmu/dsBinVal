@@ -77,7 +77,8 @@ test_that("all methods can be used and produce reasonable output", {
   }))
   expect_equal(roc_glm, roc_glm2)
 
-  gg = expect_silent(suppressMessages(plot(roc_glm)))
+  # Suppress ggplot warnings:
+  gg = expect_silent(suppressWarnings(suppressMessages(plot(roc_glm))))
   expect_true(inherits(gg, "ggplot"))
   expect_output(print(roc_glm))
 

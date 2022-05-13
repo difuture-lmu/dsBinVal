@@ -172,13 +172,14 @@ dsROCGLM = function(connections, truth_name, pred_name, trace = TRUE, clean_serv
   if (trace)
     message("[", Sys.time(), "] Host: Calculating AUC and CI")
 
+  class(roc_glm) = "ROC.GLM"
+
   roc_glm$auc = calculateAUC(roc_glm)
   roc_glm$ci = aucCI(connections, truth_name, pred_name, roc_glm, alpha = alpha,
     epsilon = epsilon, delta = delta, seed_object = seed_object)
   roc_glm$alpha = alpha
   roc_glm$privacy_pars = c(epsilon = epsilon, delta = delta, l2s = l2s)
 
-  class(roc_glm) = "ROC.GLM"
 
   if (trace)
     message("[", Sys.time(), "] Finished!")
