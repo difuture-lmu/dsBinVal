@@ -78,7 +78,7 @@ getDataSHIELDInfo = function() {
   cl = paste0("internMean(\"", symbol, "\")")
 
   llm = DSI::datashield.aggregate(conns = connections, cl)
-  m = Reduce("+", lln)
+  m = Reduce("+", llm)
 
   checkmate::assertNumeric(m, len = 1L)
 
@@ -90,7 +90,7 @@ getDataSHIELDInfo = function() {
 
   cl = paste0("internLength(\"", symbol, "\")")
 
-  llm = DSI::datashield.aggregate(conns = connections, cl)
+  lln = DSI::datashield.aggregate(conns = connections, cl)
   n = Reduce("+", lln)
 
   checkmate::assertIntegerish(n, len = 1L)
