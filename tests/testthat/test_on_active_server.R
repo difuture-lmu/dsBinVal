@@ -24,7 +24,6 @@ test_that("all methods can be used and produce reasonable output", {
 
     library(DSI)
     library(DSOpal)
-    library(dsBaseClient)
 
     builder = newDSLoginBuilder()
 
@@ -37,8 +36,8 @@ test_that("all methods can be used and produce reasonable output", {
     builder$append(
       server   = "ds-test-server-dummy2",
       url      = surl,
-      user     = username,
       password = password
+      user     = username,
     )
     connections <<- datashield.login(logins = builder$build(), assign = TRUE)
 
