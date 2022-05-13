@@ -77,13 +77,15 @@ getDataSHIELDInfo = function() {
   checkmate::assertCharacter(symbol)
 
   cl = paste0("internMean(\"", symbol, "\")")
-
   llm = DSI::datashield.aggregate(conns = connections, cl)
   m = Reduce("+", llm)
 
+  cl = paste0("internLength(\"", symbol, "\")")
+  n = .dsLength(conns = connections, cl)
+
   checkmate::assertNumeric(m, len = 1L)
 
-  return(m)
+  return(m / n)
 }
 
 .dsLength = function(connections, symbol = "D") {
