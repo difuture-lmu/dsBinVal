@@ -76,7 +76,7 @@ getDataSHIELDInfo = function() {
 .dsMean = function(connections, symbol = "D") {
   checkmate::assertCharacter(symbol)
 
-  cl = paste0("internMean(\"", symbol, "\")")
+  cl = paste0("internSum(\"", symbol, "\")")
   llm = DSI::datashield.aggregate(conns = connections, cl)
   m = Reduce("+", llm)
 
@@ -136,13 +136,13 @@ internDim = function(symbol = "D") {
   return(ddim)
 }
 
-#' @title Get mean of vector
+#' @title Get sum of vector
 #' @param symbol (`character(1L)`) \cr
 #'   Name of the variable at the DataSHIELD server.
-#' @return mean
+#' @return sum
 #' @author Daniel S.
 #' @export
-internMean = function(symbol) {
+internSum = function(symbol) {
   x = eval(parse(text = symbol), envir = .GlobalEnv)
   checkmate::assertNumeric(x)
 
@@ -150,7 +150,7 @@ internMean = function(symbol) {
   if (length(x) < nfilter_privacy)
     stop(symbol, " must have more than ", nfilter_privacy, " rows")
 
-  mout = mean(x)
+  mout = sum(x)
   return(mout)
 }
 

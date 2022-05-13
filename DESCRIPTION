@@ -48,7 +48,7 @@ AggregateMethods:
     confusion,
     internN,
     internDim,
-    internMean,
+    internSum,
     internLength
 AssignMethods:
     rocGLMFrame,
