@@ -49,6 +49,12 @@ test_that("all methods can be used and produce reasonable output", {
     pushObject(connections, mod)
     predictModel(connections, mod, "pred", "dat", predict_fun = "predict(mod, newdata = D, type = 'response')")
 
+    expect_equal(dsBinVal:::.dsDim(connections, "iris"), dim(iris) * c(2, 1))
+    expect_equal(dsBinVal:::.dsNcol(connections, "iris"), ncol(iris))
+    expect_equal(dsBinVal:::.dsNrow(connections, "iris"), nrow(iris) * 2)
+    expect_equal(dsBinVal:::.dsMean(connections, "valid"), mean(valid))
+    expect_equal(dsBinVal:::.dsLength(connections, "valid"), length(valid))
+
     ds_summary = ds.summary("pred")
     nuisance = lapply(ds_summary, function(dss) {
       expect_equal(unname(dss$`quantiles & mean`["Mean"]), mean(p))

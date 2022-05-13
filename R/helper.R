@@ -47,6 +47,7 @@ getDataSHIELDInfo = function() {
   cl = paste0("internDim(\"", symbol, "\")")
   lldim = DSI::datashield.aggregate(conns = connections, cl)
   ddim = Reduce("+", lldim)
+  ddim[2] = lldim[[1]][2]
 
   checkmate::assertIntegerish(ddim)
 
