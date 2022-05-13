@@ -111,7 +111,7 @@ calculateDistrGLMParts = function(formula, data,  w = NULL, params_char) {
     checkmate::assertCharacter(formula, len = 1L)
   }
   checkmate::assertCharacter(data, len = 1L, any.missing = FALSE)
-  checkmate::assertNumeric(w, null.ok = TRUE, any.missing = FALSE)
+  checkmate::assertCharacter(w, null.ok = TRUE, len = 1L, any.missing = FALSE)
   checkmate::assertCharacter(params_char, len = 1L, any.missing = FALSE)
 
   fm = format(formula)
