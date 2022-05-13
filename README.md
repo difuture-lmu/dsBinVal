@@ -143,36 +143,36 @@ l2s
 roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
   dat_name = "iris", seed_object = "y")
 #> 
-#> [2022-05-11 09:59:57] L2 sensitivity is: 0.1281
+#> [2022-05-13 14:03:37] L2 sensitivity is: 0.1281
 #> Warning in dsROCGLM(connections, truth_name = "y", pred_name = "pred", dat_name
 #> = "iris", : l2-sensitivity may be too high for good results! Epsilon = 0.5 and
 #> delta = 0.5 is used which may lead to bad results.
 #> 
-#> [2022-05-11 09:59:58] Setting: epsilon = 0.5 and delta = 0.5
+#> [2022-05-13 14:03:37] Setting: epsilon = 0.5 and delta = 0.5
 #> 
-#> [2022-05-11 09:59:58] Initializing ROC-GLM
+#> [2022-05-13 14:03:37] Initializing ROC-GLM
 #> 
-#> [2022-05-11 09:59:58] Host: Received scores of negative response
-#> [2022-05-11 09:59:58] Receiving negative scores
-#> [2022-05-11 09:59:59] Host: Pushing pooled scores
-#> [2022-05-11 10:00:00] Server: Calculating placement values and parts for ROC-GLM
-#> [2022-05-11 10:00:00] Server: Calculating probit regression to obtain ROC-GLM
-#> [2022-05-11 10:00:01] Deviance of iter1=137.2431
-#> [2022-05-11 10:00:02] Deviance of iter2=121.5994
-#> [2022-05-11 10:00:03] Deviance of iter3=147.7237
-#> [2022-05-11 10:00:04] Deviance of iter4=140.4008
-#> [2022-05-11 10:00:04] Deviance of iter5=129.2244
-#> [2022-05-11 10:00:05] Deviance of iter6=123.9979
-#> [2022-05-11 10:00:06] Deviance of iter7=123.1971
-#> [2022-05-11 10:00:07] Deviance of iter8=124.1615
-#> [2022-05-11 10:00:07] Deviance of iter9=124.5356
-#> [2022-05-11 10:00:08] Deviance of iter10=124.5503
-#> [2022-05-11 10:00:09] Deviance of iter11=124.5504
-#> [2022-05-11 10:00:10] Deviance of iter12=124.5504
-#> [2022-05-11 10:00:10] Host: Finished calculating ROC-GLM
-#> [2022-05-11 10:00:10] Host: Cleaning data on server
-#> [2022-05-11 10:00:10] Host: Calculating AUC and CI
-#> [2022-05-11 10:00:16] Finished!
+#> [2022-05-13 14:03:37] Host: Received scores of negative response
+#> [2022-05-13 14:03:37] Receiving negative scores
+#> [2022-05-13 14:03:38] Host: Pushing pooled scores
+#> [2022-05-13 14:03:39] Server: Calculating placement values and parts for ROC-GLM
+#> [2022-05-13 14:03:40] Server: Calculating probit regression to obtain ROC-GLM
+#> [2022-05-13 14:03:41] Deviance of iter1=137.2431
+#> [2022-05-13 14:03:41] Deviance of iter2=121.5994
+#> [2022-05-13 14:03:42] Deviance of iter3=147.7237
+#> [2022-05-13 14:03:43] Deviance of iter4=140.4008
+#> [2022-05-13 14:03:44] Deviance of iter5=129.2244
+#> [2022-05-13 14:03:45] Deviance of iter6=123.9979
+#> [2022-05-13 14:03:45] Deviance of iter7=123.1971
+#> [2022-05-13 14:03:46] Deviance of iter8=124.1615
+#> [2022-05-13 14:03:47] Deviance of iter9=124.5356
+#> [2022-05-13 14:03:48] Deviance of iter10=124.5503
+#> [2022-05-13 14:03:49] Deviance of iter11=124.5504
+#> [2022-05-13 14:03:49] Deviance of iter12=124.5504
+#> [2022-05-13 14:03:49] Host: Finished calculating ROC-GLM
+#> [2022-05-13 14:03:49] Host: Cleaning data on server
+#> [2022-05-13 14:03:50] Host: Calculating AUC and CI
+#> [2022-05-13 14:03:57] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -216,6 +216,7 @@ cc
 #> 
 #> 
 #> Missing values are indicated by the privacy level of 5.
+
 plot(cc)
 #> Warning: Removed 6 rows containing missing values (geom_point).
 #> Warning: Removed 6 row(s) containing missing values (geom_path).
@@ -227,7 +228,7 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2022-05-11 10:00:20.**
+**Build by root (Darwin) on 2022-05-13 14:04:01.**
 
 This readme is built automatically after each push to the repository.
 Hence, it also is a test if the functionality of the package works also
@@ -244,7 +245,7 @@ local and remote servers are as followed:
 | DSI          | 1.4.0   |
 | DSOpal       | 1.3.1   |
 | dsBaseClient | 6.2.0   |
-| dsBinVal     | 1.0.0   |
+| dsBinVal     | 1.0.1   |
 
   - Remote DataSHIELD machines:
       - `R` version of ds1: R version 4.2.0 (2022-04-22)
@@ -255,4 +256,4 @@ local and remote servers are as followed:
 | :-------- | :----------- | :----------- |
 | dsBase    | 6.2.0        | 6.2.0        |
 | resourcer | 1.2.0        | 1.2.0        |
-| dsBinVal  | 1.0.0        | 1.0.0        |
+| dsBinVal  | 1.0.1        | 1.0.1        |
