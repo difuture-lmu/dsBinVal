@@ -1,6 +1,6 @@
-context("Check if predict works locally")
+context("Check internal helper")
 
-test_that("Predict works locally", {
+test_that("internals are returning the same as the R base pendants", {
 
   expect_silent(dsBinVal:::.rmGlobalEnv())
 
