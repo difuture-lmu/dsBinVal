@@ -36,8 +36,8 @@ test_that("all methods can be used and produce reasonable output", {
     builder$append(
       server   = "ds-test-server-dummy2",
       url      = surl,
-      password = password
       user     = username,
+      password = password
     )
     connections <<- datashield.login(logins = builder$build(), assign = TRUE)
 
