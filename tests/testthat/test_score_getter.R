@@ -2,6 +2,8 @@ context("Test if score getter are working properly")
 
 test_that("test truth prob checker", {
 
+  expect_silent(dsBinVal:::.rmGlobalEnv())
+
   truth <<- rep(c(0, 1), 5)
   score <<- rnorm(10)
   truth2 <<- LETTERS[truth + 1]

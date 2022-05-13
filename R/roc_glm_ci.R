@@ -17,10 +17,14 @@
 aucCI = function(connections, truth_name, pred_name, roc_glm, alpha = 0.05, epsilon = 0.2, delta = 0.2,
   seed_object = NULL) {
 
-  mns = dsBaseClient::ds.mean(truth_name, datasources = connections)
+  #mns = dsBaseClient::ds.mean(truth_name, datasources = connections)
+  #mns = dsBaseClient::ds.mean(truth_name, datasources = connections)
 
-  ntotal = mns$Mean.by.Study[,"Ntotal"]
-  nmean  = mns$Mean.by.Study[, "EstimatedMean"]
+  #ntotal = mns$Mean.by.Study[,"Ntotal"]
+  #nmean  = mns$Mean.by.Study[, "EstimatedMean"]
+
+  ntotal = .dsLength(truth_name)
+  nmean  = .dsMean(truth_name)
 
   n_neg = sum(ntotal * (1 - nmean))
   n_pos = sum(ntotal * nmean)

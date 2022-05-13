@@ -105,8 +105,9 @@ dsL2Sens = function(connections, dat_name, pred_name, nbreaks = NULL, cols = NUL
   checkmate::assertLogical(drop_on_error, len = 1L)
 
   if (is.null(nbreaks)) {
-    ntotal = dsBaseClient::ds.dim(dat_name, type = "combined", datasources = connections)
-    nbreaks = floor(ntotal[[1]][1] / 3)
+    ntotal = .dsNrow(connections, dat_name)
+    #ntotal = dsBaseClient::ds.dim(dat_name, type = "combined", datasources = connections)
+    nbreaks = floor(ntotal / 3)
   }
 
   xXcols = cols
@@ -117,6 +118,6 @@ dsL2Sens = function(connections, dat_name, pred_name, nbreaks = NULL, cols = NUL
   l2s = as.data.frame(do.call(rbind, lapply(ll_l2s, function(x) {
     c(l2s = x$l2sens, l1n = x$l1n)
   })))
-  dsBaseClient::ds.rm("xXcols", connections)
+  # dsBaseClient::ds.rm("xXcols", connections)
   return(max(l2s$l2s[min(l2s$l1n, na.rm = TRUE) == l2s$l1n], na.rm = TRUE))
 }

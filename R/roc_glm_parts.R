@@ -233,7 +233,12 @@ calculateAUC = function(roc_glm) {
   temp = function(x) {
     stats::pnorm(params[1] + params[2] * stats::qnorm(x))
   }
-  int = stats::integrate(f = temp, lower = 0, upper = 1)
+  int  = stats::integrate(f = temp, lower = 0, upper = 1)
+  vint = int$value
 
-  return(int$value)
+  icheck = (vint > 1) || (vint < 0)
+  if (icheck) {
+    warning("Integrating the binormal model gives an AUC out of the [0,1] range")
+  }
+  return(vint)
 }
