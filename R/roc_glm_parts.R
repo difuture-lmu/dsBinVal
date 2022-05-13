@@ -105,7 +105,11 @@ rocGLMFrame = function(truth_name, prob_name, pooled_scores_name) {
 #' @author Daniel S.
 #' @export
 calculateDistrGLMParts = function(formula, data,  w = NULL, params_char) {
-  checkmate::assertCharacter(formula, len = 1L, any.missing = FALSE)
+  if (inherits(formula, "formula")) {
+    checkmate::assertFormula(formula)
+  } else {
+    checkmate::assertCharacter(formula, len = 1L)
+  }
   checkmate::assertCharacter(data, len = 1L, any.missing = FALSE)
   checkmate::assertNumeric(w, null.ok = TRUE, any.missing = FALSE)
   checkmate::assertCharacter(params_char, len = 1L, any.missing = FALSE)

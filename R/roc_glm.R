@@ -16,7 +16,11 @@
 #' @author Daniel S.
 #' @export
 dsProbitRegr = function(connections, formula, data, w = NULL, stop_tol = 1e-8, iter_max = 25L, trace = FALSE) {
-  checkmate::assertCharacter(formula, len = 1L)
+  if (inherits(formula, "formula")) {
+    checkmate::assertFormula(formula)
+  } else {
+    checkmate::assertCharacter(formula, len = 1L)
+  }
   checkmate::assertCharacter(data, len = 1L)
   checkmate::assertCharacter(w, len = 1L)
   checkmate::assertNumeric(stop_tol, len = 1L)
