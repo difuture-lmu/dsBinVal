@@ -54,14 +54,6 @@ test_that("all methods can be used and produce reasonable output", {
     expect_equal(dsBinVal:::.dsMean(connections, "valid"), mean(valid))
     expect_equal(dsBinVal:::.dsLength(connections, "valid"), length(valid) * 2)
 
-    ds_summary = ds.summary("pred")
-    nuisance = lapply(ds_summary, function(dss) {
-      expect_equal(unname(dss$`quantiles & mean`["Mean"]), mean(p))
-      expect_equal(dss$`quantiles & mean`["50%"], quantile(p, 0.5))
-      expect_equal(dss$`quantiles & mean`["25%"], quantile(p, 0.25))
-      expect_equal(dss$`quantiles & mean`["75%"], quantile(p, 0.75))
-    })
-
     p_cls <<- ifelse(p > 0.5, 1, 0)
     conf_local = table(truth = valid, predicted = p_cls)
     expect_equal(confusion("valid", "p_cls"), conf_local)
