@@ -27,13 +27,15 @@ password = "password"
 
 opal = opalr::opal.login(username = username, password = password, url = surl)
 
-check1 = opalr::dsadmin.install_github_package(opal = opal, pkg = "dsBinVal", username = "difuture-lmu")
+check1 = opalr::dsadmin.install_github_package(opal = opal, pkg = "dsBinVal", username = "difuture-lmu", ref = "main")
 if (! check1)
   stop("[", Sys.time(), "] Was not able to install dsBinVal!")
 
 check2 = opalr::dsadmin.publish_package(opal = opal, pkg = "dsBinVal")
 if (! check2)
   stop("[", Sys.time(), "] Was not able to publish methods of dsBinVal!")
+
+opalr::opal.logout(opal)
 ```
 [![R-CMD-check](https://github.com/difuture-lmu/dsBinVal/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/difuture-lmu/dsBinVal/actions/workflows/R-CMD-check.yaml) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![codecov](https://codecov.io/gh/difuture-lmu/dsBinVal/branch/main/graph/badge.svg?token=E8AZRM6XJX)](https://codecov.io/gh/difuture-lmu/dsBinVal)
 
@@ -127,7 +129,7 @@ l2s = dsL2Sens(connections, "iris", "pred")
 l2s
 
 # Due to the results presented in https://arxiv.org/abs/2203.10828, we set the privacy parameters to
-# - epsilon = 0.2, delta = 0.1 if i      l2s <= 0.01
+# - epsilon = 0.2, delta = 0.1 if        l2s <= 0.01
 # - epsilon = 0.3, delta = 0.4 if 0.01 < l2s <= 0.03
 # - epsilon = 0.5, delta = 0.3 if 0.03 < l2s <= 0.05
 # - epsilon = 0.5, delta = 0.5 if 0.05 < l2s <= 0.07
@@ -154,6 +156,12 @@ cc = dsCalibrationCurve(connections, "y", "pred", 10, 3)
 cc
 
 plot(cc)
+```
+
+#### Further performance metrics
+
+```{r}
+dsConfusion(connections, "y", "pred")
 ```
 
 ## Deploy information:
