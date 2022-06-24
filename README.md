@@ -85,7 +85,7 @@ builder$append(
 )
 
 connections = datashield.login(logins = builder$build(), assign = TRUE)
-#> 
+#>
 #> Logging into the collaborating servers
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Login ds1 [========================>---------------------------------------------------]  33% / 0s  Login ds2 [==================================================>-------------------------]  67% / 0s  Logged in all servers [================================================================] 100% / 1s
 ```
@@ -118,8 +118,8 @@ predictModel(connections, mod, "pred", "iris", predict_fun = pfun)
 
 datashield.symbols(connections)
 #> $ds1
-#> [1] "iris" "mod"  "pred" "y"   
-#> 
+#> [1] "iris" "mod"  "pred" "y"
+#>
 #> $ds2
 #> [1] "iris" "mod"  "pred" "y"
 ```
@@ -153,21 +153,17 @@ roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (internDim("iris")) [-----------------------------------------------------]   0% / 0s  Getting aggregate ds1 (internDim("iris")) [==============>-----------------------------]  33% / 0s  Checking ds2 (internDim("iris")) [=================>-----------------------------------]  33% / 0s  Getting aggregate ds2 (internDim("iris")) [============================>---------------]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d38000000fe", ...  Finalizing assignment ds1 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d...  Checking ds2 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d38000000fe", ...  Finalizing assignment ds2 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d...  Assigned expr. (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d38000000fe"...
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [---------------------]   0% / 0s  Getting aggregate ds1 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [===>--------]  33% / 0s  Checking ds2 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [======>--------------]  33% / 0s  Getting aggregate ds2 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [=======>----]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
-#> 
+#>
 #> [2022-06-24 09:02:31] L2 sensitivity is: 0.1281
-#> 
+#>
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (l2s <- decodeBinary("580a000000030004020000030500000000055554462d380000000e000000...  Finalizing assignment ds1 (l2s <- decodeBinary("580a000000030004020000030500000000055554462d380...  Checking ds2 (l2s <- decodeBinary("580a000000030004020000030500000000055554462d380000000e000000...  Finalizing assignment ds2 (l2s <- decodeBinary("580a000000030004020000030500000000055554462d380...  Assigned expr. (l2s <- decodeBinary("580a000000030004020000030500000000055554462d380000000e0000...
-#> Warning in dsROCGLM(connections, truth_name = "y", pred_name = "pred", dat_name
-#> = "iris", : l2-sensitivity may be too high for good results! Epsilon = 0.5 and
-#> delta = 0.5 is used which may lead to bad results.
-#> 
 #> [2022-06-24 09:02:31] Setting: epsilon = 0.5 and delta = 0.5
-#> 
-#> 
+#>
+#>
 #> [2022-06-24 09:02:31] Initializing ROC-GLM
-#> 
+#>
 #> [2022-06-24 09:02:31] Host: Received scores of negative response
-#> 
+#>
 #> [2022-06-24 09:02:31] Receiving negative scores
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [-------------------]   0% / 0s  Getting aggregate ds1 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [==>-------]  33% / 0s  Checking ds2 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [=====>-------------]  33% / 0s  Getting aggregate ds2 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [======>---]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
 #> [2022-06-24 09:02:31] Host: Pushing pooled scores
@@ -212,12 +208,39 @@ roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [-------------------]   0% / 0s  Getting aggregate ds1 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [==>-------]  33% / 0s  Checking ds2 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [=====>-------------]  33% / 0s  Getting aggregate ds2 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [======>---]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (getPositiveScores("y", "pred", 0.5, 0.5, "y", TRUE)) [-------------------]   0% / 0s  Getting aggregate ds1 (getPositiveScores("y", "pred", 0.5, 0.5, "y", TRUE)) [==>-------]  33% / 0s  Checking ds2 (getPositiveScores("y", "pred", 0.5, 0.5, "y", TRUE)) [=====>-------------]  33% / 0s  Getting aggregate ds2 (getPositiveScores("y", "pred", 0.5, 0.5, "y", TRUE)) [======>---]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
 #> [2022-06-24 09:02:40] Finished!
+=======
+#> [2022-06-20 13:34:43] Setting: epsilon = 0.5 and delta = 0.5
+#>
+#> [2022-06-20 13:34:43] Initializing ROC-GLM
+#>
+#> [2022-06-20 13:34:43] Host: Received scores of negative response
+#> [2022-06-20 13:34:43] Receiving negative scores
+#> [2022-06-20 13:34:44] Host: Pushing pooled scores
+#> [2022-06-20 13:34:45] Server: Calculating placement values and parts for ROC-GLM
+#> [2022-06-20 13:34:45] Server: Calculating probit regression to obtain ROC-GLM
+#> [2022-06-20 13:34:46] Deviance of iter1=137.2431
+#> [2022-06-20 13:34:47] Deviance of iter2=121.5994
+#> [2022-06-20 13:34:48] Deviance of iter3=147.7237
+#> [2022-06-20 13:34:49] Deviance of iter4=140.4008
+#> [2022-06-20 13:34:50] Deviance of iter5=129.2244
+#> [2022-06-20 13:34:51] Deviance of iter6=123.9979
+#> [2022-06-20 13:34:52] Deviance of iter7=123.1971
+#> [2022-06-20 13:34:53] Deviance of iter8=124.1615
+#> [2022-06-20 13:34:54] Deviance of iter9=124.5356
+#> [2022-06-20 13:34:54] Deviance of iter10=124.5503
+#> [2022-06-20 13:34:55] Deviance of iter11=124.5504
+#> [2022-06-20 13:34:56] Deviance of iter12=124.5504
+#> [2022-06-20 13:34:56] Host: Finished calculating ROC-GLM
+#> [2022-06-20 13:34:56] Host: Cleaning data on server
+#> [2022-06-20 13:34:57] Host: Calculating AUC and CI
+#> [2022-06-20 13:35:05] Finished!
+>>>>>>> 155e7be91dd481f2b783246a7d780af796066046
 roc_glm
-#> 
+#>
 #> ROC-GLM after Pepe:
-#> 
+#>
 #>  Binormal form: pnorm(2.51 + 1.55*qnorm(t))
-#> 
+#>
 #>  AUC and 0.95 CI: [0.86----0.91----0.95]
 
 plot(roc_glm)
@@ -236,9 +259,9 @@ dsBrierScore(connections, "y", "pred")
 cc = dsCalibrationCurve(connections, "y", "pred", 10, 3)
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calibrationCurve("y", "pred", 10, 3)) [----------------------------------]   0% / 0s  Getting aggregate ds1 (calibrationCurve("y", "pred", 10, 3)) [=======>-----------------]  33% / 0s  Checking ds2 (calibrationCurve("y", "pred", 10, 3)) [==========>-----------------------]  33% / 0s  Getting aggregate ds2 (calibrationCurve("y", "pred", 10, 3)) [================>--------]  67% / 0s  Aggregated (calibrationCurve("y", "pred", 10, 3)) [====================================] 100% / 0s
 cc
-#> 
+#>
 #> Calibration curve:
-#> 
+#>
 #>  Number of shared values:
 #>            (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6] (0.6,0.7]
 #> n              140        30        12        14        12         2         0
@@ -246,7 +269,7 @@ cc
 #>            (0.7,0.8] (0.8,0.9] (0.9,1]
 #> n                  8        38      44
 #> not_shared         8         0       0
-#> 
+#>
 #> Values of the calibration curve:
 #>           (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6] (0.6,0.7]
 #> truth     0.00000    0.2000    0.0000    0.2857    0.8333         0       NaN
@@ -254,8 +277,8 @@ cc
 #>           (0.7,0.8] (0.8,0.9] (0.9,1]
 #> truth             0    0.8421  0.9091
 #> predicted         0    0.8432  0.9604
-#> 
-#> 
+#>
+#>
 #> Missing values are indicated by the privacy level of 5.
 
 plot(cc)
@@ -277,11 +300,11 @@ dsConfusion(connections, "y", "pred")
 #> truth   0   1
 #>     0 188  12
 #>     1  20  80
-#> 
+#>
 #> $measures
-#>      npos      nneg        f1       acc       npv       tpr       tnr       fnr 
-#> 208.00000 100.00000   0.90385   0.89333   0.80000   0.90385   0.80000   0.09615 
-#>       fpr 
+#>      npos      nneg        f1       acc       npv       tpr       tnr       fnr
+#> 208.00000 100.00000   0.90385   0.89333   0.80000   0.90385   0.80000   0.09615
+#>       fpr
 #>   0.20000
 ```
 
