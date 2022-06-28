@@ -57,6 +57,29 @@ It is necessary to register the assign and aggregate methods in the OPAL adminis
 
 Note that the package needs to be installed at both locations, the server and the analysts machine.
 
+## Installation on DataSHIELD
+
+The two options are to use the Opal API:
+- Log into Opal ans switch to the `Administration/DataSHIELD/` tab
+- Click the `Add DataSHIELD package` button
+- Select `GitHub` as source, and use `difuture-lmu` as user, `dsBinVal` as name, and `main` as Git reference.
+
+The second option is to use the `opalr` package to install `dsBinVal` directly from `R`:
+```{r, eval=FALSE}
+### User credentials (here from the opal test server):
+surl     = "https://opal-demo.obiba.org/"
+username = "administrator"
+password = "password"
+
+### Install package and publish methods:
+opal = opalr::opal.login(username = username, password = password, url = surl)
+
+opalr::dsadmin.install_github_package(opal = opal, pkg = "dsBinVal", username = "difuture-lmu", ref = "main")
+opalr::dsadmin.publish_package(opal = opal, pkg = "dsBinVal")
+
+opalr::opal.logout(opal)
+```
+
 ## Usage
 
 A more sophisticated example is available [here](github.com/difuture-lmu/datashield-roc-glm-demo).
