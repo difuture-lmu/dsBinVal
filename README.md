@@ -209,7 +209,7 @@ roc_glm
 plot(roc_glm)
 ```
 
-![](Readme_files/unnamed-chunk-9-1.png)<!-- -->
+![](Readme_files/unnamed-chunk-8-1.png)<!-- -->
 
 #### Assess calibration
 
@@ -249,7 +249,7 @@ plot(cc)
 #> Warning: Removed 1 row(s) containing missing values (geom_path).
 ```
 
-![](Readme_files/unnamed-chunk-10-1.png)<!-- -->
+![](Readme_files/unnamed-chunk-9-1.png)<!-- -->
 
 #### Further performance metrics
 
