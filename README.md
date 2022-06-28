@@ -47,13 +47,13 @@ server and the analysts machine.
 
 ## Installation on DataSHIELD
 
-The two options are to use the Opal API: - Log into Opal ans switch to
-the `Administration/DataSHIELD/` tab - Click the `Add DataSHIELD
-package` button - Select `GitHub` as source, and use `difuture-lmu` as
-user, `dsBinVal` as name, and `main` as Git reference.
+The two options are to use the Opal API: 
 
-The second option is to use the `opalr` package to install `dsBinVal`
-directly from `R`:
+- Log into Opal ans switch to the `Administration/DataSHIELD/` tab 
+- Click the `Add DataSHIELD package` button 
+- Select `GitHub` as source, and use `difuture-lmu` as user, `dsBinVal` as name, and `main` as Git reference.
+
+The second option is to use the `opalr` package to install `dsBinVal` directly from `R`:
 
 ``` r
 ### User credentials (here from the opal test server):
