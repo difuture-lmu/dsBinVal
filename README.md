@@ -47,13 +47,15 @@ server and the analysts machine.
 
 ## Installation on DataSHIELD
 
-The two options are to use the Opal API: 
+The two options are to use the Opal API:
 
-- Log into Opal ans switch to the `Administration/DataSHIELD/` tab 
-- Click the `Add DataSHIELD package` button 
-- Select `GitHub` as source, and use `difuture-lmu` as user, `dsBinVal` as name, and `main` as Git reference.
+  - Log into Opal ans switch to the `Administration/DataSHIELD/` tab
+  - Click the `Add DataSHIELD package` button
+  - Select `GitHub` as source, and use `difuture-lmu` as user,
+    `dsBinVal` as name, and `main` as Git reference.
 
-The second option is to use the `opalr` package to install `dsBinVal` directly from `R`:
+The second option is to use the `opalr` package to install `dsBinVal`
+directly from `R`:
 
 ``` r
 ### User credentials (here from the opal test server):
@@ -168,36 +170,36 @@ l2s
 roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
   dat_name = "iris", seed_object = "y")
 #> 
-#> [2022-06-28 07:32:32] L2 sensitivity is: 0.1281
+#> [2022-07-04 13:33:35] L2 sensitivity is: 0.1281
 #> Warning in dsROCGLM(connections, truth_name = "y", pred_name = "pred", dat_name
 #> = "iris", : l2-sensitivity may be too high for good results! Epsilon = 0.5 and
 #> delta = 0.5 is used which may lead to bad results.
 #> 
-#> [2022-06-28 07:32:33] Setting: epsilon = 0.5 and delta = 0.5
+#> [2022-07-04 13:33:36] Setting: epsilon = 0.5 and delta = 0.5
 #> 
-#> [2022-06-28 07:32:33] Initializing ROC-GLM
+#> [2022-07-04 13:33:36] Initializing ROC-GLM
 #> 
-#> [2022-06-28 07:32:33] Host: Received scores of negative response
-#> [2022-06-28 07:32:33] Receiving negative scores
-#> [2022-06-28 07:32:34] Host: Pushing pooled scores
-#> [2022-06-28 07:32:36] Server: Calculating placement values and parts for ROC-GLM
-#> [2022-06-28 07:32:37] Server: Calculating probit regression to obtain ROC-GLM
-#> [2022-06-28 07:32:38] Deviance of iter1=137.2431
-#> [2022-06-28 07:32:40] Deviance of iter2=121.5994
-#> [2022-06-28 07:32:41] Deviance of iter3=147.7237
-#> [2022-06-28 07:32:42] Deviance of iter4=140.4008
-#> [2022-06-28 07:32:44] Deviance of iter5=129.2244
-#> [2022-06-28 07:32:45] Deviance of iter6=123.9979
-#> [2022-06-28 07:32:46] Deviance of iter7=123.1971
-#> [2022-06-28 07:32:48] Deviance of iter8=124.1615
-#> [2022-06-28 07:32:49] Deviance of iter9=124.5356
-#> [2022-06-28 07:32:50] Deviance of iter10=124.5503
-#> [2022-06-28 07:32:52] Deviance of iter11=124.5504
-#> [2022-06-28 07:32:53] Deviance of iter12=124.5504
-#> [2022-06-28 07:32:53] Host: Finished calculating ROC-GLM
-#> [2022-06-28 07:32:53] Host: Cleaning data on server
-#> [2022-06-28 07:32:54] Host: Calculating AUC and CI
-#> [2022-06-28 07:33:06] Finished!
+#> [2022-07-04 13:33:36] Host: Received scores of negative response
+#> [2022-07-04 13:33:36] Receiving negative scores
+#> [2022-07-04 13:33:37] Host: Pushing pooled scores
+#> [2022-07-04 13:33:39] Server: Calculating placement values and parts for ROC-GLM
+#> [2022-07-04 13:33:40] Server: Calculating probit regression to obtain ROC-GLM
+#> [2022-07-04 13:33:42] Deviance of iter1=137.2431
+#> [2022-07-04 13:33:43] Deviance of iter2=121.5994
+#> [2022-07-04 13:33:44] Deviance of iter3=147.7237
+#> [2022-07-04 13:33:45] Deviance of iter4=140.4008
+#> [2022-07-04 13:33:47] Deviance of iter5=129.2244
+#> [2022-07-04 13:33:48] Deviance of iter6=123.9979
+#> [2022-07-04 13:33:49] Deviance of iter7=123.1971
+#> [2022-07-04 13:33:51] Deviance of iter8=124.1615
+#> [2022-07-04 13:33:52] Deviance of iter9=124.5356
+#> [2022-07-04 13:33:53] Deviance of iter10=124.5503
+#> [2022-07-04 13:33:54] Deviance of iter11=124.5504
+#> [2022-07-04 13:33:56] Deviance of iter12=124.5504
+#> [2022-07-04 13:33:56] Host: Finished calculating ROC-GLM
+#> [2022-07-04 13:33:56] Host: Cleaning data on server
+#> [2022-07-04 13:33:56] Host: Calculating AUC and CI
+#> [2022-07-04 13:34:08] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -209,7 +211,7 @@ roc_glm
 plot(roc_glm)
 ```
 
-![](Readme_files/unnamed-chunk-8-1.png)<!-- -->
+![](Readme_files/unnamed-chunk-9-1.png)<!-- -->
 
 #### Assess calibration
 
@@ -249,7 +251,7 @@ plot(cc)
 #> Warning: Removed 1 row(s) containing missing values (geom_path).
 ```
 
-![](Readme_files/unnamed-chunk-9-1.png)<!-- -->
+![](Readme_files/unnamed-chunk-10-1.png)<!-- -->
 
 #### Further performance metrics
 
@@ -270,7 +272,7 @@ dsConfusion(connections, "y", "pred")
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2022-06-28 07:33:15.**
+**Build by root (Darwin) on 2022-07-04 13:34:15.**
 
 This readme is built automatically after each push to the repository.
 Hence, it also is a test if the functionality of the package works also
