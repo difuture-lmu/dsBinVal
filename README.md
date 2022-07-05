@@ -114,14 +114,17 @@ builder$append(
 connections = datashield.login(logins = builder$build(), assign = TRUE)
 #> 
 #> Logging into the collaborating servers
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Login ds1 [========================>---------------------------------------------------]  33% / 0s  Login ds2 [==================================================>-------------------------]  67% / 0s  Logged in all servers [================================================================] 100% / 1s
 ```
 
 #### Assign iris and validation vector at DataSHIELD (just for testing)
 
 ``` r
 datashield.assign(connections, "iris", quote(iris))
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (iris <- iris) [----------------------------------------------------------]   0% / 1s  Finalizing assignment ds1 (iris <- iris) [==============>------------------------------]  33% / 1s  Checking ds2 (iris <- iris) [==================>---------------------------------------]  33% / 1s  Finalizing assignment ds2 (iris <- iris) [=============================>---------------]  67% / 1s  Assigned expr. (iris <- iris) [========================================================] 100% / 1s
 vcall = paste0("quote(c(", paste(rep(c(1, 0), times = c(50, 100)), collapse = ", "), "))")
 datashield.assign(connections, "y", eval(parse(text = vcall)))
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (y <- c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ) [---]   0% / 0s  Finalizing assignment ds1 (y <- c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, )...  Checking ds2 (y <- c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ) [>--]  33% / 0s  Finalizing assignment ds2 (y <- c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, )...  Assigned expr. (y <- c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ) [=] 100% / 0s
 ```
 
 #### Load test model, push to DataSHIELD, and calculate predictions
@@ -133,10 +136,12 @@ mod = glm(y ~ Sepal.Length, data = iris, family = binomial())
 
 # Push the model to the DataSHIELD servers using `dsPredictBase`:
 pushObject(connections, mod)
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (mod <- decodeBinary("580a000000030004020000030500000000055554462d3800000313000000...  Finalizing assignment ds1 (mod <- decodeBinary("580a000000030004020000030500000000055554462d380...  Checking ds2 (mod <- decodeBinary("580a000000030004020000030500000000055554462d3800000313000000...  Finalizing assignment ds2 (mod <- decodeBinary("580a000000030004020000030500000000055554462d380...  Assigned expr. (mod <- decodeBinary("580a000000030004020000030500000000055554462d38000003130000...
 
 # Calculate scores and save at the servers using `dsPredictBase`:
 pfun =  "predict(mod, newdata = D, type = 'response')"
 predictModel(connections, mod, "pred", "iris", predict_fun = pfun)
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (pred <- assignPredictModel("580a000000030004020000030500000000055554462d380000001...  Finalizing assignment ds1 (pred <- assignPredictModel("580a000000030004020000030500000000055554...  Checking ds2 (pred <- assignPredictModel("580a000000030004020000030500000000055554462d380000001...  Finalizing assignment ds2 (pred <- assignPredictModel("580a000000030004020000030500000000055554...  Assigned expr. (pred <- assignPredictModel("580a000000030004020000030500000000055554462d3800000...
 
 datashield.symbols(connections)
 #> $ds1
@@ -153,8 +158,11 @@ datashield.symbols(connections)
 # l2-sensitivity to set the privacy parameters of differential
 # privacy adequately:
 l2s = dsL2Sens(connections, "iris", "pred")
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (internDim("iris")) [-----------------------------------------------------]   0% / 0s  Getting aggregate ds1 (internDim("iris")) [==============>-----------------------------]  33% / 0s  Checking ds2 (internDim("iris")) [=================>-----------------------------------]  33% / 0s  Getting aggregate ds2 (internDim("iris")) [============================>---------------]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d38000000fe", ...  Finalizing assignment ds1 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d...  Checking ds2 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d38000000fe", ...  Finalizing assignment ds2 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d...  Assigned expr. (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d38000000fe"...
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [---------------------]   0% / 0s  Getting aggregate ds1 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [===>--------]  33% / 0s  Checking ds2 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [======>--------------]  33% / 0s  Getting aggregate ds2 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [=======>----]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
 l2s
-#> [1] 0.1280699
+#> [1] 0.1281
 
 # Due to the results presented in https://arxiv.org/abs/2203.10828, we set the privacy parameters to
 # - epsilon = 0.2, delta = 0.1 if        l2s <= 0.01
@@ -169,37 +177,68 @@ l2s
 ``` r
 roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
   dat_name = "iris", seed_object = "y")
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (internDim("iris")) [-----------------------------------------------------]   0% / 0s  Getting aggregate ds1 (internDim("iris")) [==============>-----------------------------]  33% / 0s  Checking ds2 (internDim("iris")) [=================>-----------------------------------]  33% / 0s  Getting aggregate ds2 (internDim("iris")) [============================>---------------]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d38000000fe", ...  Finalizing assignment ds1 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d...  Checking ds2 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d38000000fe", ...  Finalizing assignment ds2 (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d...  Assigned expr. (xXcols <- decodeBinary("580a000000030004020000030500000000055554462d38000000fe"...
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [---------------------]   0% / 0s  Getting aggregate ds1 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [===>--------]  33% / 0s  Checking ds2 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [======>--------------]  33% / 0s  Getting aggregate ds2 (l2sens("iris", "pred", 100, "xXcols", diff, TRUE)) [=======>----]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
 #> 
-#> [2022-07-04 13:33:35] L2 sensitivity is: 0.1281
+#> [2022-07-05 16:22:18] L2 sensitivity is: 0.1281
+#> 
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (l2s <- decodeBinary("580a000000030004020000030500000000055554462d380000000e000000...  Finalizing assignment ds1 (l2s <- decodeBinary("580a000000030004020000030500000000055554462d380...  Checking ds2 (l2s <- decodeBinary("580a000000030004020000030500000000055554462d380000000e000000...  Finalizing assignment ds2 (l2s <- decodeBinary("580a000000030004020000030500000000055554462d380...  Assigned expr. (l2s <- decodeBinary("580a000000030004020000030500000000055554462d380000000e0000...
 #> Warning in dsROCGLM(connections, truth_name = "y", pred_name = "pred", dat_name
 #> = "iris", : l2-sensitivity may be too high for good results! Epsilon = 0.5 and
 #> delta = 0.5 is used which may lead to bad results.
 #> 
-#> [2022-07-04 13:33:36] Setting: epsilon = 0.5 and delta = 0.5
+#> [2022-07-05 16:22:18] Setting: epsilon = 0.5 and delta = 0.5
 #> 
-#> [2022-07-04 13:33:36] Initializing ROC-GLM
 #> 
-#> [2022-07-04 13:33:36] Host: Received scores of negative response
-#> [2022-07-04 13:33:36] Receiving negative scores
-#> [2022-07-04 13:33:37] Host: Pushing pooled scores
-#> [2022-07-04 13:33:39] Server: Calculating placement values and parts for ROC-GLM
-#> [2022-07-04 13:33:40] Server: Calculating probit regression to obtain ROC-GLM
-#> [2022-07-04 13:33:42] Deviance of iter1=137.2431
-#> [2022-07-04 13:33:43] Deviance of iter2=121.5994
-#> [2022-07-04 13:33:44] Deviance of iter3=147.7237
-#> [2022-07-04 13:33:45] Deviance of iter4=140.4008
-#> [2022-07-04 13:33:47] Deviance of iter5=129.2244
-#> [2022-07-04 13:33:48] Deviance of iter6=123.9979
-#> [2022-07-04 13:33:49] Deviance of iter7=123.1971
-#> [2022-07-04 13:33:51] Deviance of iter8=124.1615
-#> [2022-07-04 13:33:52] Deviance of iter9=124.5356
-#> [2022-07-04 13:33:53] Deviance of iter10=124.5503
-#> [2022-07-04 13:33:54] Deviance of iter11=124.5504
-#> [2022-07-04 13:33:56] Deviance of iter12=124.5504
-#> [2022-07-04 13:33:56] Host: Finished calculating ROC-GLM
-#> [2022-07-04 13:33:56] Host: Cleaning data on server
-#> [2022-07-04 13:33:56] Host: Calculating AUC and CI
-#> [2022-07-04 13:34:08] Finished!
+#> [2022-07-05 16:22:18] Initializing ROC-GLM
+#> 
+#> [2022-07-05 16:22:18] Host: Received scores of negative response
+#> 
+#> [2022-07-05 16:22:18] Receiving negative scores
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [-------------------]   0% / 0s  Getting aggregate ds1 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [==>-------]  33% / 0s  Checking ds2 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [=====>-------------]  33% / 0s  Getting aggregate ds2 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [======>---]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#> [2022-07-05 16:22:19] Host: Pushing pooled scores
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (pooled_scores <- decodeBinary("580a000000030004020000030500000000055554462d380000...  Finalizing assignment ds1 (pooled_scores <- decodeBinary("580a000000030004020000030500000000055...  Checking ds2 (pooled_scores <- decodeBinary("580a000000030004020000030500000000055554462d380000...  Finalizing assignment ds2 (pooled_scores <- decodeBinary("580a000000030004020000030500000000055...  Assigned expr. (pooled_scores <- decodeBinary("580a000000030004020000030500000000055554462d3800...
+#> [2022-07-05 16:22:19] Server: Calculating placement values and parts for ROC-GLM
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (roc_data <- rocGLMFrame("y", "pred", "pooled_scores")) [-----------------]   0% / 0s  Finalizing assignment ds1 (roc_data <- rocGLMFrame("y", "pred", "pooled_scores")) [>---]  33% / 0s  Checking ds2 (roc_data <- rocGLMFrame("y", "pred", "pooled_scores")) [=====>-----------]  33% / 0s  Finalizing assignment ds2 (roc_data <- rocGLMFrame("y", "pred", "pooled_scores")) [==>-]  67% / 0s  Assigned expr. (roc_data <- rocGLMFrame("y", "pred", "pooled_scores")) [===============] 100% / 0s
+#> [2022-07-05 16:22:19] Server: Calculating probit regression to obtain ROC-GLM
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:20] Deviance of iter1=137.2431
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:20] Deviance of iter2=121.5994
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:21] Deviance of iter3=147.7237
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:21] Deviance of iter4=140.4008
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:21] Deviance of iter5=129.2244
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 1s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 1s
+#> [2022-07-05 16:22:22] Deviance of iter6=123.9979
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:22] Deviance of iter7=123.1971
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:23] Deviance of iter8=124.1615
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:23] Deviance of iter9=124.5356
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:24] Deviance of iter10=124.5503
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:24] Deviance of iter11=124.5504
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [--]   0% / 0s  Getting aggregate ds1 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Checking ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [>-]  33% / 0s  Getting aggregate ds2 (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) []...  Aggregated (calculateDistrGLMParts(formula = y ~ x, data = "roc_data", w = "w", ) [====] 100% / 0s
+#> [2022-07-05 16:22:24] Deviance of iter12=124.5504
+#> [2022-07-05 16:22:24] Host: Finished calculating ROC-GLM
+#> [2022-07-05 16:22:24] Host: Cleaning data on server
+#> [2022-07-05 16:22:25] Host: Calculating AUC and CI
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (internLength("y")) [-----------------------------------------------------]   0% / 0s  Getting aggregate ds1 (internLength("y")) [==============>-----------------------------]  33% / 0s  Checking ds2 (internLength("y")) [=================>-----------------------------------]  33% / 1s  Getting aggregate ds2 (internLength("y")) [============================>---------------]  67% / 1s  Aggregated (...) [=====================================================================] 100% / 1s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (internSum("y")) [--------------------------------------------------------]   0% / 0s  Getting aggregate ds1 (internSum("y")) [===============>-------------------------------]  33% / 0s  Checking ds2 (internSum("y")) [==================>-------------------------------------]  33% / 0s  Getting aggregate ds2 (internSum("y")) [==============================>----------------]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (internLength("y")) [-----------------------------------------------------]   0% / 0s  Getting aggregate ds1 (internLength("y")) [==============>-----------------------------]  33% / 0s  Checking ds2 (internLength("y")) [=================>-----------------------------------]  33% / 0s  Getting aggregate ds2 (internLength("y")) [============================>---------------]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (getNegativeScoresVar("y", "pred", return_sum = TRUE)) [------------------]   0% / 0s  Getting aggregate ds1 (getNegativeScoresVar("y", "pred", return_sum = TRUE)) [==>------]  33% / 0s  Checking ds2 (getNegativeScoresVar("y", "pred", return_sum = TRUE)) [=====>------------]  33% / 0s  Getting aggregate ds2 (getNegativeScoresVar("y", "pred", return_sum = TRUE)) [=====>---]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (getPositiveScoresVar("y", "pred", return_sum = TRUE)) [------------------]   0% / 0s  Getting aggregate ds1 (getPositiveScoresVar("y", "pred", return_sum = TRUE)) [==>------]  33% / 0s  Checking ds2 (getPositiveScoresVar("y", "pred", return_sum = TRUE)) [=====>------------]  33% / 0s  Getting aggregate ds2 (getPositiveScoresVar("y", "pred", return_sum = TRUE)) [=====>---]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (getNegativeScoresVar("y", "pred", m = 1)) [------------------------------]   0% / 0s  Getting aggregate ds1 (getNegativeScoresVar("y", "pred", m = 1)) [======>--------------]  33% / 0s  Checking ds2 (getNegativeScoresVar("y", "pred", m = 1)) [=========>--------------------]  33% / 0s  Getting aggregate ds2 (getNegativeScoresVar("y", "pred", m = 1)) [=============>-------]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (getPositiveScoresVar("y", "pred", m = 1)) [------------------------------]   0% / 0s  Getting aggregate ds1 (getPositiveScoresVar("y", "pred", m = 1)) [======>--------------]  33% / 0s  Checking ds2 (getPositiveScoresVar("y", "pred", m = 1)) [=========>--------------------]  33% / 0s  Getting aggregate ds2 (getPositiveScoresVar("y", "pred", m = 1)) [=============>-------]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [-------------------]   0% / 0s  Getting aggregate ds1 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [==>-------]  33% / 0s  Checking ds2 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [=====>-------------]  33% / 0s  Getting aggregate ds2 (getNegativeScores("y", "pred", 0.5, 0.5, "y", TRUE)) [======>---]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (getPositiveScores("y", "pred", 0.5, 0.5, "y", TRUE)) [-------------------]   0% / 0s  Getting aggregate ds1 (getPositiveScores("y", "pred", 0.5, 0.5, "y", TRUE)) [==>-------]  33% / 0s  Checking ds2 (getPositiveScores("y", "pred", 0.5, 0.5, "y", TRUE)) [=====>-------------]  33% / 0s  Getting aggregate ds2 (getPositiveScores("y", "pred", 0.5, 0.5, "y", TRUE)) [======>---]  67% / 0s  Aggregated (...) [=====================================================================] 100% / 0s
+#> [2022-07-05 16:22:29] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -217,10 +256,12 @@ plot(roc_glm)
 
 ``` r
 dsBrierScore(connections, "y", "pred")
-#> [1] 0.07431599
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (brierScore("y", "pred")) [-----------------------------------------------]   0% / 0s  Getting aggregate ds1 (brierScore("y", "pred")) [============>-------------------------]  33% / 0s  Checking ds2 (brierScore("y", "pred")) [===============>-------------------------------]  33% / 0s  Getting aggregate ds2 (brierScore("y", "pred")) [========================>-------------]  67% / 1s  Aggregated (brierScore("y", "pred")) [=================================================] 100% / 1s
+#> [1] 0.07432
 
 ### Calculate and plot calibration curve:
 cc = dsCalibrationCurve(connections, "y", "pred", 10, 3)
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calibrationCurve("y", "pred", 10, 3)) [----------------------------------]   0% / 0s  Getting aggregate ds1 (calibrationCurve("y", "pred", 10, 3)) [=======>-----------------]  33% / 0s  Checking ds2 (calibrationCurve("y", "pred", 10, 3)) [==========>-----------------------]  33% / 0s  Getting aggregate ds2 (calibrationCurve("y", "pred", 10, 3)) [================>--------]  67% / 0s  Aggregated (calibrationCurve("y", "pred", 10, 3)) [====================================] 100% / 0s
 cc
 #> 
 #> Calibration curve:
@@ -234,12 +275,12 @@ cc
 #> not_shared         8         0       0
 #> 
 #> Values of the calibration curve:
-#>              (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6]
-#> truth     0.00000000 0.2000000 0.0000000 0.2857143 0.8333333         0
-#> predicted 0.01074561 0.1312315 0.2395063 0.3457399 0.4699741         0
-#>           (0.6,0.7] (0.7,0.8] (0.8,0.9]   (0.9,1]
-#> truth           NaN         0 0.8421053 0.9090909
-#> predicted       NaN         0 0.8431611 0.9603714
+#>           (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6] (0.6,0.7]
+#> truth     0.00000    0.2000    0.0000    0.2857    0.8333         0       NaN
+#> predicted 0.01075    0.1312    0.2395    0.3457    0.4700         0       NaN
+#>           (0.7,0.8] (0.8,0.9] (0.9,1]
+#> truth             0    0.8421  0.9091
+#> predicted         0    0.8432  0.9604
 #> 
 #> 
 #> Missing values are indicated by the privacy level of 5.
@@ -257,6 +298,7 @@ plot(cc)
 
 ``` r
 dsConfusion(connections, "y", "pred")
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (confusion("y", "pred", 0.5)) [-------------------------------------------]   0% / 0s  Getting aggregate ds1 (confusion("y", "pred", 0.5)) [==========>-----------------------]  33% / 0s  Checking ds2 (confusion("y", "pred", 0.5)) [=============>-----------------------------]  33% / 0s  Getting aggregate ds2 (confusion("y", "pred", 0.5)) [======================>-----------]  67% / 0s  Aggregated (confusion("y", "pred", 0.5)) [=============================================] 100% / 0s
 #> $confusion
 #>      predicted
 #> truth   0   1
@@ -264,15 +306,15 @@ dsConfusion(connections, "y", "pred")
 #>     1  20  80
 #> 
 #> $measures
-#>         npos         nneg           f1          acc          npv          tpr 
-#> 208.00000000 100.00000000   0.90384615   0.89333333   0.80000000   0.90384615 
-#>          tnr          fnr          fpr 
-#>   0.80000000   0.09615385   0.20000000
+#>      npos      nneg        f1       acc       npv       tpr       tnr       fnr 
+#> 208.00000 100.00000   0.90385   0.89333   0.80000   0.90385   0.80000   0.09615 
+#>       fpr 
+#>   0.20000
 ```
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2022-07-04 13:34:15.**
+**Build by daniel (Linux) on 2022-07-05 16:22:31.**
 
 This readme is built automatically after each push to the repository.
 Hence, it also is a test if the functionality of the package works also
@@ -281,7 +323,7 @@ on the DataSHIELD servers. We also test these functionality in
 local and remote servers are as followed:
 
   - Local machine:
-      - `R` version: R version 4.2.1 (2022-06-23)
+      - `R` version: R version 4.2.0 (2022-04-22)
       - Version of DataSHELD client packages:
 
 | Package      | Version |
