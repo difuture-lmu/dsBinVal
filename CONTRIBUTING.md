@@ -62,7 +62,7 @@ Each of these steps are described in more detail below. This might feel
 overwhelming the first time you get set up, but it gets easier with practice.
 
 If you're not familiar with git or GitHub, please start by reading
-<http://r-pkgs.had.co.nz/git.html>
+<https://www.w3schools.com/git>
 
 Pull requests will be evaluated against the a checklist:
 
