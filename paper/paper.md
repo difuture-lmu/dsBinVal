@@ -49,7 +49,7 @@ In this package we close the gap between distributed model building and the vali
 
 __Technical details:__ To ensure the functioning of our package on DataSHIELD, it is constantly unit tested on an active DataSHIELD [test instance](opal-demo.obiba.org). The reference, username, and password are available at the [OPAL documentation](opaldoc.obiba.org/en/latest/resources.html) in the "Types" section.
 
-__State of field:__ To the best of our knowledge, there is no distributed ROC-GLM implementation in `R`. Current state-of-the-art techniques require to share sensitive information from the sites and to use existing algorithms such as @pROC for the ROC curve or standard software for the GLM to calculate the ROC-GLM (as stated by @pepe2000interpretation).
+__State of field:__ To the best of our knowledge, there is no distributed ROC-GLM implementation available in `R`. Current state-of-the-art techniques require to share sensitive information from the sites and to use existing implementation such as `pROC` [@pROC] for the ROC curve or standard software for the GLM to calculate the ROC-GLM (as stated by @pepe2000interpretation).
 
 # Acknowledgements
 
