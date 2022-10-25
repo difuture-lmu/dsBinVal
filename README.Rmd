@@ -13,6 +13,27 @@ knitr::opts_chunk$set(
   fig.path = "Readme_files/"
 )
 
+## Helper to determine OPAL version:
+v_major  = seq(4L, 10L)
+v_minor1 = seq_len(10L) - 1
+v_minor2 = seq_len(10L) - 1
+
+versions = expand.grid(v_major, v_minor1, v_minor2)
+od = order(versions[, 1], versions[, 2], versions[, 3])
+versions = versions[od, ]
+vstrings = paste(versions[, 1], versions[, 2], versions[, 3], sep = ".")
+
+getOPALVersion = function(opal, versions) {
+  k = 1
+  ov = opalr::opal.version_compare(opal, versions[k])
+  while (ov != 0) {
+    if (ov > 0) k = k + 1
+    if (ov < 0) stop("Version is smaller than the smallest one from vector.")
+    ov = opalr::opal.version_compare(opal, versions[k])
+  }
+  return(versions[k])
+}
+
 pkgs = c("here", "opalr", "DSI", "DSOpal", "dsBaseClient")
 for (pkg in pkgs) {
   if (! requireNamespace(pkg, quietly = TRUE))
@@ -26,6 +47,7 @@ username = "administrator"
 password = "password"
 
 opal = opalr::opal.login(username = username, password = password, url = surl)
+opal_version = getOPALVersion(opal, vstrings)
 
 check1 = opalr::dsadmin.install_github_package(opal = opal, pkg = "dsBinVal", username = "difuture-lmu", ref = "main")
 if (! check1)
@@ -216,6 +238,7 @@ knitr::kable(dfv)
 - Remote DataSHIELD machines:
     - `R` version of `r names(ri_ds)[1]`: `r ri_ds[[1]]$session$R.version$version.string`
     - `R` version of `r names(ri_ds)[2]`: `r ri_ds[[2]]$session$R.version$version.string`
+    - OPAL version of the test instance: `r opal_version`
     - Version of server packages:
 
 
