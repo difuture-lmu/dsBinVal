@@ -10,8 +10,8 @@ v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.or
 
 The package provides functionality to conduct and visualize ROC analysis
 and calibration on decentralized data. The basis is the
-DataSHIELD\](<https://www.datashield.org/>) infrastructure for
-distributed computing. This package provides the calculation of the
+[DataSHIELD](https://www.datashield.org/) infrastructure for distributed
+computing. This package provides the calculation of the
 [**ROC-GLM**](https://www.jstor.org/stable/2676973?seq=1) with [**AUC
 confidence intervals**](https://www.jstor.org/stable/2531595?seq=1) as
 well as calibration curves and the brier score. In order to calculate
@@ -23,7 +23,7 @@ value of these numbers. Instead of setting the option, we directly
 retrieve the privacy level from the
 [`DESCRIPTION`](https://github.com/difuture-lmu/dsBinVal/blob/master/DESCRIPTION)
 file each time a function calls for it. This options is set to 5 by
-default. The methodology is explained in detail
+default. The methodological base of th epackage is explained in detail
 [here](https://arxiv.org/abs/2203.10828).
 
 ## Installation
@@ -170,36 +170,36 @@ l2s
 roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
   dat_name = "iris", seed_object = "y")
 #> 
-#> [2022-10-24 13:54:53] L2 sensitivity is: 0.1281
+#> [2022-10-25 06:58:21] L2 sensitivity is: 0.1281
 #> Warning in dsROCGLM(connections, truth_name = "y", pred_name = "pred", dat_name
 #> = "iris", : l2-sensitivity may be too high for good results! Epsilon = 0.5 and
 #> delta = 0.5 is used which may lead to bad results.
 #> 
-#> [2022-10-24 13:54:54] Setting: epsilon = 0.5 and delta = 0.5
+#> [2022-10-25 06:58:22] Setting: epsilon = 0.5 and delta = 0.5
 #> 
-#> [2022-10-24 13:54:54] Initializing ROC-GLM
+#> [2022-10-25 06:58:22] Initializing ROC-GLM
 #> 
-#> [2022-10-24 13:54:54] Host: Received scores of negative response
-#> [2022-10-24 13:54:54] Receiving negative scores
-#> [2022-10-24 13:54:55] Host: Pushing pooled scores
-#> [2022-10-24 13:54:55] Server: Calculating placement values and parts for ROC-GLM
-#> [2022-10-24 13:54:56] Server: Calculating probit regression to obtain ROC-GLM
-#> [2022-10-24 13:54:57] Deviance of iter1=137.2431
-#> [2022-10-24 13:54:58] Deviance of iter2=121.5994
-#> [2022-10-24 13:54:59] Deviance of iter3=147.7237
-#> [2022-10-24 13:55:00] Deviance of iter4=140.4008
-#> [2022-10-24 13:55:01] Deviance of iter5=129.2244
-#> [2022-10-24 13:55:01] Deviance of iter6=123.9979
-#> [2022-10-24 13:55:02] Deviance of iter7=123.1971
-#> [2022-10-24 13:55:03] Deviance of iter8=124.1615
-#> [2022-10-24 13:55:04] Deviance of iter9=124.5356
-#> [2022-10-24 13:55:05] Deviance of iter10=124.5503
-#> [2022-10-24 13:55:06] Deviance of iter11=124.5504
-#> [2022-10-24 13:55:07] Deviance of iter12=124.5504
-#> [2022-10-24 13:55:07] Host: Finished calculating ROC-GLM
-#> [2022-10-24 13:55:07] Host: Cleaning data on server
-#> [2022-10-24 13:55:07] Host: Calculating AUC and CI
-#> [2022-10-24 13:55:15] Finished!
+#> [2022-10-25 06:58:22] Host: Received scores of negative response
+#> [2022-10-25 06:58:22] Receiving negative scores
+#> [2022-10-25 06:58:23] Host: Pushing pooled scores
+#> [2022-10-25 06:58:24] Server: Calculating placement values and parts for ROC-GLM
+#> [2022-10-25 06:58:25] Server: Calculating probit regression to obtain ROC-GLM
+#> [2022-10-25 06:58:25] Deviance of iter1=137.2431
+#> [2022-10-25 06:58:26] Deviance of iter2=121.5994
+#> [2022-10-25 06:58:27] Deviance of iter3=147.7237
+#> [2022-10-25 06:58:28] Deviance of iter4=140.4008
+#> [2022-10-25 06:58:28] Deviance of iter5=129.2244
+#> [2022-10-25 06:58:29] Deviance of iter6=123.9979
+#> [2022-10-25 06:58:30] Deviance of iter7=123.1971
+#> [2022-10-25 06:58:31] Deviance of iter8=124.1615
+#> [2022-10-25 06:58:31] Deviance of iter9=124.5356
+#> [2022-10-25 06:58:32] Deviance of iter10=124.5503
+#> [2022-10-25 06:58:33] Deviance of iter11=124.5504
+#> [2022-10-25 06:58:34] Deviance of iter12=124.5504
+#> [2022-10-25 06:58:34] Host: Finished calculating ROC-GLM
+#> [2022-10-25 06:58:34] Host: Cleaning data on server
+#> [2022-10-25 06:58:34] Host: Calculating AUC and CI
+#> [2022-10-25 06:58:41] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -272,7 +272,7 @@ dsConfusion(connections, "y", "pred")
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2022-10-24 13:55:22.**
+**Build by root (Darwin) on 2022-10-25 06:58:46.**
 
 This readme is built automatically after each push to the repository.
 Hence, it also is a test if the functionality of the package works also
