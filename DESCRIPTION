@@ -32,8 +32,7 @@ Suggests:
     DSOpal,
     ggplot2,
     testthat,
-    opalr,
-    dsLite
+    opalr
 AggregateMethods:
     calculateDistrGLMParts,
     getNegativeScoresVar,
@@ -54,5 +53,7 @@ AssignMethods:
     decodeBinary,
     assignPredictModel,
     removeMissings
+Remotes:
+    datashield/dsBase
 Options: datashield.privacyLevel=5
 RoxygenNote: 7.1.1
