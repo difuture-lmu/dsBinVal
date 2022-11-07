@@ -1,4 +1,4 @@
-#' @title Calculate data for calibration curve
+#' @title Calculate data for calibration curve, called by dsCalibrationCurve
 #' @description This function calculates a vector of values for the calibration curve.
 #' @param truth_name (`character(1L)`) Character containing the name of the vector of
 #'   0-1-values encoded as integer or numeric.
@@ -9,12 +9,24 @@
 #' @author Daniel S.
 #' @export
 calibrationCurve = function(truth_name, prob_name, nbins = 10L, remove_critical_bins = TRUE) {
+
+  #############################################################
+  #MODULE 1: CAPTURE THE nfilter SETTINGS
+  thr = dsBase::listDisclosureSettingsDS()
+  nfilter_tab = as.numeric(thr$nfilter.tab)
+  #nfilter_glm = as.numeric(thr$nfilter.glm)
+  #nfilter_subset = as.numeric(thr$nfilter.subset)
+  #nfilter_string = as.numeric(thr$nfilter.string)
+  #############################################################
+
   checkmate::assertCharacter(truth_name, len = 1L, null.ok = FALSE, any.missing = FALSE)
   checkmate::assertCharacter(prob_name, len = 1L, null.ok = FALSE, any.missing = FALSE)
   checkmate::assertCount(nbins, na.ok = FALSE, positive = TRUE, null.ok = FALSE)
 
-  truth = eval(parse(text = truth_name))
-  prob  = eval(parse(text = prob_name))
+  #truth = eval(parse(text = truth_name))
+  truth = get(truth_name, envir = parent.frame())
+  #prob = eval(parse(text = prob_name))
+  prob = get(prob_name, envir = parent.frame())
 
   ntruth = length(truth)
   checkmate::assertNumeric(prob, len = ntruth, null.ok = FALSE, any.missing = FALSE)
@@ -42,15 +54,16 @@ calibrationCurve = function(truth_name, prob_name, nbins = 10L, remove_critical_
   tb       = table(bins)
   df_count = data.frame(bin = names(tb), n = as.numeric(tb), lower = breaks[-length(breaks)], upper = breaks[-1])
 
-  ## Calculate curve only if each bin has at least nfilter_privacy or more values to ensure privacy:
-  nfilter_privacy = .getPrivacyLevel()
+  ## Calculate curve only if each bin has at least nfilter_tab or more values to ensure privacy:
+  # Fallback if `listDisclosureSettingsDS` returns NULL:
+  if (is.null(nfilter_tab)) nfilter_tab = .getPrivacyLevel()
   if (remove_critical_bins) {
-    idx_critical = which((tb < nfilter_privacy) & (tb > 0))
+    idx_critical = which((tb < nfilter_tab) & (tb > 0))
   } else {
-    if (any(tb[tb > 0] < nfilter_privacy))
-      stop("More than ", nfilter_privacy, " observations per bin are required ",
+    if (any(tb[tb > 0] < nfilter_tab))
+      stop("More than ", nfilter_tab, " observations per bin are required ",
         "to ensure privacy! Critical number of observations in bin are ",
-        paste(tb[(tb > 0) & (tb < nfilter_privacy)], collapse = ", "), ".")
+        paste(tb[(tb > 0) & (tb < nfilter_tab)], collapse = ", "), ".")
   }
 
   df_tmp = data.frame(truth, prob)
@@ -61,7 +74,6 @@ calibrationCurve = function(truth_name, prob_name, nbins = 10L, remove_critical_
     idx_anonymize = out$bin %in% names(idx_critical)
     out$truth[idx_anonymize] = NA
     out$prob[idx_anonymize] = NA
-    #out$n[idx_anonymize] = NA
   }
   return(out)
 }

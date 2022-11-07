@@ -24,6 +24,7 @@ Depends:
     R (>= 3.1.0)
 Imports:
     DSI,
+    dsBase,
     checkmate,
     stringr,
     digest
@@ -31,7 +32,8 @@ Suggests:
     DSOpal,
     ggplot2,
     testthat,
-    opalr
+    opalr,
+    dsLite
 AggregateMethods:
     calculateDistrGLMParts,
     getNegativeScoresVar,

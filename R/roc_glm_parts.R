@@ -16,6 +16,7 @@ computePlacementValues = function(pooled_scores_name, truth_name, prob_name, tse
   prob  = df_pred$prob
 
   p_scores = eval(parse(text = pooled_scores_name))
+  p_scores = get(pooled_scores_name, envir = parent.frame())
 
   ecdf_emp = stats::ecdf(p_scores)
   surv_emp = function(x) 1 - ecdf_emp(x)
@@ -76,17 +77,29 @@ rocGLMData = function(U, tset) {
 #' @author Stefan B., Daniel S.
 #' @export
 rocGLMFrame = function(truth_name, prob_name, pooled_scores_name) {
+
+  #############################################################
+  #MODULE 1: CAPTURE THE nfilter SETTINGS
+  thr = dsBase::listDisclosureSettingsDS()
+  nfilter_tab = as.numeric(thr$nfilter.tab)
+  #nfilter_glm = as.numeric(thr$nfilter.glm)
+  #nfilter_subset = as.numeric(thr$nfilter.subset)
+  #nfilter_string = as.numeric(thr$nfilter.string)
+  #############################################################
+
   checkmate::assertCharacter(pooled_scores_name, len = 1L)
   df_pred = checkTruthProb(truth_name, prob_name)
 
   truth = df_pred$truth
   prob  = df_pred$prob
 
-  if (length(truth) < 5)
-    stop("More than 5 observations are required to ensure privacy!")
+  # Fallback if `listDisclosureSettingsDS` returns NULL:
+  if (length(nfilter_tab) == 0) nfilter_tab = .getPrivacyLevel()
+  if (length(truth) < nfilter_tab)
+    stop("More than ", nfilter_tab, " observations are required to ensure privacy!")
 
   tset = prob[truth == 1]
-  pv   = computePlacementValues(pooled_scores_name, prob, truth, tset)
+  pv   = computePlacementValues(pooled_scores_name, truth_name, prob_name, tset)
   u    = calcU(tset, pv)
   roc_glm_data = rocGLMData(u, tset)
 
@@ -105,6 +118,16 @@ rocGLMFrame = function(truth_name, prob_name, pooled_scores_name) {
 #' @author Daniel S.
 #' @export
 calculateDistrGLMParts = function(formula, data,  w = NULL, params_char) {
+
+  #############################################################
+  #MODULE 1: CAPTURE THE nfilter SETTINGS
+  thr = dsBase::listDisclosureSettingsDS()
+  #nfilter_tab = as.numeric(thr$nfilter.tab)
+  nfilter_glm = as.numeric(thr$nfilter.glm)
+  #nfilter_subset = as.numeric(thr$nfilter.subset)
+  #nfilter_string = as.numeric(thr$nfilter.string)
+  #############################################################
+
   if (inherits(formula, "formula")) {
     checkmate::assertFormula(formula)
   } else {
@@ -140,7 +163,9 @@ calculateDistrGLMParts = function(formula, data,  w = NULL, params_char) {
     }))
   }
 
-  if (nrow(X) < length(beta))
+  # Fallback if `listDisclosureSettingsDS` returns NULL:
+  if (length(nfilter_glm) == 0) nfilter_glm = 1 / .getPrivacyLevel()
+  if ((nfilter_glm * nrow(X)) < length(beta))
     stop("Number of parameters must be greater then the number of observations.")
 
   w_mat = diag(sqrt(w))

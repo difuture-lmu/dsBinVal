@@ -122,7 +122,6 @@ dsROCGLM = function(connections, truth_name, pred_name, trace = TRUE, clean_serv
     message("\n[", Sys.time(), "] Setting: epsilon = ", epsilon, " and delta = ", delta, "\n")
   }
 
-
   checkmate::assertLogical(trace, len = 1L, any.missing = FALSE, null.ok = FALSE)
   checkmate::assertLogical(clean_server, len = 1L, any.missing = FALSE, null.ok = FALSE)
   checkmate::assertCharacter(seed_object, null.ok = TRUE, len = 1L)

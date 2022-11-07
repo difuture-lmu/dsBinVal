@@ -177,3 +177,56 @@ internLength = function(symbol) {
   rm(list = fglobal, envir = .GlobalEnv)
   return(invisible(NULL))
 }
+
+#' @title Truth and Prediction Checker
+#' @description This function checks if the vector of true values and predictions
+#'   has the correct format to be used for the ROC-GLM. If something does not suit,
+#'   then the function tries to convert it into the correct format.
+#' @param truth_name (`character(1L)`) Character containing the name of the vector of 0-1-values
+#'   encoded as integer or numeric.
+#' @param prob_name (`character(1L)`) Character containing the name of the vector of probabilities.
+#' @param pos (`character(1L)`) Character containing the name of the positive class.
+#' @return Data frame containing the truth and prediction vector.
+#' @author Daniel S.
+checkTruthProb = function(truth_name, prob_name, pos = NULL) {
+
+  checkmate::assertCharacter(truth_name, len = 1L, any.missing = FALSE)
+  checkmate::assertCharacter(prob_name, len = 1L, any.missing = FALSE)
+
+  #truth = eval(parse(text = truth_name))
+  truth = get(truth_name, envir = parent.frame())
+  #prob = eval(parse(text = prob_name))
+  prob = get(prob_name, envir = parent.frame())
+
+  if (length(unique(truth)) > 2)
+    stop("\"", truth_name, "\" contains ", length(unique(truth)), " > 2 elements! Two are required!")
+
+  ntruth = length(truth)
+  checkmate::assertNumeric(prob, any.missing = FALSE, len = ntruth, null.ok = FALSE, finite = TRUE)
+
+  if (is.null(pos)) {
+    if (is.character(truth) | is.factor(truth)) {
+      warning("\"", truth_name, "\" is not encoded as 0-1 integer, conversion is done automatically.",
+        "This may lead to a label flip! Set argument \"pos\" to ensure correct encoding.")
+    }
+
+    if (is.character(truth))
+      truth = as.integer(as.factor(truth))
+
+    if (is.factor(truth))
+      truth = as.integer(truth)
+
+    if (max(truth) == 2)
+      truth = truth - 1
+  } else {
+    if (is.character(truth) | is.factor(truth))
+      truth = ifelse(truth == pos, 1, 0)
+
+    if (is.numeric(truth)) {
+      warning(quote("pos"), " is set but \"", truth_name, "\" is numeric. Are you sure",
+        " you know what the response really is?")
+    }
+  }
+  return(invisible(data.frame(truth = truth, prob = prob)))
+}
+
