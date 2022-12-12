@@ -170,36 +170,36 @@ l2s
 roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
   dat_name = "iris", seed_object = "y")
 #> 
-#> [2022-11-28 13:24:01] L2 sensitivity is: 0.1281
+#> [2022-12-12 13:25:15] L2 sensitivity is: 0.1281
 #> Warning in dsROCGLM(connections, truth_name = "y", pred_name = "pred", dat_name
 #> = "iris", : l2-sensitivity may be too high for good results! Epsilon = 0.5 and
 #> delta = 0.5 is used which may lead to bad results.
 #> 
-#> [2022-11-28 13:24:02] Setting: epsilon = 0.5 and delta = 0.5
+#> [2022-12-12 13:25:16] Setting: epsilon = 0.5 and delta = 0.5
 #> 
-#> [2022-11-28 13:24:02] Initializing ROC-GLM
+#> [2022-12-12 13:25:16] Initializing ROC-GLM
 #> 
-#> [2022-11-28 13:24:02] Host: Received scores of negative response
-#> [2022-11-28 13:24:02] Receiving negative scores
-#> [2022-11-28 13:24:03] Host: Pushing pooled scores
-#> [2022-11-28 13:24:04] Server: Calculating placement values and parts for ROC-GLM
-#> [2022-11-28 13:24:04] Server: Calculating probit regression to obtain ROC-GLM
-#> [2022-11-28 13:24:05] Deviance of iter1=137.2431
-#> [2022-11-28 13:24:06] Deviance of iter2=121.5994
-#> [2022-11-28 13:24:07] Deviance of iter3=147.7237
-#> [2022-11-28 13:24:08] Deviance of iter4=140.4008
-#> [2022-11-28 13:24:08] Deviance of iter5=129.2244
-#> [2022-11-28 13:24:09] Deviance of iter6=123.9979
-#> [2022-11-28 13:24:10] Deviance of iter7=123.1971
-#> [2022-11-28 13:24:11] Deviance of iter8=124.1615
-#> [2022-11-28 13:24:11] Deviance of iter9=124.5356
-#> [2022-11-28 13:24:12] Deviance of iter10=124.5503
-#> [2022-11-28 13:24:13] Deviance of iter11=124.5504
-#> [2022-11-28 13:24:14] Deviance of iter12=124.5504
-#> [2022-11-28 13:24:14] Host: Finished calculating ROC-GLM
-#> [2022-11-28 13:24:14] Host: Cleaning data on server
-#> [2022-11-28 13:24:14] Host: Calculating AUC and CI
-#> [2022-11-28 13:24:21] Finished!
+#> [2022-12-12 13:25:16] Host: Received scores of negative response
+#> [2022-12-12 13:25:16] Receiving negative scores
+#> [2022-12-12 13:25:16] Host: Pushing pooled scores
+#> [2022-12-12 13:25:17] Server: Calculating placement values and parts for ROC-GLM
+#> [2022-12-12 13:25:18] Server: Calculating probit regression to obtain ROC-GLM
+#> [2022-12-12 13:25:19] Deviance of iter1=137.2431
+#> [2022-12-12 13:25:20] Deviance of iter2=121.5994
+#> [2022-12-12 13:25:20] Deviance of iter3=147.7237
+#> [2022-12-12 13:25:21] Deviance of iter4=140.4008
+#> [2022-12-12 13:25:22] Deviance of iter5=129.2244
+#> [2022-12-12 13:25:23] Deviance of iter6=123.9979
+#> [2022-12-12 13:25:23] Deviance of iter7=123.1971
+#> [2022-12-12 13:25:24] Deviance of iter8=124.1615
+#> [2022-12-12 13:25:25] Deviance of iter9=124.5356
+#> [2022-12-12 13:25:26] Deviance of iter10=124.5503
+#> [2022-12-12 13:25:27] Deviance of iter11=124.5504
+#> [2022-12-12 13:25:27] Deviance of iter12=124.5504
+#> [2022-12-12 13:25:27] Host: Finished calculating ROC-GLM
+#> [2022-12-12 13:25:27] Host: Cleaning data on server
+#> [2022-12-12 13:25:28] Host: Calculating AUC and CI
+#> [2022-12-12 13:25:35] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -272,7 +272,7 @@ dsConfusion(connections, "y", "pred")
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2022-11-28 13:24:28.**
+**Build by root (Darwin) on 2022-12-12 13:25:41.**
 
 This readme is built automatically after each push to the repository.
 Hence, it also is a test if the functionality of the package works also
