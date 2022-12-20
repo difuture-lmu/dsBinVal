@@ -1,6 +1,7 @@
 context("Test if calibration curve works")
 
 test_that("calibrationCurve works", {
+  set.seed(31415)
   x <<- runif(100, 0, 1)
   p1 <<- rbinom(100, 1, x)
   p2 <<- rbinom(100, 1, x)

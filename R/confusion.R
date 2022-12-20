@@ -8,6 +8,16 @@
 #' @author Daniel S.
 #' @export
 confusion = function(truth_name, prob_name, threshold = 0.5) {
+
+  #############################################################
+  #MODULE 1: CAPTURE THE nfilter SETTINGS
+  thr = dsBase::listDisclosureSettingsDS()
+  nfilter_tab = as.numeric(thr$nfilter.tab)
+  #nfilter_glm = as.numeric(thr$nfilter.glm)
+  #nfilter_subset = as.numeric(thr$nfilter.subset)
+  #nfilter_string = as.numeric(thr$nfilter.string)
+  #############################################################
+
   checkmate::assertCharacter(truth_name, len = 1L, null.ok = FALSE, any.missing = FALSE)
   checkmate::assertCharacter(prob_name, len = 1L, null.ok = FALSE, any.missing = FALSE)
   checkmate::assertNumeric(threshold, len = 1L, any.missing = FALSE)
@@ -17,16 +27,20 @@ confusion = function(truth_name, prob_name, threshold = 0.5) {
       "depending on the prediction, and hence scoring classifier, to use other threshold.")
   }
 
-  truth = eval(parse(text = truth_name))
-  prob  = eval(parse(text = prob_name))
+  #truth = eval(parse(text = truth_name))
+  truth = get(truth_name, envir = parent.frame())
+  #prob = eval(parse(text = prob_name))
+  prob = get(prob_name, envir = parent.frame())
 
   ntruth = length(truth)
   checkmate::assertNumeric(prob, len = ntruth, null.ok = FALSE, any.missing = FALSE)
 
   ## Calculate brier score just if there are at least five or more values to ensure privacy:
-  nfilter_privacy = .getPrivacyLevel()
-  if (ntruth < nfilter_privacy)
-    stop("More than ", nfilter_privacy, " observations are required to ensure privacy!")
+
+  # Fallback if `listDisclosureSettingsDS` returns NULL:
+  if (length(nfilter_tab) == 0) nfilter_tab = .getPrivacyLevel()
+  if (ntruth < nfilter_tab)
+    stop("More than ", nfilter_tab, " observations are required to ensure privacy!")
 
   if (is.character(truth))
     truth = as.integer(as.factor(truth))
@@ -48,14 +62,14 @@ confusion = function(truth_name, prob_name, threshold = 0.5) {
   tab_truth = table(truth)
   tab_pred  = table(cls_pred)
 
-  if (any(tab_truth < nfilter_privacy)) {
+  if (any(tab_truth < nfilter_tab)) {
     stop("Each entry in the table of the truth values must be ",
-       "smaller than the privacy level ", nfilter_privacy, ".")
+       "smaller than the privacy level ", nfilter_tab, ".")
   }
 
-  if (any(tab_pred < nfilter_privacy)) {
+  if (any(tab_pred < nfilter_tab)) {
     stop("Each entry in the table of the predicted classes ",
-      "must be smaller than the privacy level ", nfilter_privacy, ".")
+      "must be smaller than the privacy level ", nfilter_tab, ".")
   }
   return(conf)
 }

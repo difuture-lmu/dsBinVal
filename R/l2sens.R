@@ -15,13 +15,23 @@
 #' @author Daniel S.
 #' @export
 l2sens = function(dat_name, scores_name, nbreaks = NULL, col_names = NULL, norm = diff, drop_on_error = TRUE) {
+
+  #############################################################
+  #MODULE 1: CAPTURE THE nfilter SETTINGS
+  thr = dsBase::listDisclosureSettingsDS()
+  nfilter_tab = as.numeric(thr$nfilter.tab)
+  #nfilter_glm = as.numeric(thr$nfilter.glm)
+  #nfilter_subset = as.numeric(thr$nfilter.subset)
+  #nfilter_string = as.numeric(thr$nfilter.string)
+  #############################################################
+
   if (checkmate::testCharacter(dat_name, len = 1L))
-    dat = eval(parse(text = dat_name))
+    dat = get(dat_name, envir = parent.frame())
   else
     dat = dat_name
 
   if (checkmate::testCharacter(scores_name, len = 1L))
-    scores = eval(parse(text = scores_name))
+    scores = get(scores_name, envir = parent.frame())
   else
     scores = scores_name
 
@@ -29,7 +39,7 @@ l2sens = function(dat_name, scores_name, nbreaks = NULL, col_names = NULL, norm 
     if (is.null(col_names))
       cols = NULL
     else
-      cols = eval(parse(text = col_names))
+      cols = get(col_names, envir = parent.frame())
   } else {
     cols = col_names
   }
@@ -40,6 +50,11 @@ l2sens = function(dat_name, scores_name, nbreaks = NULL, col_names = NULL, norm 
   checkmate::assertCharacter(cols, null.ok = TRUE)
   checkmate::assertFunction(norm)
   checkmate::assertLogical(drop_on_error, len = 1L)
+
+  # Fallback if `listDisclosureSettingsDS` returns NULL:
+  if (length(nfilter_tab) == 0) nfilter_tab = .getPrivacyLevel()
+  if (nrow(dat) < nfilter_tab)
+    stop("More than ", nfilter_tab, " observations are required to ensure privacy!")
 
   e = try(expr = {
     if (is.null(nbreaks)) nbreaks = floor(nrow(dat) / 3)

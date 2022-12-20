@@ -25,52 +25,6 @@ seedBoundedToObject = function(object, rm_attributes = TRUE) {
   return(seed_add)
 }
 
-#' @title Truth and Prediction Checker
-#' @description This function checks if the vector of true values and predictions
-#'   has the correct format to be used for the ROC-GLM. If something does not suit,
-#'   then the function tries to convert it into the correct format.
-#' @param truth_name (`character(1L)`) Character containing the name of the vector of 0-1-values
-#'   encoded as integer or numeric.
-#' @param prob_name (`character(1L)`) Character containing the name of the vector of probabilities.
-#' @param pos (`character(1L)`) Character containing the name of the positive class.
-#' @return Data frame containing the truth and prediction vector.
-#' @author Daniel S.
-checkTruthProb = function(truth_name, prob_name, pos = NULL) {
-  truth = eval(parse(text = truth_name))
-  prob  = eval(parse(text = prob_name))
-
-  if (length(unique(truth)) > 2)
-    stop("\"", truth_name, "\" contains ", length(unique(truth)), " > 2 elements! Two are required!")
-
-  ntruth = length(truth)
-  checkmate::assertNumeric(prob, any.missing = FALSE, len = ntruth, null.ok = FALSE, finite = TRUE)
-
-  if (is.null(pos)) {
-    if (is.character(truth) | is.factor(truth)) {
-      warning("\"", truth_name, "\" is not encoded as 0-1 integer, conversion is done automatically.",
-        "This may lead to a label flip! Set argument \"pos\" to ensure correct encoding.")
-    }
-
-    if (is.character(truth))
-      truth = as.integer(as.factor(truth))
-
-    if (is.factor(truth))
-      truth = as.integer(truth)
-
-    if (max(truth) == 2)
-      truth = truth - 1
-  } else {
-    if (is.character(truth) | is.factor(truth))
-      truth = ifelse(truth == pos, 1, 0)
-
-    if (is.numeric(truth)) {
-      warning(quote("pos"), " is set but \"", truth_name, "\" is numeric. Are you sure",
-        " you know what the response really is?")
-    }
-  }
-  return(invisible(data.frame(truth = truth, prob = prob)))
-}
-
 #' @title Return variance of positive scores
 #' @description This function just returns the variance of positive scores.
 #' @param truth_name (`character(1L)`) Character containing the name of the vector of 0-1-values
@@ -84,6 +38,16 @@ checkTruthProb = function(truth_name, prob_name, pos = NULL) {
 #' @author Daniel S.
 #' @export
 getPositiveScoresVar = function(truth_name, prob_name, m = NULL, return_sum = FALSE) {
+
+  #############################################################
+  #MODULE 1: CAPTURE THE nfilter SETTINGS
+  thr = dsBase::listDisclosureSettingsDS()
+  nfilter_tab = as.numeric(thr$nfilter.tab)
+  #nfilter_glm = as.numeric(thr$nfilter.glm)
+  #nfilter_subset = as.numeric(thr$nfilter.subset)
+  #nfilter_string = as.numeric(thr$nfilter.string)
+  #############################################################
+
   df_pred = checkTruthProb(truth_name, prob_name)
 
   checkmate::assertNumeric(m, len = 1L, null.ok = TRUE)
@@ -92,9 +56,11 @@ getPositiveScoresVar = function(truth_name, prob_name, m = NULL, return_sum = FA
   prob  = df_pred$prob
 
   ## Calculate brier score just if there are at least five or more values to ensure privacy:
-  nfilter_privacy = .getPrivacyLevel()
-  if (length(truth) < nfilter_privacy)
-    stop("More than ", nfilter_privacy, " observations are required to ensure privacy")
+
+  # Fallback if `listDisclosureSettingsDS` returns NULL:
+  if (length(nfilter_tab) == 0) nfilter_tab = .getPrivacyLevel()
+  if (length(truth) < nfilter_tab)
+    stop("More than ", nfilter_tab, " observations are required to ensure privacy")
 
   pv = prob[truth == 1]
   if (return_sum) return(sum(pv))
@@ -140,9 +106,9 @@ getPositiveScores = function(truth_name, prob_name, epsilon = 0.2, delta = 0.2,
       "sensitivity with name 'l2s' to the servers.")
   }
 
-  l2s = eval(parse(text = "l2s"))
-  checkmate::assertNumeric(l2s, len = 1L, lower = 0)
-
+  l2s = get("l2s", envir = parent.frame())
+  #l2s = eval(parse(text = "l2s"))
+  checkmate::assertNumeric(l2s, len = 1L, lower = 0, any.missing = FALSE)
   if (l2s == 0)
     stop("L2 sensitivity must be > 0")
 
@@ -181,15 +147,27 @@ getPositiveScores = function(truth_name, prob_name, epsilon = 0.2, delta = 0.2,
 #' @author Daniel S.
 #' @export
 getNegativeScoresVar = function(truth_name, prob_name, m = NULL, return_sum = FALSE) {
+
+  #############################################################
+  #MODULE 1: CAPTURE THE nfilter SETTINGS
+  thr = dsBase::listDisclosureSettingsDS()
+  nfilter_tab = as.numeric(thr$nfilter.tab)
+  #nfilter_glm = as.numeric(thr$nfilter.glm)
+  #nfilter_subset = as.numeric(thr$nfilter.subset)
+  #nfilter_string = as.numeric(thr$nfilter.string)
+  #############################################################
+
   df_pred = checkTruthProb(truth_name, prob_name)
 
   truth = df_pred$truth
   prob  = df_pred$prob
 
   ## Calculate brier score just if there are at least five or more values to ensure privacy:
-  nfilter_privacy = .getPrivacyLevel()
-  if (length(truth) < nfilter_privacy)
-    stop("More than ", nfilter_privacy, " observations are required to ensure privacy!")
+
+  # Fallback if `listDisclosureSettingsDS` returns NULL:
+  if (length(nfilter_tab) == 0) nfilter_tab = .getPrivacyLevel()
+  if (length(truth) < nfilter_tab)
+    stop("More than ", nfilter_tab, " observations are required to ensure privacy!")
 
   nv = prob[truth == 0]
   if (return_sum) return(sum(nv))
@@ -231,10 +209,10 @@ getNegativeScores = function(truth_name, prob_name, epsilon = 0.2, delta = 0.2,
   if (! "l2s" %in% c(ls(envir = .GlobalEnv), ls()))
     stop("Cannot find l2 sensitivity. Please push an l2 sensitivity with name 'l2s' to the servers.")
 
-  l2s = eval(parse(text = "l2s"))
-  checkmate::assertNumeric(l2s, len = 1L, lower = 0)
+  l2s = get("l2s", envir = parent.frame())
+  #l2s = eval(parse(text = "l2s"))
+  checkmate::assertNumeric(l2s, len = 1L, lower = 0, any.missing = FALSE)
   if (l2s == 0) stop("L2 sensitivity must be > 0")
-
 
   truth = df_pred$truth
   prob  = df_pred$prob
