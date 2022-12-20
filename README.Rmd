@@ -13,6 +13,27 @@ knitr::opts_chunk$set(
   fig.path = "Readme_files/"
 )
 
+## Helper to determine OPAL version:
+v_major  = seq(4L, 10L)
+v_minor1 = seq_len(10L) - 1
+v_minor2 = seq_len(10L) - 1
+
+versions = expand.grid(v_major, v_minor1, v_minor2)
+od = order(versions[, 1], versions[, 2], versions[, 3])
+versions = versions[od, ]
+vstrings = paste(versions[, 1], versions[, 2], versions[, 3], sep = ".")
+
+getOPALVersion = function(opal, versions) {
+  k = 1
+  ov = opalr::opal.version_compare(opal, versions[k])
+  while (ov != 0) {
+    if (ov > 0) k = k + 1
+    if (ov < 0) stop("Version is smaller than the smallest one from vector.")
+    ov = opalr::opal.version_compare(opal, versions[k])
+  }
+  return(versions[k])
+}
+
 pkgs = c("here", "opalr", "DSI", "DSOpal", "dsBaseClient")
 for (pkg in pkgs) {
   if (! requireNamespace(pkg, quietly = TRUE))
@@ -26,6 +47,7 @@ username = "administrator"
 password = "password"
 
 opal = opalr::opal.login(username = username, password = password, url = surl)
+opal_version = getOPALVersion(opal, vstrings)
 
 check1 = opalr::dsadmin.install_github_package(opal = opal, pkg = "dsBinVal", username = "difuture-lmu", ref = "main")
 if (! check1)
@@ -36,6 +58,24 @@ if (! check2)
   stop("[", Sys.time(), "] Was not able to publish methods of dsBinVal!")
 
 opalr::opal.logout(opal)
+
+# Build model for the example, therefore download the CNSIM data sets from:
+# https://github.com/datashield/DSLite/tree/master/data
+
+if (FALSE) {
+  dpath = "~/Downloads"
+  dnames = paste0(dpath, "/CNSIM", seq_len(3), ".rda")
+  dLoader = function(n) {
+    load(n)
+    dn = ls()
+    dn = dn[grep("CNSIM", dn)]
+    return(get(dn))
+  }
+  CNSIM = na.omit(do.call(rbind, lapply(dnames, dLoader)))
+  mod = glm(DIS_DIAB ~ ., data = CNSIM, family = binomial())
+  save(mod, file = here::here("Readme_files/mod.rda"))
+}
+
 ```
 [![R-CMD-check](https://github.com/difuture-lmu/dsBinVal/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/difuture-lmu/dsBinVal/actions/workflows/R-CMD-check.yaml) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![codecov](https://codecov.io/gh/difuture-lmu/dsBinVal/branch/main/graph/badge.svg?token=E8AZRM6XJX)](https://codecov.io/gh/difuture-lmu/dsBinVal)
 
@@ -107,39 +147,44 @@ builder$append(
   server   = "ds1",
   url      = surl,
   user     = username,
-  password = password
+  password = password,
+  table    = "CNSIM.CNSIM1"
 )
 builder$append(
   server   = "ds2",
   url      = surl,
   user     = username,
-  password = password
+  password = password,
+  table    = "CNSIM.CNSIM2"
+)
+builder$append(
+  server   = "ds3",
+  url      = surl,
+  user     = username,
+  password = password,
+  table    = "CNSIM.CNSIM3"
 )
 
 connections = datashield.login(logins = builder$build(), assign = TRUE)
 ```
 
-#### Assign iris and validation vector at DataSHIELD (just for testing)
-
-```{r}
-datashield.assign(connections, "iris", quote(iris))
-vcall = paste0("quote(c(", paste(rep(c(1, 0), times = c(50, 100)), collapse = ", "), "))")
-datashield.assign(connections, "y", eval(parse(text = vcall)))
-```
-
 #### Load test model, push to DataSHIELD, and calculate predictions
 
 ```{r}
-# Model predicts if species of iris is setosa or not.
-iris$y = ifelse(iris$Species == "setosa", 1, 0)
-mod = glm(y ~ Sepal.Length, data = iris, family = binomial())
+# Load the model fitted locally on CNSIM:
+load(here::here("Readme_files/mod.rda"))
+# Model was calculated by:
+#> glm(DIS_DIAB ~ ., data = CNSIM, family = binomial())
 
-# Push the model to the DataSHIELD servers using `dsPredictBase`:
+# Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
 
-# Calculate scores and save at the servers using `dsPredictBase`:
+# Create a clean data set without NAs:
+ds.completeCases("D", newobj = "D_complete")
+
+# Calculate scores and save at the servers:
 pfun =  "predict(mod, newdata = D, type = 'response')"
-predictModel(connections, mod, "pred", "iris", predict_fun = pfun)
+predictModel(connections, mod, "pred", "D_complete", predict_fun = pfun)
 
 datashield.symbols(connections)
 ```
@@ -150,7 +195,7 @@ datashield.symbols(connections)
 # In order to securely calculate the ROC-GLM, we have to assess the
 # l2-sensitivity to set the privacy parameters of differential
 # privacy adequately:
-l2s = dsL2Sens(connections, "iris", "pred")
+l2s = dsL2Sens(connections, "D_complete", "pred")
 l2s
 
 # Due to the results presented in https://arxiv.org/abs/2203.10828, we set the privacy parameters to
@@ -164,8 +209,10 @@ l2s
 #### Calculate ROC-GLM
 
 ```{r}
-roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
-  dat_name = "iris", seed_object = "y")
+# The response must be encoded as integer/numeric vector:
+ds.asInteger("D_complete$DIS_DIAB", "truth")
+roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
+  dat_name = "D_complete", seed_object = "pred")
 roc_glm
 
 plot(roc_glm)
@@ -174,19 +221,13 @@ plot(roc_glm)
 #### Assess calibration
 
 ```{r}
-dsBrierScore(connections, "y", "pred")
+dsBrierScore(connections, "truth", "pred")
 
 ### Calculate and plot calibration curve:
-cc = dsCalibrationCurve(connections, "y", "pred", 10, 3)
+cc = dsCalibrationCurve(connections, "truth", "pred")
 cc
 
 plot(cc)
-```
-
-#### Further performance metrics
-
-```{r}
-dsConfusion(connections, "y", "pred")
 ```
 
 ## Deploy information:
@@ -215,6 +256,7 @@ knitr::kable(dfv)
 ```
 
 - Remote DataSHIELD machines:
+    - OPAL version of the test instance: `r opal_version`
     - `R` version of `r names(ri_ds)[1]`: `r ri_ds[[1]]$session$R.version$version.string`
     - `R` version of `r names(ri_ds)[2]`: `r ri_ds[[2]]$session$R.version$version.string`
     - Version of server packages:

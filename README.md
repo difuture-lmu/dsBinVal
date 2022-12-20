@@ -49,10 +49,10 @@ server and the analysts machine.
 
 The two options are to use the Opal API:
 
-  - Log into Opal ans switch to the `Administration/DataSHIELD/` tab
-  - Click the `Add DataSHIELD package` button
-  - Select `GitHub` as source, and use `difuture-lmu` as user,
-    `dsBinVal` as name, and `main` as Git reference.
+- Log into Opal ans switch to the `Administration/DataSHIELD/` tab
+- Click the `Add DataSHIELD package` button
+- Select `GitHub` as source, and use `difuture-lmu` as user, `dsBinVal`
+  as name, and `main` as Git reference.
 
 The second option is to use the `opalr` package to install `dsBinVal`
 directly from `R`:
@@ -102,48 +102,76 @@ builder$append(
   server   = "ds1",
   url      = surl,
   user     = username,
-  password = password
+  password = password,
+  table    = "CNSIM.CNSIM1"
 )
 builder$append(
   server   = "ds2",
   url      = surl,
   user     = username,
-  password = password
+  password = password,
+  table    = "CNSIM.CNSIM2"
+)
+builder$append(
+  server   = "ds3",
+  url      = surl,
+  user     = username,
+  password = password,
+  table    = "CNSIM.CNSIM3"
 )
 
 connections = datashield.login(logins = builder$build(), assign = TRUE)
 #> 
 #> Logging into the collaborating servers
-```
-
-#### Assign iris and validation vector at DataSHIELD (just for testing)
-
-``` r
-datashield.assign(connections, "iris", quote(iris))
-vcall = paste0("quote(c(", paste(rep(c(1, 0), times = c(50, 100)), collapse = ", "), "))")
-datashield.assign(connections, "y", eval(parse(text = vcall)))
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Login ds1 [==================>---------------------------------------------------------]  25% / 0s  Login ds2 [=====================================>--------------------------------------]  50% / 0s  Login ds3 [========================================================>-------------------]  75% / 1s  Logged in all servers [================================================================] 100% / 1s
+#> 
+#>   No variables have been specified. 
+#>   All the variables in the table 
+#>   (the whole dataset) will be assigned to R!
+#> 
+#> Assigning table data...
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Assigning ds1 (CNSIM.CNSIM1) [=============>-------------------------------------------]  25% / 1s  Assigning ds2 (CNSIM.CNSIM2) [===========================>-----------------------------]  50% / 1s  Assigning ds3 (CNSIM.CNSIM3) [==========================================>--------------]  75% / 1s  Assigned all tables [==================================================================] 100% / 1s
 ```
 
 #### Load test model, push to DataSHIELD, and calculate predictions
 
 ``` r
-# Model predicts if species of iris is setosa or not.
-iris$y = ifelse(iris$Species == "setosa", 1, 0)
-mod = glm(y ~ Sepal.Length, data = iris, family = binomial())
+# Load the model fitted locally on CNSIM:
+load(here::here("Readme_files/mod.rda"))
+# Model was calculated by:
+#> glm(DIS_DIAB ~ ., data = CNSIM, family = binomial())
 
-# Push the model to the DataSHIELD servers using `dsPredictBase`:
+# Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
+#> [2022-10-26 17:17:18] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (mod <- decodeBinary("580a000000030004020100030500000000055554462d3800000313000000...  Finalizing assignment ds1 (mod <- decodeBinary("580a000000030004020100030500000000055554462d380...  Checking ds2 (mod <- decodeBinary("580a000000030004020100030500000000055554462d3800000313000000...  Finalizing assignment ds2 (mod <- decodeBinary("580a000000030004020100030500000000055554462d380...  Checking ds3 (mod <- decodeBinary("580a000000030004020100030500000000055554462d3800000313000000...  Finalizing assignment ds3 (mod <- decodeBinary("580a000000030004020100030500000000055554462d380...  Assigned expr. (mod <- decodeBinary("580a000000030004020100030500000000055554462d38000003130000...
 
-# Calculate scores and save at the servers using `dsPredictBase`:
+# Create a clean data set without NAs:
+ds.completeCases("D", newobj = "D_complete")
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (exists("D")) [-----------------------------------------------------------]   0% / 0s  Getting aggregate ds1 (exists("D")) [===========>--------------------------------------]  25% / 0s  Checking ds2 (exists("D")) [==============>--------------------------------------------]  25% / 0s  Getting aggregate ds2 (exists("D")) [========================>-------------------------]  50% / 0s  Checking ds3 (exists("D")) [=============================>-----------------------------]  50% / 0s  Getting aggregate ds3 (exists("D")) [=====================================>------------]  75% / 0s  Aggregated (exists("D")) [=============================================================] 100% / 0s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (D_complete <- completeCasesDS("D")) [------------------------------------]   0% / 0s  Finalizing assignment ds1 (D_complete <- completeCasesDS("D")) [=====>-----------------]  25% / 0s  Checking ds2 (D_complete <- completeCasesDS("D")) [========>---------------------------]  25% / 0s  Finalizing assignment ds2 (D_complete <- completeCasesDS("D")) [===========>-----------]  50% / 0s  Checking ds3 (D_complete <- completeCasesDS("D")) [=================>------------------]  50% / 0s  Finalizing assignment ds3 (D_complete <- completeCasesDS("D")) [================>------]  75% / 0s  Assigned expr. (D_complete <- completeCasesDS("D")) [==================================] 100% / 1s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (testObjExistsDS("D_complete")) [-----------------------------------------]   0% / 0s  Getting aggregate ds1 (testObjExistsDS("D_complete")) [=======>------------------------]  25% / 0s  Checking ds2 (testObjExistsDS("D_complete")) [=========>-------------------------------]  25% / 0s  Getting aggregate ds2 (testObjExistsDS("D_complete")) [===============>----------------]  50% / 0s  Checking ds3 (testObjExistsDS("D_complete")) [===================>---------------------]  50% / 0s  Getting aggregate ds3 (testObjExistsDS("D_complete")) [=======================>--------]  75% / 0s  Aggregated (testObjExistsDS("D_complete")) [===========================================] 100% / 1s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (messageDS("D_complete")) [-----------------------------------------------]   0% / 0s  Getting aggregate ds1 (messageDS("D_complete")) [=========>----------------------------]  25% / 0s  Checking ds2 (messageDS("D_complete")) [===========>-----------------------------------]  25% / 0s  Getting aggregate ds2 (messageDS("D_complete")) [==================>-------------------]  50% / 0s  Checking ds3 (messageDS("D_complete")) [=======================>-----------------------]  50% / 0s  Getting aggregate ds3 (messageDS("D_complete")) [===========================>----------]  75% / 0s  Aggregated (messageDS("D_complete")) [=================================================] 100% / 1s
+#> $is.object.created
+#> [1] "A data object <D_complete> has been created in all specified data sources"
+#> 
+#> $validity.check
+#> [1] "<D_complete> appears valid in all sources"
+
+# Calculate scores and save at the servers:
 pfun =  "predict(mod, newdata = D, type = 'response')"
-predictModel(connections, mod, "pred", "iris", predict_fun = pfun)
+predictModel(connections, mod, "pred", "D_complete", predict_fun = pfun)
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (pred <- assignPredictModel("580a000000030004020100030500000000055554462d380000001...  Finalizing assignment ds1 (pred <- assignPredictModel("580a000000030004020100030500000000055554...  Checking ds2 (pred <- assignPredictModel("580a000000030004020100030500000000055554462d380000001...  Finalizing assignment ds2 (pred <- assignPredictModel("580a000000030004020100030500000000055554...  Checking ds3 (pred <- assignPredictModel("580a000000030004020100030500000000055554462d380000001...  Finalizing assignment ds3 (pred <- assignPredictModel("580a000000030004020100030500000000055554...  Assigned expr. (pred <- assignPredictModel("580a000000030004020100030500000000055554462d3800000...
 
 datashield.symbols(connections)
 #> $ds1
-#> [1] "iris" "mod"  "pred" "y"   
+#> [1] "D"          "D_complete" "mod"        "pred"      
 #> 
 #> $ds2
-#> [1] "iris" "mod"  "pred" "y"
+#> [1] "D"          "D_complete" "mod"        "pred"      
+#> 
+#> $ds3
+#> [1] "D"          "D_complete" "mod"        "pred"
 ```
 
 #### Calculate l2-sensitivity
@@ -152,9 +180,12 @@ datashield.symbols(connections)
 # In order to securely calculate the ROC-GLM, we have to assess the
 # l2-sensitivity to set the privacy parameters of differential
 # privacy adequately:
-l2s = dsL2Sens(connections, "iris", "pred")
+l2s = dsL2Sens(connections, "D_complete", "pred")
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (internDim("D_complete")) [-----------------------------------------------]   0% / 0s  Getting aggregate ds1 (internDim("D_complete")) [=========>----------------------------]  25% / 0s  Checking ds2 (internDim("D_complete")) [===========>-----------------------------------]  25% / 0s  Getting aggregate ds2 (internDim("D_complete")) [==================>-------------------]  50% / 0s  Checking ds3 (internDim("D_complete")) [=======================>-----------------------]  50% / 0s  Getting aggregate ds3 (internDim("D_complete")) [===========================>----------]  75% / 0s  Aggregated (...) [=====================================================================] 100% / 1s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe", ...  Finalizing assignment ds1 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d...  Checking ds2 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe", ...  Finalizing assignment ds2 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d...  Checking ds3 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe", ...  Finalizing assignment ds3 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d...  Assigned expr. (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe"...
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [--------------]   0% / 0s  Getting aggregate ds1 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [>----]  25% / 0s  Checking ds2 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>----------]  25% / 0s  Checking ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>----------]  25% / 0s  Waiting...  (...) [================>---------------------------------------------------]  25% / 0s  Checking ds2 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>----------]  25% / 0s  Getting aggregate ds2 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [=>---]  50% / 0s  Checking ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [======>-------]  50% / 1s  Waiting...  (...) [=================================>----------------------------------]  50% / 1s  Checking ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [======>-------]  50% / 1s  Getting aggregate ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>-]  75% / 1s  Aggregated (...) [=====================================================================] 100% / 1s
 l2s
-#> [1] 0.1280699
+#> [1] 0.001476
 
 # Due to the results presented in https://arxiv.org/abs/2203.10828, we set the privacy parameters to
 # - epsilon = 0.2, delta = 0.1 if        l2s <= 0.01
@@ -167,8 +198,22 @@ l2s
 #### Calculate ROC-GLM
 
 ``` r
-roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
-  dat_name = "iris", seed_object = "y")
+# The response must be encoded as integer/numeric vector:
+ds.asInteger("D_complete$DIS_DIAB", "truth")
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (exists("DIS_DIAB", D_complete)) [----------------------------------------]   0% / 0s  Getting aggregate ds1 (exists("DIS_DIAB", D_complete)) [=======>-----------------------]  25% / 0s  Checking ds2 (exists("DIS_DIAB", D_complete)) [=========>------------------------------]  25% / 0s  Getting aggregate ds2 (exists("DIS_DIAB", D_complete)) [===============>---------------]  50% / 0s  Checking ds3 (exists("DIS_DIAB", D_complete)) [===================>--------------------]  50% / 0s  Getting aggregate ds3 (exists("DIS_DIAB", D_complete)) [======================>--------]  75% / 0s  Aggregated (exists("DIS_DIAB", D_complete)) [==========================================] 100% / 1s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (truth <- asIntegerDS("D_complete$DIS_DIAB")) [---------------------------]   0% / 0s  Finalizing assignment ds1 (truth <- asIntegerDS("D_complete$DIS_DIAB")) [===>----------]  25% / 0s  Checking ds2 (truth <- asIntegerDS("D_complete$DIS_DIAB")) [======>--------------------]  25% / 0s  Finalizing assignment ds2 (truth <- asIntegerDS("D_complete$DIS_DIAB")) [======>-------]  50% / 0s  Checking ds3 (truth <- asIntegerDS("D_complete$DIS_DIAB")) [=============>-------------]  50% / 0s  Finalizing assignment ds3 (truth <- asIntegerDS("D_complete$DIS_DIAB")) [=========>----]  75% / 0s  Assigned expr. (truth <- asIntegerDS("D_complete$DIS_DIAB")) [=========================] 100% / 1s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (testObjExistsDS("truth")) [----------------------------------------------]   0% / 0s  Getting aggregate ds1 (testObjExistsDS("truth")) [========>----------------------------]  25% / 0s  Checking ds2 (testObjExistsDS("truth")) [===========>----------------------------------]  25% / 0s  Getting aggregate ds2 (testObjExistsDS("truth")) [=================>-------------------]  50% / 0s  Checking ds3 (testObjExistsDS("truth")) [======================>-----------------------]  50% / 0s  Getting aggregate ds3 (testObjExistsDS("truth")) [===========================>---------]  75% / 0s  Aggregated (testObjExistsDS("truth")) [================================================] 100% / 1s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (messageDS("truth")) [----------------------------------------------------]   0% / 0s  Getting aggregate ds1 (messageDS("truth")) [==========>--------------------------------]  25% / 0s  Checking ds2 (messageDS("truth")) [============>---------------------------------------]  25% / 0s  Getting aggregate ds2 (messageDS("truth")) [=====================>---------------------]  50% / 0s  Checking ds3 (messageDS("truth")) [=========================>--------------------------]  50% / 0s  Getting aggregate ds3 (messageDS("truth")) [===============================>-----------]  75% / 0s  Aggregated (messageDS("truth")) [======================================================] 100% / 1s
+#> $is.object.created
+#> [1] "A data object <truth> has been created in all specified data sources"
+#> 
+#> $validity.check
+#> [1] "<truth> appears valid in all sources"
+roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
+  dat_name = "D_complete", seed_object = "pred")
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (internDim("D_complete")) [-----------------------------------------------]   0% / 0s  Getting aggregate ds1 (internDim("D_complete")) [=========>----------------------------]  25% / 0s  Checking ds2 (internDim("D_complete")) [===========>-----------------------------------]  25% / 0s  Getting aggregate ds2 (internDim("D_complete")) [==================>-------------------]  50% / 0s  Checking ds3 (internDim("D_complete")) [=======================>-----------------------]  50% / 0s  Getting aggregate ds3 (internDim("D_complete")) [===========================>----------]  75% / 0s  Aggregated (...) [=====================================================================] 100% / 1s
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe", ...  Finalizing assignment ds1 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d...  Checking ds2 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe", ...  Finalizing assignment ds2 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d...  Checking ds3 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe", ...  Finalizing assignment ds3 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d...  Assigned expr. (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe"...
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [--------------]   0% / 0s  Getting aggregate ds1 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [>----]  25% / 0s  Checking ds2 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>----------]  25% / 0s  Checking ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>----------]  25% / 0s  Waiting...  (...) [================>---------------------------------------------------]  25% / 0s  Checking ds2 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>----------]  25% / 0s  Getting aggregate ds2 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [=>---]  50% / 0s  Checking ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [======>-------]  50% / 1s  Waiting...  (...) [=================================>----------------------------------]  50% / 1s  Checking ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [======>-------]  50% / 1s  Getting aggregate ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>-]  75% / 1s  Aggregated (...) [=====================================================================] 100% / 1s
 #> 
 #> [2022-12-19 13:17:57] L2 sensitivity is: 0.1281
 #> Warning in dsROCGLM(connections, truth_name = "y", pred_name = "pred", dat_name
@@ -179,96 +224,82 @@ roc_glm = dsROCGLM(connections, truth_name = "y", pred_name = "pred",
 #> 
 #> [2022-12-19 13:17:58] Initializing ROC-GLM
 #> 
-#> [2022-12-19 13:17:58] Host: Received scores of negative response
-#> [2022-12-19 13:17:58] Receiving negative scores
-#> [2022-12-19 13:17:59] Host: Pushing pooled scores
-#> [2022-12-19 13:18:01] Server: Calculating placement values and parts for ROC-GLM
-#> [2022-12-19 13:18:02] Server: Calculating probit regression to obtain ROC-GLM
-#> [2022-12-19 13:18:03] Deviance of iter1=137.2431
-#> [2022-12-19 13:18:05] Deviance of iter2=121.5994
-#> [2022-12-19 13:18:06] Deviance of iter3=147.7237
-#> [2022-12-19 13:18:07] Deviance of iter4=140.4008
-#> [2022-12-19 13:18:08] Deviance of iter5=129.2244
-#> [2022-12-19 13:18:10] Deviance of iter6=123.9979
-#> [2022-12-19 13:18:11] Deviance of iter7=123.1971
-#> [2022-12-19 13:18:12] Deviance of iter8=124.1615
-#> [2022-12-19 13:18:14] Deviance of iter9=124.5356
-#> [2022-12-19 13:18:15] Deviance of iter10=124.5503
-#> [2022-12-19 13:18:16] Deviance of iter11=124.5504
-#> [2022-12-19 13:18:17] Deviance of iter12=124.5504
-#> [2022-12-19 13:18:17] Host: Finished calculating ROC-GLM
-#> [2022-12-19 13:18:17] Host: Cleaning data on server
-#> [2022-12-19 13:18:18] Host: Calculating AUC and CI
-#> [2022-12-19 13:18:30] Finished!
+#> [2022-11-07 13:46:13] Host: Received scores of negative response
+#> [2022-11-07 13:46:13] Receiving negative scores
+#> [2022-11-07 13:46:15] Host: Pushing pooled scores
+#> [2022-11-07 13:46:16] Server: Calculating placement values and parts for ROC-GLM
+#> [2022-11-07 13:46:18] Server: Calculating probit regression to obtain ROC-GLM
+#> [2022-11-07 13:46:19] Deviance of iter1=137.2431
+#> [2022-11-07 13:46:20] Deviance of iter2=121.5994
+#> [2022-11-07 13:46:21] Deviance of iter3=147.7237
+#> [2022-11-07 13:46:22] Deviance of iter4=140.4008
+#> [2022-11-07 13:46:22] Deviance of iter5=129.2244
+#> [2022-11-07 13:46:23] Deviance of iter6=123.9979
+#> [2022-11-07 13:46:24] Deviance of iter7=123.1971
+#> [2022-11-07 13:46:25] Deviance of iter8=124.1615
+#> [2022-11-07 13:46:26] Deviance of iter9=124.5356
+#> [2022-11-07 13:46:27] Deviance of iter10=124.5503
+#> [2022-11-07 13:46:28] Deviance of iter11=124.5504
+#> [2022-11-07 13:46:29] Deviance of iter12=124.5504
+#> [2022-11-07 13:46:29] Host: Finished calculating ROC-GLM
+#> [2022-11-07 13:46:29] Host: Cleaning data on server
+#> [2022-11-07 13:46:30] Host: Calculating AUC and CI
+#> [2022-11-07 13:46:38] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
 #> 
-#>  Binormal form: pnorm(2.51 + 1.55*qnorm(t))
+#>  Binormal form: pnorm(0.69 + 0.54*qnorm(t))
 #> 
-#>  AUC and 0.95 CI: [0.86----0.91----0.95]
+#>  AUC and 0.95 CI: [0.66----0.73----0.79]
 
 plot(roc_glm)
 ```
 
-![](Readme_files/unnamed-chunk-9-1.png)<!-- -->
+![](Readme_files/unnamed-chunk-8-1.png)<!-- -->
 
 #### Assess calibration
 
 ``` r
-dsBrierScore(connections, "y", "pred")
-#> [1] 0.07431599
+dsBrierScore(connections, "truth", "pred")
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (brierScore("truth", "pred")) [-------------------------------------------]   0% / 0s  Getting aggregate ds1 (brierScore("truth", "pred")) [=======>--------------------------]  25% / 0s  Checking ds2 (brierScore("truth", "pred")) [==========>--------------------------------]  25% / 0s  Getting aggregate ds2 (brierScore("truth", "pred")) [================>-----------------]  50% / 0s  Checking ds3 (brierScore("truth", "pred")) [=====================>---------------------]  50% / 0s  Getting aggregate ds3 (brierScore("truth", "pred")) [=========================>--------]  75% / 0s  Aggregated (brierScore("truth", "pred")) [=============================================] 100% / 0s
+#> [1] 0.01191
 
 ### Calculate and plot calibration curve:
-cc = dsCalibrationCurve(connections, "y", "pred", 10, 3)
+cc = dsCalibrationCurve(connections, "truth", "pred")
+#>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (calibrationCurve("truth", "pred", 10, TRUE)) [---------------------------]   0% / 0s  Getting aggregate ds1 (calibrationCurve("truth", "pred", 10, TRUE)) [===>--------------]  25% / 0s  Checking ds2 (calibrationCurve("truth", "pred", 10, TRUE)) [======>--------------------]  25% / 0s  Getting aggregate ds2 (calibrationCurve("truth", "pred", 10, TRUE)) [========>---------]  50% / 0s  Checking ds3 (calibrationCurve("truth", "pred", 10, TRUE)) [=============>-------------]  50% / 0s  Getting aggregate ds3 (calibrationCurve("truth", "pred", 10, TRUE)) [=============>----]  75% / 0s  Aggregated (calibrationCurve("truth", "pred", 10, TRUE)) [=============================] 100% / 0s
 cc
 #> 
 #> Calibration curve:
 #> 
 #>  Number of shared values:
 #>            (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6] (0.6,0.7]
-#> n              140        30        12        14        12         2         0
-#> not_shared       0         0         0         0         0         2       NaN
+#> n             6791        44        16         9         5         2         7
+#> not_shared       0         0         4         3         5         2         2
 #>            (0.7,0.8] (0.8,0.9] (0.9,1]
-#> n                  8        38      44
-#> not_shared         8         0       0
+#> n                  1         1       0
+#> not_shared         1         1     NaN
 #> 
 #> Values of the calibration curve:
-#>              (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6]
-#> truth     0.00000000 0.2000000 0.0000000 0.2857143 0.8333333         0
-#> predicted 0.01074561 0.1312315 0.2395063 0.3457399 0.4699741         0
-#>           (0.6,0.7] (0.7,0.8] (0.8,0.9]   (0.9,1]
-#> truth           NaN         0 0.8421053 0.9090909
-#> predicted       NaN         0 0.8431611 0.9603714
+#>            (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6] (0.6,0.7]
+#> truth     0.009571    0.2500    0.2500    0.1111         0         0    0.4286
+#> predicted 0.010314    0.1393    0.1835    0.2283         0         0    0.4537
+#>           (0.7,0.8] (0.8,0.9] (0.9,1]
+#> truth             0         0     NaN
+#> predicted         0         0     NaN
 #> 
 #> 
 #> Missing values are indicated by the privacy level of 5.
 
 plot(cc)
+
 #> Warning: Removed 6 rows containing missing values (`geom_point()`).
 #> Warning: Removed 6 rows containing missing values (`geom_line()`).
 #> Warning: Removed 1 rows containing missing values (`geom_point()`).
 #> Warning: Removed 1 row containing missing values (`geom_line()`).
 ```
 
-![](Readme_files/unnamed-chunk-10-1.png)<!-- -->
-
-#### Further performance metrics
-
-``` r
-dsConfusion(connections, "y", "pred")
-#> $confusion
-#>      predicted
-#> truth   0   1
-#>     0 188  12
-#>     1  20  80
-#> 
-#> $measures
-#>         npos         nneg           f1          acc          npv          tpr 
-#> 208.00000000 100.00000000   0.90384615   0.89333333   0.80000000   0.90384615 
-#>          tnr          fnr          fpr 
-#>   0.80000000   0.09615385   0.20000000
-```
+![](Readme_files/unnamed-chunk-9-1.png)<!-- -->
 
 ## Deploy information:
 
@@ -279,25 +310,26 @@ Hence, it also is a test if the functionality of the package works also
 on the DataSHIELD servers. We also test these functionality in
 `tests/testthat/test_on_active_server.R`. The system information of the
 local and remote servers are as followed:
-
   - Local machine:
       - `R` version: R version 4.2.2 (2022-10-31)
       - Version of DataSHELD client packages:
 
+
 | Package      | Version |
-| :----------- | :------ |
+|:-------------|:--------|
 | DSI          | 1.5.0   |
-| DSOpal       | 1.4.0   |
+| DSOpal       | 1.3.1   |
 | dsBaseClient | 6.2.0   |
 | dsBinVal     | 1.0.1   |
 
-  - Remote DataSHIELD machines:
-      - `R` version of ds1: R version 4.2.1 (2022-06-23)
-      - `R` version of ds2: R version 4.2.1 (2022-06-23)
-      - Version of server packages:
+- Remote DataSHIELD machines:
+  - OPAL version of the test instance: 4.5.2
+  - `R` version of ds1: R version 4.2.1 (2022-06-23)
+  - `R` version of ds2: R version 4.2.1 (2022-06-23)
+  - Version of server packages:
 
-| Package   | ds1: Version | ds2: Version |
-| :-------- | :----------- | :----------- |
-| dsBase    | 6.2.0        | 6.2.0        |
-| resourcer | 1.3.0        | 1.3.0        |
-| dsBinVal  | 1.0.1        | 1.0.1        |
+| Package   | ds1: Version | ds2: Version | ds3: Version |
+|:----------|:-------------|:-------------|:-------------|
+| dsBase    | 6.2.0        | 6.2.0        | 6.2.0        |
+| resourcer | 1.3.0        | 1.3.0        | 1.3.0        |
+| dsBinVal  | 1.0.1        | 1.0.1        | 1.0.1        |
