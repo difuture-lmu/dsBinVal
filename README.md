@@ -215,14 +215,14 @@ roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe", ...  Finalizing assignment ds1 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d...  Checking ds2 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe", ...  Finalizing assignment ds2 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d...  Checking ds3 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe", ...  Finalizing assignment ds3 (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d...  Assigned expr. (xXcols <- decodeBinary("580a000000030004020100030500000000055554462d38000000fe"...
 #>    [-------------------------------------------------------------------------------------]   0% / 0s  Checking ds1 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [--------------]   0% / 0s  Getting aggregate ds1 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [>----]  25% / 0s  Checking ds2 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>----------]  25% / 0s  Checking ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>----------]  25% / 0s  Waiting...  (...) [================>---------------------------------------------------]  25% / 0s  Checking ds2 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>----------]  25% / 0s  Getting aggregate ds2 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [=>---]  50% / 0s  Checking ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [======>-------]  50% / 1s  Waiting...  (...) [=================================>----------------------------------]  50% / 1s  Checking ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [======>-------]  50% / 1s  Getting aggregate ds3 (l2sens("D_complete", "pred", 2292, "xXcols", diff, TRUE)) [===>-]  75% / 1s  Aggregated (...) [=====================================================================] 100% / 1s
 #> 
-#> [2022-11-07 13:46:12] L2 sensitivity is: 0.1281
+#> [2022-12-19 13:17:57] L2 sensitivity is: 0.1281
 #> Warning in dsROCGLM(connections, truth_name = "y", pred_name = "pred", dat_name
 #> = "iris", : l2-sensitivity may be too high for good results! Epsilon = 0.5 and
 #> delta = 0.5 is used which may lead to bad results.
 #> 
-#> [2022-11-07 13:46:13] Setting: epsilon = 0.5 and delta = 0.5
+#> [2022-12-19 13:17:58] Setting: epsilon = 0.5 and delta = 0.5
 #> 
-#> [2022-11-07 13:46:13] Initializing ROC-GLM
+#> [2022-12-19 13:17:58] Initializing ROC-GLM
 #> 
 #> [2022-11-07 13:46:13] Host: Received scores of negative response
 #> [2022-11-07 13:46:13] Receiving negative scores
@@ -245,7 +245,6 @@ roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
 #> [2022-11-07 13:46:29] Host: Cleaning data on server
 #> [2022-11-07 13:46:30] Host: Calculating AUC and CI
 #> [2022-11-07 13:46:38] Finished!
-
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -304,7 +303,7 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2022-11-07 13:46:47.**
+**Build by root (Darwin) on 2022-12-19 13:18:39.**
 
 This readme is built automatically after each push to the repository.
 Hence, it also is a test if the functionality of the package works also
