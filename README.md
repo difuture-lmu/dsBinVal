@@ -14,10 +14,12 @@ and calibration on decentralized data. The basis is the
 computing. This package provides the calculation of the
 [**ROC-GLM**](https://www.jstor.org/stable/2676973?seq=1) with [**AUC
 confidence intervals**](https://www.jstor.org/stable/2531595?seq=1) as
-well as calibration curves and the brier score. In order to calculate
-the ROC-GLM or assess calibration it is necessary to push models and
-predict them at the servers which is also provided by this package. Note
-that DataSHIELD uses [privacy
+well as [**calibration
+curves**](https://www.geeksforgeeks.org/calibration-curves/) and the
+[**Brier score**](https://en.wikipedia.org/wiki/Brier_score). In order
+to calculate the ROC-GLM or assess calibration it is necessary to push
+models and predict them at the servers which is also provided by this
+package. Note that DataSHIELD uses [privacy
 filter](https://data2knowledge.atlassian.net/wiki/spaces/DSDEV/pages/714768398/Disclosure+control)
 from DataSHIELD v5 onwards that are also used in this package.
 Additionally, this package uses the old option `datashield.privacyLevel`
@@ -26,7 +28,7 @@ aggregation) as fallback. Instead of setting the option, we directly
 retrieve the fallback privacy level from the
 [`DESCRIPTION`](https://github.com/difuture-lmu/dsBinVal/blob/master/DESCRIPTION)
 file each time a function calls for it. This options is set to 5 by
-default. The methodological base of the package is explained in detail
+default. The methodology of the package is explained in detail
 [here](https://arxiv.org/abs/2203.10828).
 
 ## Installation
@@ -144,7 +146,7 @@ load(here::here("Readme_files/mod.rda"))
 
 # Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
-#> [2023-01-16 08:16:25] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
+#> [2023-01-16 13:20:26] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
 
 # Create a clean data set without NAs:
 ds.completeCases("D", newobj = "D_complete")
@@ -200,27 +202,27 @@ ds.asInteger("D_complete$DIS_DIAB", "truth")
 roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
   dat_name = "D_complete", seed_object = "pred")
 #> 
-#> [2023-01-16 08:18:23] L2 sensitivity is: 0.0015
+#> [2023-01-16 13:22:46] L2 sensitivity is: 0.0015
 #> 
-#> [2023-01-16 08:18:24] Setting: epsilon = 0.2 and delta = 0.1
+#> [2023-01-16 13:22:48] Setting: epsilon = 0.2 and delta = 0.1
 #> 
-#> [2023-01-16 08:18:24] Initializing ROC-GLM
+#> [2023-01-16 13:22:48] Initializing ROC-GLM
 #> 
-#> [2023-01-16 08:18:24] Host: Received scores of negative response
-#> [2023-01-16 08:18:24] Receiving negative scores
-#> [2023-01-16 08:18:25] Host: Pushing pooled scores
-#> [2023-01-16 08:18:27] Server: Calculating placement values and parts for ROC-GLM
-#> [2023-01-16 08:18:28] Server: Calculating probit regression to obtain ROC-GLM
-#> [2023-01-16 08:18:29] Deviance of iter1=38.8162
-#> [2023-01-16 08:18:31] Deviance of iter2=48.9408
-#> [2023-01-16 08:18:32] Deviance of iter3=52.5077
-#> [2023-01-16 08:18:33] Deviance of iter4=52.5684
-#> [2023-01-16 08:18:34] Deviance of iter5=52.5684
-#> [2023-01-16 08:18:35] Deviance of iter6=52.5684
-#> [2023-01-16 08:18:35] Host: Finished calculating ROC-GLM
-#> [2023-01-16 08:18:35] Host: Cleaning data on server
-#> [2023-01-16 08:18:36] Host: Calculating AUC and CI
-#> [2023-01-16 08:18:46] Finished!
+#> [2023-01-16 13:22:48] Host: Received scores of negative response
+#> [2023-01-16 13:22:48] Receiving negative scores
+#> [2023-01-16 13:22:50] Host: Pushing pooled scores
+#> [2023-01-16 13:22:53] Server: Calculating placement values and parts for ROC-GLM
+#> [2023-01-16 13:22:55] Server: Calculating probit regression to obtain ROC-GLM
+#> [2023-01-16 13:22:57] Deviance of iter1=38.8162
+#> [2023-01-16 13:22:59] Deviance of iter2=48.9408
+#> [2023-01-16 13:23:01] Deviance of iter3=52.5077
+#> [2023-01-16 13:23:03] Deviance of iter4=52.5684
+#> [2023-01-16 13:23:05] Deviance of iter5=52.5684
+#> [2023-01-16 13:23:07] Deviance of iter6=52.5684
+#> [2023-01-16 13:23:07] Host: Finished calculating ROC-GLM
+#> [2023-01-16 13:23:07] Host: Cleaning data on server
+#> [2023-01-16 13:23:08] Host: Calculating AUC and CI
+#> [2023-01-16 13:23:25] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -276,13 +278,17 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2023-01-16 08:18:52.**
+**Build by root (Darwin) on 2023-01-16 13:23:36.**
 
-This readme is built automatically after each push to the repository.
-Hence, it also is a test if the functionality of the package works also
-on the DataSHIELD servers. We also test these functionality in
-`tests/testthat/test_on_active_server.R`. The system information of the
-local and remote servers are as followed:
+This readme is built automatically after each push to the repository and
+weekly on Monday. The autobuilt is computed by installing the package on
+the DataSHIELD test server and is therefore a test if the functionality
+of the package works on DataSHIELD servers. Additionally, the
+functionality is tested using the [GH
+Actions](https://github.com/difuture-lmu/dsBinVal/actions/workflows/R-CMD-check.yaml)
+with
+[`tests/testthat/test_on_active_server.R`](https://github.com/difuture-lmu/dsBinVal/blob/main/tests/testthat/test_on_active_server.R).
+The system information of the local and remote machines are:
 
   - Local machine:
       - `R` version: R version 4.2.2 (2022-10-31)
