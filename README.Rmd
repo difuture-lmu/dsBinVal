@@ -234,7 +234,7 @@ plot(cc)
 
 __Build by `r Sys.info()[["login"]]` (`r Sys.info()[["sysname"]]`) on `r as.character(Sys.time())`.__
 
-This readme is built automatically after each push to the repository. Hence, it also is a test if the functionality of the package works also on the DataSHIELD servers. We also test these functionality in `tests/testthat/test_on_active_server.R`. The system information of the local and remote servers are as followed:
+This readme is built automatically after each push to the repository and weekly on Monday. The autobuilt is computed by installing the package on the DataSHIELD test server and is therefore a test if the functionality of the package works on DataSHIELD servers. Additionally, the functionality is tested using the [GH Actions](https://github.com/difuture-lmu/dsBinVal/actions/workflows/R-CMD-check.yaml) with [`tests/testthat/test_on_active_server.R`](https://github.com/difuture-lmu/dsBinVal/blob/main/tests/testthat/test_on_active_server.R). The system information of the local and remote machines are:
 
 
 ```{r, include=FALSE}
