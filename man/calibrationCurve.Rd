@@ -2,7 +2,7 @@
 % Please edit documentation in R/calibration_curve.R
 \name{calibrationCurve}
 \alias{calibrationCurve}
-\title{Calculate data for calibration curve}
+\title{Calculate data for calibration curve, called by dsCalibrationCurve}
 \usage{
 calibrationCurve(
   truth_name,

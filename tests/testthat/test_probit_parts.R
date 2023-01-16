@@ -15,10 +15,7 @@ test_that("score vector is correct", {
 
   parts = calculateDistrGLMParts(form, data = "dat", params_char = params_char)
 
-  expect_equal(-2 * log(karts$likelihood), glm_dev)
-  #glm_obs_info
-  #parts$XtX
-  #(dev = -2 * log(parts$likelihood))
+  expect_equal(-2 * log(parts$likelihood), glm_dev)
 })
 
 test_that("individual parts can be calculated", {

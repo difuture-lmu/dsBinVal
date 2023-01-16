@@ -22,18 +22,19 @@ plotCalibrationCurve = function(cc, individuals = TRUE, ...) {
 
   gg = ggplot2::ggplot()
   if (individuals) {
+    prob = truth = server = NULL
     gg = gg +
       ggplot2::geom_point(data = tmp,
-        ggplot2::aes_string(x = "prob", y = "truth", color = "server"),
+        ggplot2::aes(x = prob, y = truth, color = server),
         alpha = 0.5) +
       ggplot2::geom_line(data = tmp,
-        ggplot2::aes_string(x = "prob", y = "truth", color = "server"),
+        ggplot2::aes(x = prob, y = truth, color = server),
         alpha = 0.5) +
       ggplot2::labs(color = "Server")
   }
   gg = gg +
-    ggplot2::geom_point(data = cc$aggregated, ggplot2::aes_string(x = "prob", y = "truth"), ...) +
-    ggplot2::geom_line(data = cc$aggregated, ggplot2::aes_string(x = "prob", y = "truth"), ...)
+    ggplot2::geom_point(data = cc$aggregated, ggplot2::aes(x = prob, y = truth), ...) +
+    ggplot2::geom_line(data = cc$aggregated, ggplot2::aes(x = prob, y = truth), ...)
 
   gg = gg +
     ggplot2::geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "dark red") +

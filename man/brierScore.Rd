@@ -2,7 +2,7 @@
 % Please edit documentation in R/brier_score.R
 \name{brierScore}
 \alias{brierScore}
-\title{Calculate Brier score}
+\title{Calculate Brier score, called by dsBrierScore}
 \usage{
 brierScore(truth_name, prob_name)
 }

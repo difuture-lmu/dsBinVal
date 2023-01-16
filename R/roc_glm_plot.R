@@ -30,18 +30,20 @@ plot.ROC.GLM = function(x, ...) {
 
   df_plt = data.frame(TPR = y, FPR = x)
 
+  FPR = TPR = NULL # To prevent checks from failing.
   gg = ggplot2::ggplot() +
-    ggplot2::geom_line(data = df_plt, mapping = ggplot2::aes_string(x = "FPR", y = "TPR"), size = 1.5) +
+    ggplot2::geom_line(data = df_plt, mapping = ggplot2::aes(x = FPR, y = TPR), size = 1.5) +
     ggplot2::geom_abline(slope = 1, col = "gray", alpha = 0.9, linetype = "dashed") +
     ggplot2::ggtitle("ROC Curve", "Approximation via ROC-GLM")
 
   if (plot_ci) {
+    lower = upper = auc = NULL
     df_auc = data.frame(lower = roc_glm$ci[1], upper = roc_glm$ci[2], auc = roc_glm$auc)
     gg = gg +
       ggplot2::geom_errorbarh(data = df_auc,
-        ggplot2::aes_string(y = "0.1", xmin = "lower", xmax = "upper"), height = 0.05) +
-      ggplot2::geom_point(data = df_auc, ggplot2::aes_string(y = "0.1", x = "auc"), size = 5) +
-      ggplot2::geom_point(data = df_auc, ggplot2::aes_string(y = "0.1", x = "auc"), size = 2, color = "white") +
+        ggplot2::aes(y = 0.1, xmin = lower, xmax = upper), height = 0.05) +
+      ggplot2::geom_point(data = df_auc, ggplot2::aes(y = 0.1, x = auc), size = 5) +
+      ggplot2::geom_point(data = df_auc, ggplot2::aes(y = 0.1, x = auc), size = 2, color = "white") +
       ggplot2::annotate("text", x = df_auc$auc, y = 0.1, label = "AUC", vjust = -1) +
       ggplot2::annotate("text", x = df_auc$auc, y = 0.1, label = round(df_auc$auc, 2), vjust = 2) +
       ggplot2::annotate("text", x = df_auc$lower, y = 0.1, label = round(df_auc$lower, 2), vjust = 3) +
