@@ -27,10 +27,10 @@ Imports:
     dsBase,
     checkmate,
     stringr,
-    digest
+    digest,
+    ggplot2
 Suggests:
     DSOpal,
-    ggplot2,
     testthat,
     opalr
 AggregateMethods:
