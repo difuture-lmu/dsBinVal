@@ -28,10 +28,11 @@ Imports:
     checkmate,
     stringr,
     digest,
-    dsBaseClient
+    dsBaseClient,
+    ggplot2
+>>>>>>> 6340728544af10b2389dabcfc6524cadc3b0a374
 Suggests:
     DSOpal,
-    ggplot2,
     testthat,
     opalr
 AggregateMethods:

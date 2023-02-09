@@ -54,10 +54,10 @@ server and the analysts machine.
 
 The two options are to use the Opal API:
 
-  - Log into Opal ans switch to the `Administration/DataSHIELD/` tab
-  - Click the `Add DataSHIELD package` button
-  - Select `GitHub` as source, and use `difuture-lmu` as user,
-    `dsBinVal` as name, and `main` as Git reference.
+- Log into Opal ans switch to the `Administration/DataSHIELD/` tab
+- Click the `Add DataSHIELD package` button
+- Select `GitHub` as source, and use `difuture-lmu` as user, `dsBinVal`
+  as name, and `main` as Git reference.
 
 The second option is to use the `opalr` package to install `dsBinVal`
 directly from `R`:
@@ -80,7 +80,7 @@ opalr::opal.logout(opal)
 ## Usage
 
 A more sophisticated example is available
-[here](github.com/difuture-lmu/datashield-roc-glm-demo).
+[here](https://github.com/difuture-lmu/datashield-roc-glm-demo).
 
 ``` r
 library(DSI)
@@ -146,7 +146,7 @@ load(here::here("Readme_files/mod.rda"))
 
 # Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
-#> [2023-01-23 13:09:14] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
+#> [2023-02-06 13:32:02] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
 
 # Create a clean data set without NAs:
 ds.completeCases("D", newobj = "D_complete")
@@ -202,27 +202,27 @@ ds.asInteger("D_complete$DIS_DIAB", "truth")
 roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
   dat_name = "D_complete", seed_object = "pred")
 #> 
-#> [2023-01-23 13:11:35] L2 sensitivity is: 0.0015
+#> [2023-02-06 13:34:14] L2 sensitivity is: 0.0015
 #> 
-#> [2023-01-23 13:11:37] Setting: epsilon = 0.2 and delta = 0.1
+#> [2023-02-06 13:34:16] Setting: epsilon = 0.2 and delta = 0.1
 #> 
-#> [2023-01-23 13:11:37] Initializing ROC-GLM
+#> [2023-02-06 13:34:16] Initializing ROC-GLM
 #> 
-#> [2023-01-23 13:11:37] Host: Received scores of negative response
-#> [2023-01-23 13:11:37] Receiving negative scores
-#> [2023-01-23 13:11:39] Host: Pushing pooled scores
-#> [2023-01-23 13:11:42] Server: Calculating placement values and parts for ROC-GLM
-#> [2023-01-23 13:11:44] Server: Calculating probit regression to obtain ROC-GLM
-#> [2023-01-23 13:11:47] Deviance of iter1=38.8162
-#> [2023-01-23 13:11:49] Deviance of iter2=48.9408
-#> [2023-01-23 13:11:51] Deviance of iter3=52.5077
-#> [2023-01-23 13:11:53] Deviance of iter4=52.5684
-#> [2023-01-23 13:11:55] Deviance of iter5=52.5684
-#> [2023-01-23 13:11:57] Deviance of iter6=52.5684
-#> [2023-01-23 13:11:57] Host: Finished calculating ROC-GLM
-#> [2023-01-23 13:11:57] Host: Cleaning data on server
-#> [2023-01-23 13:11:58] Host: Calculating AUC and CI
-#> [2023-01-23 13:12:17] Finished!
+#> [2023-02-06 13:34:16] Host: Received scores of negative response
+#> [2023-02-06 13:34:16] Receiving negative scores
+#> [2023-02-06 13:34:17] Host: Pushing pooled scores
+#> [2023-02-06 13:34:20] Server: Calculating placement values and parts for ROC-GLM
+#> [2023-02-06 13:34:21] Server: Calculating probit regression to obtain ROC-GLM
+#> [2023-02-06 13:34:22] Deviance of iter1=38.8162
+#> [2023-02-06 13:34:24] Deviance of iter2=48.9408
+#> [2023-02-06 13:34:25] Deviance of iter3=52.5077
+#> [2023-02-06 13:34:26] Deviance of iter4=52.5684
+#> [2023-02-06 13:34:28] Deviance of iter5=52.5684
+#> [2023-02-06 13:34:29] Deviance of iter6=52.5684
+#> [2023-02-06 13:34:29] Host: Finished calculating ROC-GLM
+#> [2023-02-06 13:34:29] Host: Cleaning data on server
+#> [2023-02-06 13:34:30] Host: Calculating AUC and CI
+#> [2023-02-06 13:34:42] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -278,7 +278,7 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2023-01-23 13:12:25.**
+**Build by root (Darwin) on 2023-02-06 13:34:54.**
 
 This readme is built automatically after each push to the repository and
 weekly on Monday. The autobuilt is computed by installing the package on
@@ -290,25 +290,25 @@ with
 [`tests/testthat/test_on_active_server.R`](https://github.com/difuture-lmu/dsBinVal/blob/main/tests/testthat/test_on_active_server.R).
 The system information of the local and remote machines are:
 
-  - Local machine:
-      - `R` version: R version 4.2.2 (2022-10-31)
-      - Version of DataSHELD client packages:
+- Local machine:
+  - `R` version: R version 4.2.2 (2022-10-31)
+  - Version of DataSHELD client packages:
 
 | Package      | Version |
-| :----------- | :------ |
+|:-------------|:--------|
 | DSI          | 1.5.0   |
 | DSOpal       | 1.4.0   |
 | dsBaseClient | 6.2.0   |
 | dsBinVal     | 1.0.1   |
 
-  - Remote DataSHIELD machines:
-      - OPAL version of the test instance: 4.5.4
-      - `R` version of ds1: R version 4.2.1 (2022-06-23)
-      - `R` version of ds2: R version 4.2.1 (2022-06-23)
-      - Version of server packages:
+- Remote DataSHIELD machines:
+  - OPAL version of the test instance: 4.5.5
+  - `R` version of ds1: R version 4.2.1 (2022-06-23)
+  - `R` version of ds2: R version 4.2.1 (2022-06-23)
+  - Version of server packages:
 
 | Package   | ds1: Version | ds2: Version | ds3: Version |
-| :-------- | :----------- | :----------- | :----------- |
+|:----------|:-------------|:-------------|:-------------|
 | dsBase    | 6.2.0        | 6.2.0        | 6.2.0        |
 | resourcer | 1.3.0        | 1.3.0        | 1.3.0        |
 | dsBinVal  | 1.0.1        | 1.0.1        | 1.0.1        |

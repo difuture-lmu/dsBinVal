@@ -124,7 +124,7 @@ opalr::opal.logout(opal)
 
 ## Usage
 
-A more sophisticated example is available [here](github.com/difuture-lmu/datashield-roc-glm-demo).
+A more sophisticated example is available [here](https://github.com/difuture-lmu/datashield-roc-glm-demo).
 
 ```{r}
 library(dsBinVal)
