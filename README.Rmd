@@ -41,6 +41,8 @@ for (pkg in pkgs) {
 }
 devtools::install(quiet = TRUE, upgrade = "always")
 library(DSI)
+library(DSOpal)
+library(dsBaseClient)
 
 ## Install packages on the DataSHIELD test machine:
 surl     = "https://opal-demo.obiba.org/"
