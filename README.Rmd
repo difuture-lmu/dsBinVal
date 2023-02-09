@@ -40,6 +40,7 @@ for (pkg in pkgs) {
     install.packages(pkg, repos = c(getOption("repos"), "https://cran.obiba.org"))
 }
 devtools::install(quiet = TRUE, upgrade = "always")
+library(DSI)
 
 ## Install packages on the DataSHIELD test machine:
 surl     = "https://opal-demo.obiba.org/"
