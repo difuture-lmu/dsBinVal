@@ -56,7 +56,7 @@ AssignMethods:
     assignPredictModel,
     removeMissings
 Remotes:
-    datashield/dsBaseClient
+    datashield/dsBaseClient,
     datashield/dsBase
 Options: datashield.privacyLevel=5
 RoxygenNote: 7.1.1
