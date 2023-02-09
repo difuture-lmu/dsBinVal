@@ -29,11 +29,11 @@ Imports:
     dsBaseClient,
     checkmate,
     stringr,
-    ggplot2
-Suggests:
+    ggplot2,
     DSOpal,
-    testthat,
     opalr
+Suggests:
+    testthat
 AggregateMethods:
     calculateDistrGLMParts,
     getNegativeScoresVar,
