@@ -25,12 +25,12 @@ Depends:
 Imports:
     DSI,
     dsBase,
+    digest,
+    dsBaseClient
+Requires:
     checkmate,
     stringr,
-    digest,
-    dsBaseClient,
     ggplot2
->>>>>>> 6340728544af10b2389dabcfc6524cadc3b0a374
 Suggests:
     DSOpal,
     testthat,
