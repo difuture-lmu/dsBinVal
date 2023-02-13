@@ -15,11 +15,11 @@ tags:
 authors:
   - name: Daniel Schalk
     orcid: 0000-0003-0950-1947
-    affiliation: "1, 3"
+    affiliation: "1, 3, 4"
   - name: Verena Sophia Hoffmann
     affiliation: "2, 3"
   - name: Bernd Bischl
-    affiliation: 1
+    affiliation: "1, 4"
   - name: Ulrich Mansmann
     affiliation: "2, 3"
 affiliations:
@@ -29,6 +29,8 @@ affiliations:
    index: 2
  - name: DIFUTURE (DataIntegration for Future Medicine, www.difuture.de), LMU Munich, Munich, Germany
    index: 3
+ - name: Munich Center for Machine Learning, Munich, Germany
+   index: 4
 date: 23 March 2022
 bibliography: paper.bib
 ---
