@@ -2,6 +2,11 @@
 
 ##
 
+- **13.02.2023** \
+  Finalize JOSS paper and last modification for submission.
+
+## dsBinVal 1.0.1
+
 - **16.01.2023** \
   Remove `ggplot2::aes_string` and use `ggplot2::aes` instead.
 
