@@ -7,7 +7,7 @@ Authors@R:
         role = c("aut", "cre"),
         email = "daniel.schalk@stat.uni-muenchen.de",
         comment = c(ORCID = "0000-0003-0950-1947")))
-Version: 1.0.1
+Version: 1.0.2
 License: LGPL-3
 Description: Methods to conduct distributed ROC and calibration analyses. The basis is the DataSHIELD
     <https://www.datashield.org> infrastructure for distributed computing. This
