@@ -4,7 +4,8 @@
 [![R-CMD-check](https://github.com/difuture-lmu/dsBinVal/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/difuture-lmu/dsBinVal/actions/workflows/R-CMD-check.yaml)
 [![License: LGPL
 v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
-[![codecov](https://codecov.io/gh/difuture-lmu/dsBinVal/branch/main/graph/badge.svg?token=E8AZRM6XJX)](https://codecov.io/gh/difuture-lmu/dsBinVal) [![DOI](https://joss.theoj.org/papers/10.21105/joss.04545/status.svg)](https://doi.org/10.21105/joss.04545)
+[![codecov](https://codecov.io/gh/difuture-lmu/dsBinVal/branch/main/graph/badge.svg?token=E8AZRM6XJX)](https://codecov.io/gh/difuture-lmu/dsBinVal)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.04545/status.svg)](https://doi.org/10.21105/joss.04545)
 
 # ROC-GLM and Calibration for DataSHIELD
 
@@ -138,7 +139,7 @@ load(here::here("Readme_files/mod.rda"))
 
 # Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
-#> [2023-02-13 13:21:57] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
+#> [2023-03-06 13:23:20] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
 
 # Create a clean data set without NAs:
 ds.completeCases("D", newobj = "D_complete")
@@ -194,27 +195,27 @@ ds.asInteger("D_complete$DIS_DIAB", "truth")
 roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
   dat_name = "D_complete", seed_object = "pred")
 #> 
-#> [2023-02-13 13:23:48] L2 sensitivity is: 0.0015
+#> [2023-03-06 13:25:44] L2 sensitivity is: 0.0015
 #> 
-#> [2023-02-13 13:23:49] Setting: epsilon = 0.2 and delta = 0.1
+#> [2023-03-06 13:25:45] Setting: epsilon = 0.2 and delta = 0.1
 #> 
-#> [2023-02-13 13:23:49] Initializing ROC-GLM
+#> [2023-03-06 13:25:45] Initializing ROC-GLM
 #> 
-#> [2023-02-13 13:23:49] Host: Received scores of negative response
-#> [2023-02-13 13:23:49] Receiving negative scores
-#> [2023-02-13 13:23:51] Host: Pushing pooled scores
-#> [2023-02-13 13:23:52] Server: Calculating placement values and parts for ROC-GLM
-#> [2023-02-13 13:23:54] Server: Calculating probit regression to obtain ROC-GLM
-#> [2023-02-13 13:23:55] Deviance of iter1=38.8162
-#> [2023-02-13 13:23:56] Deviance of iter2=48.9408
-#> [2023-02-13 13:23:57] Deviance of iter3=52.5077
-#> [2023-02-13 13:23:58] Deviance of iter4=52.5684
-#> [2023-02-13 13:23:59] Deviance of iter5=52.5684
-#> [2023-02-13 13:24:00] Deviance of iter6=52.5684
-#> [2023-02-13 13:24:00] Host: Finished calculating ROC-GLM
-#> [2023-02-13 13:24:00] Host: Cleaning data on server
-#> [2023-02-13 13:24:01] Host: Calculating AUC and CI
-#> [2023-02-13 13:24:11] Finished!
+#> [2023-03-06 13:25:45] Host: Received scores of negative response
+#> [2023-03-06 13:25:45] Receiving negative scores
+#> [2023-03-06 13:25:47] Host: Pushing pooled scores
+#> [2023-03-06 13:25:49] Server: Calculating placement values and parts for ROC-GLM
+#> [2023-03-06 13:25:50] Server: Calculating probit regression to obtain ROC-GLM
+#> [2023-03-06 13:25:52] Deviance of iter1=38.8162
+#> [2023-03-06 13:25:53] Deviance of iter2=48.9408
+#> [2023-03-06 13:25:54] Deviance of iter3=52.5077
+#> [2023-03-06 13:25:56] Deviance of iter4=52.5684
+#> [2023-03-06 13:25:57] Deviance of iter5=52.5684
+#> [2023-03-06 13:25:58] Deviance of iter6=52.5684
+#> [2023-03-06 13:25:58] Host: Finished calculating ROC-GLM
+#> [2023-03-06 13:25:58] Host: Cleaning data on server
+#> [2023-03-06 13:26:00] Host: Calculating AUC and CI
+#> [2023-03-06 13:26:11] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -270,7 +271,7 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2023-02-13 13:24:19.**
+**Build by root (Darwin) on 2023-03-06 13:26:18.**
 
 This readme is built automatically after each push to the repository and
 weekly on Monday. The autobuilt is computed by installing the package on
@@ -294,7 +295,7 @@ The system information of the local and remote machines are:
 | dsBinVal     | 1.0.2   |
 
 - Remote DataSHIELD machines:
-  - OPAL version of the test instance: 4.5.5
+  - OPAL version of the test instance: 4.5.6
   - `R` version of ds1: R version 4.2.1 (2022-06-23)
   - `R` version of ds2: R version 4.2.1 (2022-06-23)
   - Version of server packages:
