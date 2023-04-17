@@ -139,7 +139,7 @@ load(here::here("Readme_files/mod.rda"))
 
 # Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
-#> [2023-04-03 13:22:29] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
+#> [2023-04-17 13:16:56] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
 
 # Create a clean data set without NAs:
 ds.completeCases("D", newobj = "D_complete")
@@ -195,27 +195,27 @@ ds.asInteger("D_complete$DIS_DIAB", "truth")
 roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
   dat_name = "D_complete", seed_object = "pred")
 #> 
-#> [2023-04-03 13:24:52] L2 sensitivity is: 0.0015
+#> [2023-04-17 13:19:09] L2 sensitivity is: 0.0015
 #> 
-#> [2023-04-03 13:24:54] Setting: epsilon = 0.2 and delta = 0.1
+#> [2023-04-17 13:19:11] Setting: epsilon = 0.2 and delta = 0.1
 #> 
-#> [2023-04-03 13:24:54] Initializing ROC-GLM
+#> [2023-04-17 13:19:11] Initializing ROC-GLM
 #> 
-#> [2023-04-03 13:24:54] Host: Received scores of negative response
-#> [2023-04-03 13:24:54] Receiving negative scores
-#> [2023-04-03 13:24:56] Host: Pushing pooled scores
-#> [2023-04-03 13:25:00] Server: Calculating placement values and parts for ROC-GLM
-#> [2023-04-03 13:25:02] Server: Calculating probit regression to obtain ROC-GLM
-#> [2023-04-03 13:25:04] Deviance of iter1=38.8162
-#> [2023-04-03 13:25:06] Deviance of iter2=48.9408
-#> [2023-04-03 13:25:08] Deviance of iter3=52.5077
-#> [2023-04-03 13:25:10] Deviance of iter4=52.5684
-#> [2023-04-03 13:25:12] Deviance of iter5=52.5684
-#> [2023-04-03 13:25:14] Deviance of iter6=52.5684
-#> [2023-04-03 13:25:14] Host: Finished calculating ROC-GLM
-#> [2023-04-03 13:25:14] Host: Cleaning data on server
-#> [2023-04-03 13:25:15] Host: Calculating AUC and CI
-#> [2023-04-03 13:25:32] Finished!
+#> [2023-04-17 13:19:11] Host: Received scores of negative response
+#> [2023-04-17 13:19:11] Receiving negative scores
+#> [2023-04-17 13:19:13] Host: Pushing pooled scores
+#> [2023-04-17 13:19:16] Server: Calculating placement values and parts for ROC-GLM
+#> [2023-04-17 13:19:18] Server: Calculating probit regression to obtain ROC-GLM
+#> [2023-04-17 13:19:20] Deviance of iter1=38.8162
+#> [2023-04-17 13:19:22] Deviance of iter2=48.9408
+#> [2023-04-17 13:19:24] Deviance of iter3=52.5077
+#> [2023-04-17 13:19:26] Deviance of iter4=52.5684
+#> [2023-04-17 13:19:27] Deviance of iter5=52.5684
+#> [2023-04-17 13:19:29] Deviance of iter6=52.5684
+#> [2023-04-17 13:19:29] Host: Finished calculating ROC-GLM
+#> [2023-04-17 13:19:29] Host: Cleaning data on server
+#> [2023-04-17 13:19:31] Host: Calculating AUC and CI
+#> [2023-04-17 13:19:49] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -271,7 +271,7 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2023-04-03 13:25:41.**
+**Build by root (Darwin) on 2023-04-17 13:19:59.**
 
 This readme is built automatically after each push to the repository and
 weekly on Monday. The autobuilt is computed by installing the package on
