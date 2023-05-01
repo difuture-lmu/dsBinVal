@@ -139,7 +139,7 @@ load(here::here("Readme_files/mod.rda"))
 
 # Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
-#> [2023-04-24 13:20:12.723521] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
+#> [2023-05-01 13:20:01.019503] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
 
 # Create a clean data set without NAs:
 ds.completeCases("D", newobj = "D_complete")
@@ -195,34 +195,34 @@ ds.asInteger("D_complete$DIS_DIAB", "truth")
 roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
   dat_name = "D_complete", seed_object = "pred")
 #> 
-#> [2023-04-24 13:22:41.721201] L2 sensitivity is: 0.0015
+#> [2023-05-01 13:22:20.627372] L2 sensitivity is: 0.0015
 #> 
-#> [2023-04-24 13:22:43.771353] Setting: epsilon = 0.2 and delta = 0.1
+#> [2023-05-01 13:22:22.731154] Setting: epsilon = 0.2 and delta = 0.1
 #> 
-#> [2023-04-24 13:22:43.771802] Initializing ROC-GLM
+#> [2023-05-01 13:22:22.731593] Initializing ROC-GLM
 #> 
-#> [2023-04-24 13:22:43.771809] Host: Received scores of negative response
-#> [2023-04-24 13:22:43.772202] Receiving negative scores
-#> [2023-04-24 13:22:46.147039] Host: Pushing pooled scores
-#> [2023-04-24 13:22:50.02923] Server: Calculating placement values and parts for ROC-GLM
-#> [2023-04-24 13:22:52.087222] Server: Calculating probit regression to obtain ROC-GLM
-#> [2023-04-24 13:22:54.286039] Deviance of iter1=38.8162
-#> [2023-04-24 13:22:56.335696] Deviance of iter2=48.9408
-#> [2023-04-24 13:22:58.414782] Deviance of iter3=52.5077
-#> [2023-04-24 13:23:00.464113] Deviance of iter4=52.5684
-#> [2023-04-24 13:23:02.516114] Deviance of iter5=52.5684
-#> [2023-04-24 13:23:04.58153] Deviance of iter6=52.5684
-#> [2023-04-24 13:23:04.581919] Host: Finished calculating ROC-GLM
-#> [2023-04-24 13:23:04.5822] Host: Cleaning data on server
-#> [2023-04-24 13:23:06.134314] Host: Calculating AUC and CI
-#> [2023-04-24 13:23:24.702841] Finished!
+#> [2023-05-01 13:22:22.731599] Host: Received scores of negative response
+#> [2023-05-01 13:22:22.731976] Receiving negative scores
+#> [2023-05-01 13:22:24.808901] Host: Pushing pooled scores
+#> [2023-05-01 13:22:27.924084] Server: Calculating placement values and parts for ROC-GLM
+#> [2023-05-01 13:22:30.014656] Server: Calculating probit regression to obtain ROC-GLM
+#> [2023-05-01 13:22:32.297231] Deviance of iter1=63.7694
+#> [2023-05-01 13:22:34.366321] Deviance of iter2=98.4921
+#> [2023-05-01 13:22:36.429623] Deviance of iter3=107.2788
+#> [2023-05-01 13:22:38.507044] Deviance of iter4=107.4237
+#> [2023-05-01 13:22:40.577145] Deviance of iter5=107.4237
+#> [2023-05-01 13:22:42.666321] Deviance of iter6=107.4237
+#> [2023-05-01 13:22:42.666697] Host: Finished calculating ROC-GLM
+#> [2023-05-01 13:22:42.666942] Host: Cleaning data on server
+#> [2023-05-01 13:22:44.198988] Host: Calculating AUC and CI
+#> [2023-05-01 13:23:02.854031] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
 #> 
-#>  Binormal form: pnorm(0.69 + 0.54*qnorm(t))
+#>  Binormal form: pnorm(0.67 + 0.55*qnorm(t))
 #> 
-#>  AUC and 0.95 CI: [0.66----0.73----0.79]
+#>  AUC and 0.95 CI: [0.66----0.72----0.78]
 
 plot(roc_glm)
 ```
@@ -233,7 +233,7 @@ plot(roc_glm)
 
 ``` r
 dsBrierScore(connections, "truth", "pred")
-#> [1] 0.01190512
+#> [1] 0.01222748
 
 ### Calculate and plot calibration curve:
 cc = dsCalibrationCurve(connections, "truth", "pred")
@@ -243,16 +243,16 @@ cc
 #> 
 #>  Number of shared values:
 #>            (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6] (0.6,0.7]
-#> n             6791        44        16         9         5         2         7
-#> not_shared       0         0         0         0         2         2         2
+#> n             7270        52        20        11         6         3         7
+#> not_shared       0         0         0         2         3         3         2
 #>            (0.7,0.8] (0.8,0.9] (0.9,1]
 #> n                  1         1       0
 #> not_shared         1         1     NaN
 #> 
 #> Values of the calibration curve:
 #>               (0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6]
-#> truth     0.009571492 0.2500000 0.3750000 0.2222222 0.4000000         0
-#> predicted 0.010313664 0.1393237 0.2468129 0.3414045 0.2534424         0
+#> truth     0.009766162 0.2307692 0.3500000 0.1818182 0.3333333         0
+#> predicted 0.010694587 0.1381766 0.2487212 0.2793309 0.2112020         0
 #>           (0.6,0.7] (0.7,0.8] (0.8,0.9] (0.9,1]
 #> truth     0.4285714         0         0     NaN
 #> predicted 0.4537049         0         0     NaN
@@ -261,8 +261,8 @@ cc
 #> Missing values are indicated by the privacy level of 5.
 
 plot(cc)
-#> Warning: Removed 18 rows containing missing values (`geom_point()`).
-#> Warning: Removed 18 rows containing missing values (`geom_line()`).
+#> Warning: Removed 17 rows containing missing values (`geom_point()`).
+#> Warning: Removed 17 rows containing missing values (`geom_line()`).
 #> Warning: Removed 1 rows containing missing values (`geom_point()`).
 #> Warning: Removed 1 row containing missing values (`geom_line()`).
 ```
@@ -271,7 +271,7 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2023-04-24 13:23:32.147544.**
+**Build by root (Darwin) on 2023-05-01 13:23:10.169721.**
 
 This readme is built automatically after each push to the repository and
 weekly on Monday. The autobuilt is computed by installing the package on
@@ -295,7 +295,7 @@ The system information of the local and remote machines are:
 | dsBinVal     | 1.0.2   |
 
 - Remote DataSHIELD machines:
-  - OPAL version of the test instance: 4.5.7
+  - OPAL version of the test instance: 4.5.8
   - `R` version of ds1: R version 4.2.1 (2022-06-23)
   - `R` version of ds2: R version 4.2.1 (2022-06-23)
   - Version of server packages:
