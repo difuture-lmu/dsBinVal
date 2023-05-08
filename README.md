@@ -139,7 +139,7 @@ load(here::here("Readme_files/mod.rda"))
 
 # Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
-#> [2023-05-01 13:20:01.019503] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
+#> [2023-05-08 13:18:40.318203] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
 
 # Create a clean data set without NAs:
 ds.completeCases("D", newobj = "D_complete")
@@ -195,27 +195,27 @@ ds.asInteger("D_complete$DIS_DIAB", "truth")
 roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
   dat_name = "D_complete", seed_object = "pred")
 #> 
-#> [2023-05-01 13:22:20.627372] L2 sensitivity is: 0.0015
+#> [2023-05-08 13:20:34.849639] L2 sensitivity is: 0.0015
 #> 
-#> [2023-05-01 13:22:22.731154] Setting: epsilon = 0.2 and delta = 0.1
+#> [2023-05-08 13:20:36.006119] Setting: epsilon = 0.2 and delta = 0.1
 #> 
-#> [2023-05-01 13:22:22.731593] Initializing ROC-GLM
+#> [2023-05-08 13:20:36.006569] Initializing ROC-GLM
 #> 
-#> [2023-05-01 13:22:22.731599] Host: Received scores of negative response
-#> [2023-05-01 13:22:22.731976] Receiving negative scores
-#> [2023-05-01 13:22:24.808901] Host: Pushing pooled scores
-#> [2023-05-01 13:22:27.924084] Server: Calculating placement values and parts for ROC-GLM
-#> [2023-05-01 13:22:30.014656] Server: Calculating probit regression to obtain ROC-GLM
-#> [2023-05-01 13:22:32.297231] Deviance of iter1=63.7694
-#> [2023-05-01 13:22:34.366321] Deviance of iter2=98.4921
-#> [2023-05-01 13:22:36.429623] Deviance of iter3=107.2788
-#> [2023-05-01 13:22:38.507044] Deviance of iter4=107.4237
-#> [2023-05-01 13:22:40.577145] Deviance of iter5=107.4237
-#> [2023-05-01 13:22:42.666321] Deviance of iter6=107.4237
-#> [2023-05-01 13:22:42.666697] Host: Finished calculating ROC-GLM
-#> [2023-05-01 13:22:42.666942] Host: Cleaning data on server
-#> [2023-05-01 13:22:44.198988] Host: Calculating AUC and CI
-#> [2023-05-01 13:23:02.854031] Finished!
+#> [2023-05-08 13:20:36.006575] Host: Received scores of negative response
+#> [2023-05-08 13:20:36.006908] Receiving negative scores
+#> [2023-05-08 13:20:37.235397] Host: Pushing pooled scores
+#> [2023-05-08 13:20:39.182419] Server: Calculating placement values and parts for ROC-GLM
+#> [2023-05-08 13:20:40.333793] Server: Calculating probit regression to obtain ROC-GLM
+#> [2023-05-08 13:20:41.609318] Deviance of iter1=63.7694
+#> [2023-05-08 13:20:42.762665] Deviance of iter2=98.4921
+#> [2023-05-08 13:20:43.904948] Deviance of iter3=107.2788
+#> [2023-05-08 13:20:45.043705] Deviance of iter4=107.4237
+#> [2023-05-08 13:20:46.196287] Deviance of iter5=107.4237
+#> [2023-05-08 13:20:47.309888] Deviance of iter6=107.4237
+#> [2023-05-08 13:20:47.310319] Host: Finished calculating ROC-GLM
+#> [2023-05-08 13:20:47.310606] Host: Cleaning data on server
+#> [2023-05-08 13:20:48.202798] Host: Calculating AUC and CI
+#> [2023-05-08 13:20:58.769219] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -271,7 +271,7 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2023-05-01 13:23:10.169721.**
+**Build by root (Darwin) on 2023-05-08 13:21:03.825398.**
 
 This readme is built automatically after each push to the repository and
 weekly on Monday. The autobuilt is computed by installing the package on
@@ -296,12 +296,12 @@ The system information of the local and remote machines are:
 
 - Remote DataSHIELD machines:
   - OPAL version of the test instance: 4.5.8
-  - `R` version of ds1: R version 4.2.1 (2022-06-23)
-  - `R` version of ds2: R version 4.2.1 (2022-06-23)
+  - `R` version of ds1: R version 4.3.0 (2023-04-21)
+  - `R` version of ds2: R version 4.3.0 (2023-04-21)
   - Version of server packages:
 
 | Package   | ds1: Version | ds2: Version | ds3: Version |
 |:----------|:-------------|:-------------|:-------------|
 | dsBase    | 6.2.0        | 6.2.0        | 6.2.0        |
-| resourcer | 1.3.0        | 1.3.0        | 1.3.0        |
+| resourcer | 1.4.0        | 1.4.0        | 1.4.0        |
 | dsBinVal  | 1.0.2        | 1.0.2        | 1.0.2        |
