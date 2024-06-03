@@ -139,7 +139,10 @@ load(here::here("Readme_files/mod.rda"))
 
 # Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
-#> [2024-04-22 13:13:48.063726] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
+#> [2024-06-03 13:15:02.230001] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
+```
+
+``` r
 
 # Create a clean data set without NAs:
 ds.completeCases("D", newobj = "D_complete")
@@ -148,6 +151,9 @@ ds.completeCases("D", newobj = "D_complete")
 #> 
 #> $validity.check
 #> [1] "<D_complete> appears valid in all sources"
+```
+
+``` r
 
 # Calculate scores and save at the servers:
 pfun =  "predict(mod, newdata = D, type = 'response')"
@@ -173,6 +179,9 @@ datashield.symbols(connections)
 l2s = dsL2Sens(connections, "D_complete", "pred")
 l2s
 #> [1] 0.001475989
+```
+
+``` r
 
 # Due to the results presented in https://arxiv.org/abs/2203.10828, we set the privacy parameters to
 # - epsilon = 0.2, delta = 0.1 if        l2s <= 0.01
@@ -192,30 +201,36 @@ ds.asInteger("D_complete$DIS_DIAB", "truth")
 #> 
 #> $validity.check
 #> [1] "<truth> appears valid in all sources"
+```
+
+``` r
 roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
   dat_name = "D_complete", seed_object = "pred")
 #> 
-#> [2024-04-22 13:16:22.865938] L2 sensitivity is: 0.0015
+#> [2024-06-03 13:17:08.967241] L2 sensitivity is: 0.0015
 #> 
-#> [2024-04-22 13:16:24.798812] Setting: epsilon = 0.2 and delta = 0.1
+#> [2024-06-03 13:17:10.551881] Setting: epsilon = 0.2 and delta = 0.1
 #> 
-#> [2024-04-22 13:16:24.7992] Initializing ROC-GLM
+#> [2024-06-03 13:17:10.552312] Initializing ROC-GLM
 #> 
-#> [2024-04-22 13:16:24.799205] Host: Received scores of negative response
-#> [2024-04-22 13:16:24.799542] Receiving negative scores
-#> [2024-04-22 13:16:26.746705] Host: Pushing pooled scores
-#> [2024-04-22 13:16:30.121529] Server: Calculating placement values and parts for ROC-GLM
-#> [2024-04-22 13:16:32.062631] Server: Calculating probit regression to obtain ROC-GLM
-#> [2024-04-22 13:16:34.208119] Deviance of iter1=63.7694
-#> [2024-04-22 13:16:36.187686] Deviance of iter2=98.4921
-#> [2024-04-22 13:16:38.1557] Deviance of iter3=107.2788
-#> [2024-04-22 13:16:40.124237] Deviance of iter4=107.4237
-#> [2024-04-22 13:16:42.093282] Deviance of iter5=107.4237
-#> [2024-04-22 13:16:44.063297] Deviance of iter6=107.4237
-#> [2024-04-22 13:16:44.063721] Host: Finished calculating ROC-GLM
-#> [2024-04-22 13:16:44.063974] Host: Cleaning data on server
-#> [2024-04-22 13:16:46.610451] Host: Calculating AUC and CI
-#> [2024-04-22 13:17:04.261138] Finished!
+#> [2024-06-03 13:17:10.552316] Host: Received scores of negative response
+#> [2024-06-03 13:17:10.552614] Receiving negative scores
+#> [2024-06-03 13:17:12.132921] Host: Pushing pooled scores
+#> [2024-06-03 13:17:14.749562] Server: Calculating placement values and parts for ROC-GLM
+#> [2024-06-03 13:17:16.321661] Server: Calculating probit regression to obtain ROC-GLM
+#> [2024-06-03 13:17:17.941591] Deviance of iter1=63.7694
+#> [2024-06-03 13:17:19.508904] Deviance of iter2=98.4921
+#> [2024-06-03 13:17:21.101208] Deviance of iter3=107.2788
+#> [2024-06-03 13:17:22.674372] Deviance of iter4=107.4237
+#> [2024-06-03 13:17:24.264775] Deviance of iter5=107.4237
+#> [2024-06-03 13:17:25.862943] Deviance of iter6=107.4237
+#> [2024-06-03 13:17:25.863341] Host: Finished calculating ROC-GLM
+#> [2024-06-03 13:17:25.863553] Host: Cleaning data on server
+#> [2024-06-03 13:17:28.476248] Host: Calculating AUC and CI
+#> [2024-06-03 13:17:42.617266] Finished!
+```
+
+``` r
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -223,6 +238,9 @@ roc_glm
 #>  Binormal form: pnorm(0.67 + 0.55*qnorm(t))
 #> 
 #>  AUC and 0.95 CI: [0.66----0.72----0.78]
+```
+
+``` r
 
 plot(roc_glm)
 ```
@@ -234,6 +252,9 @@ plot(roc_glm)
 ``` r
 dsBrierScore(connections, "truth", "pred")
 #> [1] 0.01222748
+```
+
+``` r
 
 ### Calculate and plot calibration curve:
 cc = dsCalibrationCurve(connections, "truth", "pred")
@@ -259,6 +280,9 @@ cc
 #> 
 #> 
 #> Missing values are indicated by the privacy level of 5.
+```
+
+``` r
 
 plot(cc)
 #> Warning: Removed 17 rows containing missing values or values outside the scale range
@@ -275,7 +299,7 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2024-04-22 13:17:11.283748.**
+**Build by root (Darwin) on 2024-06-03 13:17:47.584343.**
 
 This readme is built automatically after each push to the repository and
 weekly on Monday. The autobuilt is computed by installing the package on
@@ -288,20 +312,20 @@ with
 The system information of the local and remote machines are:
 
 - Local machine:
-  - `R` version: R version 4.3.3 (2024-02-29)
+  - `R` version: R version 4.4.0 (2024-04-24)
   - Version of DataSHELD client packages:
 
 | Package      | Version |
 |:-------------|:--------|
-| DSI          | 1.5.0   |
+| DSI          | 1.6.0   |
 | DSOpal       | 1.4.0   |
 | dsBaseClient | 6.3.0   |
 | dsBinVal     | 1.0.2   |
 
 - Remote DataSHIELD machines:
   - OPAL version of the test instance: 4.7.2
-  - `R` version of ds1: R version 4.3.3 (2024-02-29)
-  - `R` version of ds2: R version 4.3.3 (2024-02-29)
+  - `R` version of ds1: R version 4.4.0 (2024-04-24)
+  - `R` version of ds2: R version 4.4.0 (2024-04-24)
   - Version of server packages:
 
 | Package   | ds1: Version | ds2: Version | ds3: Version |
