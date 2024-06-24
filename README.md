@@ -139,7 +139,7 @@ load(here::here("Readme_files/mod.rda"))
 
 # Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
-#> [2024-06-10 13:16:19.909605] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
+#> [2024-06-24 13:15:33.688224] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
 ```
 
 ``` r
@@ -207,27 +207,27 @@ ds.asInteger("D_complete$DIS_DIAB", "truth")
 roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
   dat_name = "D_complete", seed_object = "pred")
 #> 
-#> [2024-06-10 13:18:11.951499] L2 sensitivity is: 0.0015
+#> [2024-06-24 13:17:49.844593] L2 sensitivity is: 0.0015
 #> 
-#> [2024-06-10 13:18:13.193248] Setting: epsilon = 0.2 and delta = 0.1
+#> [2024-06-24 13:17:51.48763] Setting: epsilon = 0.2 and delta = 0.1
 #> 
-#> [2024-06-10 13:18:13.194036] Initializing ROC-GLM
+#> [2024-06-24 13:17:51.488609] Initializing ROC-GLM
 #> 
-#> [2024-06-10 13:18:13.194046] Host: Received scores of negative response
-#> [2024-06-10 13:18:13.194745] Receiving negative scores
-#> [2024-06-10 13:18:14.416782] Host: Pushing pooled scores
-#> [2024-06-10 13:18:16.803197] Server: Calculating placement values and parts for ROC-GLM
-#> [2024-06-10 13:18:18.060282] Server: Calculating probit regression to obtain ROC-GLM
-#> [2024-06-10 13:18:19.330297] Deviance of iter1=63.7694
-#> [2024-06-10 13:18:20.531671] Deviance of iter2=98.4921
-#> [2024-06-10 13:18:21.783336] Deviance of iter3=107.2788
-#> [2024-06-10 13:18:22.972541] Deviance of iter4=107.4237
-#> [2024-06-10 13:18:24.199109] Deviance of iter5=107.4237
-#> [2024-06-10 13:18:25.435933] Deviance of iter6=107.4237
-#> [2024-06-10 13:18:25.436226] Host: Finished calculating ROC-GLM
-#> [2024-06-10 13:18:25.436403] Host: Cleaning data on server
-#> [2024-06-10 13:18:28.046962] Host: Calculating AUC and CI
-#> [2024-06-10 13:18:39.121289] Finished!
+#> [2024-06-24 13:17:51.488616] Host: Received scores of negative response
+#> [2024-06-24 13:17:51.4891] Receiving negative scores
+#> [2024-06-24 13:17:53.192883] Host: Pushing pooled scores
+#> [2024-06-24 13:17:56.184155] Server: Calculating placement values and parts for ROC-GLM
+#> [2024-06-24 13:17:57.879] Server: Calculating probit regression to obtain ROC-GLM
+#> [2024-06-24 13:17:59.512467] Deviance of iter1=63.7694
+#> [2024-06-24 13:18:01.132332] Deviance of iter2=98.4921
+#> [2024-06-24 13:18:02.765817] Deviance of iter3=107.2788
+#> [2024-06-24 13:18:04.454862] Deviance of iter4=107.4237
+#> [2024-06-24 13:18:06.110758] Deviance of iter5=107.4237
+#> [2024-06-24 13:18:07.776129] Deviance of iter6=107.4237
+#> [2024-06-24 13:18:07.77676] Host: Finished calculating ROC-GLM
+#> [2024-06-24 13:18:07.777078] Host: Cleaning data on server
+#> [2024-06-24 13:18:10.512496] Host: Calculating AUC and CI
+#> [2024-06-24 13:18:25.6642] Finished!
 ```
 
 ``` r
@@ -299,7 +299,7 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2024-06-10 13:18:43.490065.**
+**Build by root (Darwin) on 2024-06-24 13:18:30.877416.**
 
 This readme is built automatically after each push to the repository and
 weekly on Monday. The autobuilt is computed by installing the package on
@@ -312,7 +312,7 @@ with
 The system information of the local and remote machines are:
 
 - Local machine:
-  - `R` version: R version 4.4.0 (2024-04-24)
+  - `R` version: R version 4.4.1 (2024-06-14)
   - Version of DataSHELD client packages:
 
 | Package      | Version |
