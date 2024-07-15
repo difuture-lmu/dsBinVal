@@ -139,10 +139,7 @@ load(here::here("Readme_files/mod.rda"))
 
 # Push the model to the DataSHIELD servers:
 pushObject(connections, mod)
-#> [2024-07-01 13:17:26.646357] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
-```
-
-``` r
+#> [2024-07-15 13:17:14.375331] Your object is bigger than 1 MB (5.75186157226562 MB). Uploading larger objects may take some time.
 
 # Create a clean data set without NAs:
 ds.completeCases("D", newobj = "D_complete")
@@ -151,9 +148,6 @@ ds.completeCases("D", newobj = "D_complete")
 #> 
 #> $validity.check
 #> [1] "<D_complete> appears valid in all sources"
-```
-
-``` r
 
 # Calculate scores and save at the servers:
 pfun =  "predict(mod, newdata = D, type = 'response')"
@@ -179,9 +173,6 @@ datashield.symbols(connections)
 l2s = dsL2Sens(connections, "D_complete", "pred")
 l2s
 #> [1] 0.001475989
-```
-
-``` r
 
 # Due to the results presented in https://arxiv.org/abs/2203.10828, we set the privacy parameters to
 # - epsilon = 0.2, delta = 0.1 if        l2s <= 0.01
@@ -201,36 +192,30 @@ ds.asInteger("D_complete$DIS_DIAB", "truth")
 #> 
 #> $validity.check
 #> [1] "<truth> appears valid in all sources"
-```
-
-``` r
 roc_glm = dsROCGLM(connections, truth_name = "truth", pred_name = "pred",
   dat_name = "D_complete", seed_object = "pred")
 #> 
-#> [2024-07-01 13:19:39.219616] L2 sensitivity is: 0.0015
+#> [2024-07-15 13:19:23.382513] L2 sensitivity is: 0.0015
 #> 
-#> [2024-07-01 13:19:40.876547] Setting: epsilon = 0.2 and delta = 0.1
+#> [2024-07-15 13:19:25.029126] Setting: epsilon = 0.2 and delta = 0.1
 #> 
-#> [2024-07-01 13:19:40.87744] Initializing ROC-GLM
+#> [2024-07-15 13:19:25.029848] Initializing ROC-GLM
 #> 
-#> [2024-07-01 13:19:40.877449] Host: Received scores of negative response
-#> [2024-07-01 13:19:40.878064] Receiving negative scores
-#> [2024-07-01 13:19:42.507461] Host: Pushing pooled scores
-#> [2024-07-01 13:19:45.166933] Server: Calculating placement values and parts for ROC-GLM
-#> [2024-07-01 13:19:46.791415] Server: Calculating probit regression to obtain ROC-GLM
-#> [2024-07-01 13:19:48.439092] Deviance of iter1=63.7694
-#> [2024-07-01 13:19:50.098079] Deviance of iter2=98.4921
-#> [2024-07-01 13:19:51.746866] Deviance of iter3=107.2788
-#> [2024-07-01 13:19:53.3707] Deviance of iter4=107.4237
-#> [2024-07-01 13:19:55.025108] Deviance of iter5=107.4237
-#> [2024-07-01 13:19:56.663138] Deviance of iter6=107.4237
-#> [2024-07-01 13:19:56.663747] Host: Finished calculating ROC-GLM
-#> [2024-07-01 13:19:56.664089] Host: Cleaning data on server
-#> [2024-07-01 13:19:59.959458] Host: Calculating AUC and CI
-#> [2024-07-01 13:20:14.734546] Finished!
-```
-
-``` r
+#> [2024-07-15 13:19:25.029857] Host: Received scores of negative response
+#> [2024-07-15 13:19:25.030427] Receiving negative scores
+#> [2024-07-15 13:19:26.685147] Host: Pushing pooled scores
+#> [2024-07-15 13:19:29.098002] Server: Calculating placement values and parts for ROC-GLM
+#> [2024-07-15 13:19:30.732456] Server: Calculating probit regression to obtain ROC-GLM
+#> [2024-07-15 13:19:32.473539] Deviance of iter1=63.7694
+#> [2024-07-15 13:19:34.052171] Deviance of iter2=98.4921
+#> [2024-07-15 13:19:35.705356] Deviance of iter3=107.2788
+#> [2024-07-15 13:19:37.364565] Deviance of iter4=107.4237
+#> [2024-07-15 13:19:38.993927] Deviance of iter5=107.4237
+#> [2024-07-15 13:19:40.663654] Deviance of iter6=107.4237
+#> [2024-07-15 13:19:40.664272] Host: Finished calculating ROC-GLM
+#> [2024-07-15 13:19:40.664697] Host: Cleaning data on server
+#> [2024-07-15 13:19:43.317261] Host: Calculating AUC and CI
+#> [2024-07-15 13:19:58.190052] Finished!
 roc_glm
 #> 
 #> ROC-GLM after Pepe:
@@ -238,9 +223,6 @@ roc_glm
 #>  Binormal form: pnorm(0.67 + 0.55*qnorm(t))
 #> 
 #>  AUC and 0.95 CI: [0.66----0.72----0.78]
-```
-
-``` r
 
 plot(roc_glm)
 ```
@@ -252,9 +234,6 @@ plot(roc_glm)
 ``` r
 dsBrierScore(connections, "truth", "pred")
 #> [1] 0.01222748
-```
-
-``` r
 
 ### Calculate and plot calibration curve:
 cc = dsCalibrationCurve(connections, "truth", "pred")
@@ -280,9 +259,6 @@ cc
 #> 
 #> 
 #> Missing values are indicated by the privacy level of 5.
-```
-
-``` r
 
 plot(cc)
 #> Warning: Removed 17 rows containing missing values or values outside the scale range
@@ -299,7 +275,7 @@ plot(cc)
 
 ## Deploy information:
 
-**Build by root (Darwin) on 2024-07-01 13:20:19.854601.**
+**Build by root (Darwin) on 2024-07-15 13:20:03.207205.**
 
 This readme is built automatically after each push to the repository and
 weekly on Monday. The autobuilt is computed by installing the package on
